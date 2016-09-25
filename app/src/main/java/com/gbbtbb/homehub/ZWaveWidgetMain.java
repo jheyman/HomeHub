@@ -1,15 +1,21 @@
 package com.gbbtbb.homehub;
 
-import android.app.Activity;
+import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 
 /**
  * Created by etabli on 25/09/16.
  */
-public class ZWaveWidgetMain extends BroadcastReceiver {
+public class ZWaveWidgetMain extends Fragment {
 
     public static final String CLICK_ACTION ="com.gbbtbb.zwavewidget.CLICK_ACTION";
     public static final String INITIALIZE_ACTION ="com.gbbtbb.zwavewidget.INITIALIZE_ACTION";
@@ -34,16 +40,70 @@ public class ZWaveWidgetMain extends BroadcastReceiver {
     static long latestRefreshUnixTime = 0;
 
 
-    public ZWaveWidgetMain() {
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
 
+        super.onCreateView(inflater, container, savedInstanceState);
+
+
+        IntentFilter filter = new IntentFilter(ZWaveWidgetMain.UPDATE_IMAGEVIEW_ACTION);
+        filter.addCategory(Intent.CATEGORY_DEFAULT);
+
+        // start listening for refresh local file list in
+        getActivity().registerReceiver(mYourBroadcastReceiver,filter);
+
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.zwavewidget_layout, container, false);
     }
 
-    Activity activity;
-    Context context;
-    public ZWaveWidgetMain(Activity activity,Context context) {
-        this.activity=activity;
-        this.context=context;
+    @Override
+    public void onDestroyView()
+    {
+        getActivity().unregisterReceiver(mYourBroadcastReceiver);
     }
+
+    private final BroadcastReceiver mYourBroadcastReceiver = new BroadcastReceiver()
+    {
+        @Override
+        public void onReceive(Context context, Intent intent)
+        {
+
+            final String action = intent.getAction();
+
+            Log.i("ZWaveWidgetMain", "onReceive " + action);
+
+            if (CLICK_ACTION.equals(action)) {
+
+                String deviceName = intent.getStringExtra(DEVICE_NAME_EXTRA);
+                Log.i("ZWaveWidgetMain", "onReceive CLICK devName=" + deviceName);
+
+                // Build the intent to call the service
+                Intent i = new Intent(context.getApplicationContext(), ZWaveWidgetService.class);
+                i.putExtra(DEVICE_NAME_EXTRA, deviceName);
+                i.setAction(TOGGLE_ACTION);
+                context.startService(i);
+            }
+            else if (STORE_REFRESH_TIME_ACTION.equals(action)) {
+
+                latestRefreshUnixTime = intent.getLongExtra(STORE_REFRESH_TIME_EXTRA, 0);
+                //Log.i("ZWaveWidgetProvider", "Updating latestRefreshUnixTime to " + Long.toString(latestRefreshUnixTime));
+            }
+            else if (UPDATE_IMAGEVIEW_ACTION.equals(action)) {
+                int imageViewId = intent.getIntExtra(UPDATE_IMAGEVIEW_EXTRA_VIEWID, 0);
+                int imgId = intent.getIntExtra(UPDATE_IMAGEVIEW_EXTRA_IMGID, 0);
+                Log.i("ZWaveWidgetMain", "update ImageView: " + Integer.toString(imageViewId) + ", " + Integer.toString(imgId));
+                ImageView iv = (ImageView)getActivity().findViewById(imageViewId);
+                iv.setImageResource(imgId);
+            }
+            else if (UPDATE_TEXTVIEW_ACTION.equals(action)) {
+                int txtViewId = intent.getIntExtra(UPDATE_TEXTVIEW_EXTRA_ID, 0);
+                String txt = intent.getStringExtra(UPDATE_TEXTVIEW_EXTRA_TEXT);
+                Log.i("ZWaveWidgetMain", "update TextView: " + Integer.toString(txtViewId)+ ", " + txt);
+
+            }
+        }
+    };
 
     public void update(Context context) {
 
@@ -71,43 +131,5 @@ public class ZWaveWidgetMain extends BroadcastReceiver {
         context.startService(intent);
 
         Log.i("ZWaveWidgetMain", "onUpdate: background service started");
-    }
-
-    @Override
-    public void onReceive(Context ctx, Intent intent) {
-        final String action = intent.getAction();
-
-        Log.i("ZWaveWidgetMain", "onReceive " + action);
-
-        if (CLICK_ACTION.equals(action)) {
-
-            String deviceName = intent.getStringExtra(DEVICE_NAME_EXTRA);
-            Log.i("ZWaveWidgetMain", "onReceive CLICK devName=" + deviceName);
-
-            // Build the intent to call the service
-            Intent i = new Intent(ctx.getApplicationContext(), ZWaveWidgetService.class);
-            i.putExtra(DEVICE_NAME_EXTRA, deviceName);
-            i.setAction(TOGGLE_ACTION);
-            ctx.startService(i);
-        }
-        else if (STORE_REFRESH_TIME_ACTION.equals(action)) {
-
-            latestRefreshUnixTime = intent.getLongExtra(STORE_REFRESH_TIME_EXTRA, 0);
-            //Log.i("ZWaveWidgetProvider", "Updating latestRefreshUnixTime to " + Long.toString(latestRefreshUnixTime));
-        }
-        else if (UPDATE_IMAGEVIEW_ACTION.equals(action)) {
-            int imageViewId = intent.getIntExtra(UPDATE_IMAGEVIEW_EXTRA_VIEWID, 0);
-            int imgId = intent.getIntExtra(UPDATE_IMAGEVIEW_EXTRA_IMGID, 0);
-            Log.i("ZWaveWidgetMain", "update ImageView: " + Integer.toString(imageViewId)+ ", " + Integer.toString(imgId));
-
-            Log.i("ZWaveWidgetMain", "update ImageView: acitvity is" + activity);
-
-        }
-        else if (UPDATE_TEXTVIEW_ACTION.equals(action)) {
-            int txtViewId = intent.getIntExtra(UPDATE_TEXTVIEW_EXTRA_ID, 0);
-            String txt = intent.getStringExtra(UPDATE_TEXTVIEW_EXTRA_TEXT);
-            Log.i("ZWaveWidgetMain", "update ImageView: " + Integer.toString(txtViewId)+ ", " + txt);
-
-        }
     }
 }

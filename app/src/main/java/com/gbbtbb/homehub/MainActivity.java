@@ -70,7 +70,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
 
-        zwave = new ZWaveWidgetMain(this, this);
+        zwave = new ZWaveWidgetMain();
 
         // Start background handler that will call refresh regularly
         ctx= this;

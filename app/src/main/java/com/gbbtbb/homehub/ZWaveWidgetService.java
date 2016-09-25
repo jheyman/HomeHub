@@ -299,19 +299,39 @@ public class ZWaveWidgetService extends IntentService {
         int imgId = level == 0 ? iconOffId : iconOnId;
 
         // Notify main class of view to refresh
-        final Intent updateImageViewIntent = new Intent(this, ZWaveWidgetMain.class);
+        //final Intent updateImageViewIntent = new Intent(this, ZWaveWidgetMain.class);
+        /*
+        final Intent updateImageViewIntent = new Intent("whatever");
         updateImageViewIntent.setAction(ZWaveWidgetMain.UPDATE_IMAGEVIEW_ACTION);
         updateImageViewIntent.putExtra(ZWaveWidgetMain.UPDATE_IMAGEVIEW_EXTRA_VIEWID, imageViewId);
         updateImageViewIntent.putExtra(ZWaveWidgetMain.UPDATE_IMAGEVIEW_EXTRA_IMGID, imgId);
+*/
+        Intent updateImageViewIntent = new Intent();
+        updateImageViewIntent.setAction(ZWaveWidgetMain.UPDATE_IMAGEVIEW_ACTION);
+        updateImageViewIntent.addCategory(Intent.CATEGORY_DEFAULT);
+        updateImageViewIntent.putExtra(ZWaveWidgetMain.UPDATE_IMAGEVIEW_EXTRA_VIEWID, imageViewId);
+        updateImageViewIntent.putExtra(ZWaveWidgetMain.UPDATE_IMAGEVIEW_EXTRA_IMGID, imgId);
+        sendBroadcast(updateImageViewIntent);
+        Log.i("ZWaveWidgetService", "sending broacast intent....");
 
-        final PendingIntent intent = PendingIntent.getBroadcast(this, 0, updateImageViewIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        try {
-            intent.send();
-        }
-        catch (PendingIntent.CanceledException ce) {
+
+        //final PendingIntent intent = PendingIntent.getBroadcast(this, 0, updateImageViewIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        //try {
+            //intent.send();
+
+
+
+
+
+            //sendBroadcast(updateImageViewIntent);
+
+
+  //      }
+        /*catch (PendingIntent.CanceledException ce) {
             Log.i("ZWaveWidgetService", "updateImageView: Exception: " + ce.toString());
-        }
+        }*/
 
 
 
