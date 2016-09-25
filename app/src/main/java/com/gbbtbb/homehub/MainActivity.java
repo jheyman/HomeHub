@@ -1,7 +1,9 @@
 package com.gbbtbb.homehub;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -22,6 +24,27 @@ public class MainActivity extends Activity implements OnItemClickListener {
     public static final Integer image = R.drawable.paperpad_one_row;
 
     List<ShoppingListRowItem> rowItems;
+
+    ZWaveWidgetMain zwave;
+
+    public Handler handler = new Handler();
+    private Context ctx;
+    private static int REFRESH_DELAY = 20000;
+
+    Runnable refreshWidget = new Runnable()
+    {
+        @Override
+        public void run() {
+
+            Toast toast = Toast.makeText(getApplicationContext(), "Run! ", Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+            toast.show();
+
+            zwave.update(ctx);
+
+            handler.postDelayed(this, REFRESH_DELAY);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +69,12 @@ public class MainActivity extends Activity implements OnItemClickListener {
         ShoppingListViewAdapter adapter = new ShoppingListViewAdapter(this, R.layout.shoppinglist_item, rowItems);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
+
+        zwave = new ZWaveWidgetMain(this, this);
+
+        // Start background handler that will call refresh regularly
+        ctx= this;
+        handler.postDelayed(refreshWidget, REFRESH_DELAY);
     }
 
     @Override

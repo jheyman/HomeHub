@@ -8,136 +8,24 @@
 
     <LinearLayout
         android:id="@+id/LeftTopLevelVerticalLayout"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_weight="3"
         android:orientation="vertical" >
 
-
-        <LinearLayout
-            android:id="@+id/LinearLayoutShoppingListWidget"
+        <include android:id="@+id/shoppinglist_widget_frame"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_weight="60"
-            android:background="#458733"
+            android:layout_weight="50"
             android:layout_gravity="center"
-            android:orientation="vertical" >
+            layout="@layout/shoppinglist_layout"/>
 
 
-            <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="horizontal"
-                android:background="#FFFF00">
-
-
-                <ImageView
-                    android:id="@+id/textShoppingTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:src="@drawable/paperpad_top"/>
-
-                <LinearLayout
-                android:id="@+id/LinearLayoutButtons"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                    android:padding="5dp"
-                android:orientation="horizontal"
-                    android:layout_gravity="center|right">
-
-                <ImageButton
-                    android:id="@+id/reloadList"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="4dp"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="0dp"
-                    android:background="#00000000"
-                    android:src="@drawable/reload_button"
-                    />
-
-                <ProgressBar
-                    android:id="@+id/loadingProgress"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone" >
-                </ProgressBar>
-
-                <ImageButton
-                    android:id="@+id/cleanList"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="4dp"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="0dp"
-                    android:background="#00000000"
-                    android:src="@drawable/trash_button"
-                    />
-                <ImageButton
-                    android:id="@+id/addItem"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:scaleType="fitXY"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="4dp"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="20dp"
-                    android:background="#00000000"
-                    android:src="@drawable/shopcart_add_button"
-                    />
-            </LinearLayout>
-
-            </FrameLayout>
-
-            <LinearLayout
-                android:id="@+id/LinearLayoutListView"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="100"
-                android:background="#45F033"
-                android:orientation="vertical" >
-
-                <ListView
-                    android:id="@+id/shopping_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:divider="@null"
-                    android:dividerHeight="0dp"
-                    android:background="#F03F90"
-                    android:layout_gravity="center" />
-
-                <TextView
-                    android:id="@+id/empty_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:text="EMPTY"
-                    android:textColor="#000000"
-                    android:paddingLeft="50dp"
-                    android:paddingTop="1dp"
-                    android:textSize="16sp"
-                    android:background="#FF0000"
-                    android:visibility="gone" />
-            </LinearLayout>
-
-            <ImageView
-                android:id="@+id/footer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:src="@drawable/paperpad_bottom"/>
-        </LinearLayout>
-
-         <Button
-            android:id="@+id/button2"
-            android:layout_width="match_parent"
+        <include android:id="@+id/zwave_widget_frame"
+            android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_weight="40"
-            android:text="Button2" />
+            android:layout_weight="50"
+            layout="@layout/zwavewidget_layout"/>
+
     </LinearLayout>
 
 
@@ -148,12 +36,15 @@
         android:layout_weight="4"
         android:orientation="vertical" >
 
-            <Button
-                android:id="@+id/button4"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="2"
-                android:text="Button4" />
+
+
+        <include android:id="@+id/graphviewer_widget_frame"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            layout="@layout/graphviewer_layout"/>
+
+
             <Button
                 android:id="@+id/button5"
                 android:layout_width="match_parent"
@@ -166,12 +57,15 @@
                 android:layout_height="0dp"
                 android:layout_weight="5"
                 android:orientation="horizontal" >
-                <Button
-                    android:id="@+id/button6"
+
+
+                <include android:id="@+id/photoframe_widget_frame"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="Button6" />
+                    layout="@layout/photoframe_layout"/>
+
+
                 <Button
                     android:id="@+id/button7"
                     android:layout_width="0dp"
