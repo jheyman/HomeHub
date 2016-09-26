@@ -6,11 +6,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 /**
  * Created by etabli on 25/09/16.
@@ -39,6 +41,27 @@ public class ZWaveWidgetMain extends Fragment {
 
     static long latestRefreshUnixTime = 0;
 
+    public Handler handler = new Handler();
+    private Context ctx;
+    private static int REFRESH_DELAY = 2000;
+
+    Runnable refreshWidget = new Runnable()
+    {
+        @Override
+        public void run() {
+
+            Log.i("ZWaveWidgetMain", "refreshWidget called...");
+
+            Intent intent = new Intent(ctx.getApplicationContext(), ZWaveWidgetService.class);
+            intent.putExtra(LATEST_REFRESH_EXTRA, latestRefreshUnixTime);
+            intent.setAction(REFRESH_ACTION);
+            ctx.startService(intent);
+
+            Log.i("ZWaveWidgetMain", "refreshWidget: background service started");
+
+            handler.postDelayed(this, REFRESH_DELAY);
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,14 +69,37 @@ public class ZWaveWidgetMain extends Fragment {
 
         super.onCreateView(inflater, container, savedInstanceState);
 
-
-        IntentFilter filter = new IntentFilter(ZWaveWidgetMain.UPDATE_IMAGEVIEW_ACTION);
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(UPDATE_IMAGEVIEW_ACTION);
+        filter.addAction(UPDATE_TEXTVIEW_ACTION);
+        filter.addAction(STORE_REFRESH_TIME_ACTION);
         filter.addCategory(Intent.CATEGORY_DEFAULT);
 
-        // start listening for refresh local file list in
-        getActivity().registerReceiver(mYourBroadcastReceiver,filter);
+        getActivity().registerReceiver(mYourBroadcastReceiver, filter);
+        ctx = getActivity();
 
-        // Inflate the layout for this fragment
+        // Parse the list of all declared devices, retrieve the associated imageView for each device, and register a click event on it
+        String[] deviceList = ctx.getResources().getStringArray(R.array.deviceList);
+        for (String d : deviceList) {
+            int arrayId = ctx.getResources().getIdentifier(d, "array", ctx.getPackageName());
+            String[] temp = ctx.getResources().getStringArray(arrayId);
+
+            // Get resource identifier of ImageView for this device
+            int imageViewId = ctx.getResources().getIdentifier(temp[6], "id", ctx.getPackageName());
+
+            // Register a click intent on it
+            //TODO
+        }
+
+        // Initial call to the service to get the first batch of data to refresh the UI
+        Intent intent = new Intent(ctx.getApplicationContext(), ZWaveWidgetService.class);
+        intent.putExtra(LATEST_REFRESH_EXTRA, latestRefreshUnixTime);
+        intent.setAction(INITIALIZE_ACTION);
+        ctx.startService(intent);
+
+        // Start background handler that will call refresh regularly
+        handler.postDelayed(refreshWidget, REFRESH_DELAY);
+
         return inflater.inflate(R.layout.zwavewidget_layout, container, false);
     }
 
@@ -87,49 +133,21 @@ public class ZWaveWidgetMain extends Fragment {
             else if (STORE_REFRESH_TIME_ACTION.equals(action)) {
 
                 latestRefreshUnixTime = intent.getLongExtra(STORE_REFRESH_TIME_EXTRA, 0);
-                //Log.i("ZWaveWidgetProvider", "Updating latestRefreshUnixTime to " + Long.toString(latestRefreshUnixTime));
+                Log.i("ZWaveWidgetProvider", "Updating latestRefreshUnixTime to " + Long.toString(latestRefreshUnixTime));
             }
             else if (UPDATE_IMAGEVIEW_ACTION.equals(action)) {
                 int imageViewId = intent.getIntExtra(UPDATE_IMAGEVIEW_EXTRA_VIEWID, 0);
                 int imgId = intent.getIntExtra(UPDATE_IMAGEVIEW_EXTRA_IMGID, 0);
-                Log.i("ZWaveWidgetMain", "update ImageView: " + Integer.toString(imageViewId) + ", " + Integer.toString(imgId));
                 ImageView iv = (ImageView)getActivity().findViewById(imageViewId);
                 iv.setImageResource(imgId);
             }
             else if (UPDATE_TEXTVIEW_ACTION.equals(action)) {
                 int txtViewId = intent.getIntExtra(UPDATE_TEXTVIEW_EXTRA_ID, 0);
                 String txt = intent.getStringExtra(UPDATE_TEXTVIEW_EXTRA_TEXT);
-                Log.i("ZWaveWidgetMain", "update TextView: " + Integer.toString(txtViewId)+ ", " + txt);
-
+                TextView tv = (TextView)getActivity().findViewById(txtViewId);
+                tv.setText(txt);
             }
         }
     };
 
-    public void update(Context context) {
-
-        Log.i("ZWaveWidgetProvider", "update called...");
-
-        // Parse the list of all declared devices, retrieve the associated imageView for each device, and register a click event on it
-        String[] deviceList = context.getResources().getStringArray(R.array.deviceList);
-        for (String d : deviceList) {
-            int arrayId = context.getResources().getIdentifier(d, "array", context.getPackageName());
-            String[] temp = context.getResources().getStringArray(arrayId);
-
-            // Get resource identifier of ImageView for this device
-            int imageViewId = context.getResources().getIdentifier(temp[6], "id", context.getPackageName());
-
-            // Register a click intent on it
-            //TODO
-        }
-
-        // TODO update widget
-
-        // Initial call to the service to get the first batch of data to refresh the UI
-        Intent intent = new Intent(context.getApplicationContext(), ZWaveWidgetService.class);
-        intent.putExtra(LATEST_REFRESH_EXTRA, latestRefreshUnixTime);
-        intent.setAction(INITIALIZE_ACTION);
-        context.startService(intent);
-
-        Log.i("ZWaveWidgetMain", "onUpdate: background service started");
-    }
 }

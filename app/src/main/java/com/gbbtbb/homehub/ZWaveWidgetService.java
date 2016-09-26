@@ -108,17 +108,11 @@ public class ZWaveWidgetService extends IntentService {
             updateTime = jdata.getString("updateTime");
 
             // Notify provider of data refresh time
-            final Intent storeTimeIntent = new Intent(this, ZWaveWidgetMain.class);
+            Intent storeTimeIntent = new Intent();
             storeTimeIntent.setAction(ZWaveWidgetMain.STORE_REFRESH_TIME_ACTION);
             storeTimeIntent.putExtra(ZWaveWidgetMain.STORE_REFRESH_TIME_EXTRA, Long.valueOf(updateTime));
-            final PendingIntent donePendingIntent = PendingIntent.getBroadcast(this, 0, storeTimeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            try {
-                donePendingIntent.send();
-            }
-            catch (PendingIntent.CanceledException ce) {
-                Log.i("ZWaveWidgetService", "getIncrementalUpdate: Exception: " + ce.toString());
-            }
+            storeTimeIntent.addCategory(Intent.CATEGORY_DEFAULT);
+            sendBroadcast(storeTimeIntent);
 
         } catch(JSONException e){
             Log.e("ZWaveWidgetService", "getIncrementalUpdate: Error parsing data " + e.toString());
@@ -264,7 +258,6 @@ public class ZWaveWidgetService extends IntentService {
 
         updateImageView(imgViewId, icontype_base, level);
 
-
         int textViewId = this.getResources().getIdentifier(txtViewId, "id", this.getPackageName());
         //rv.setTextViewText(textViewId, name);
         updateTextView(textViewId, name);
@@ -273,19 +266,13 @@ public class ZWaveWidgetService extends IntentService {
     private void updateTextView(int txtViewId, String text) {
 
         // Notify main class of view to refresh
-        final Intent updateImageViewIntent = new Intent(this, ZWaveWidgetMain.class);
-        updateImageViewIntent.setAction(ZWaveWidgetMain.UPDATE_TEXTVIEW_ACTION);
-        updateImageViewIntent.putExtra(ZWaveWidgetMain.UPDATE_TEXTVIEW_EXTRA_ID, txtViewId);
-        updateImageViewIntent.putExtra(ZWaveWidgetMain.UPDATE_TEXTVIEW_EXTRA_TEXT, text);
+        Intent updateTextViewIntent = new Intent();
+        updateTextViewIntent.setAction(ZWaveWidgetMain.UPDATE_TEXTVIEW_ACTION);
+        updateTextViewIntent.addCategory(Intent.CATEGORY_DEFAULT);
+        updateTextViewIntent.putExtra(ZWaveWidgetMain.UPDATE_TEXTVIEW_EXTRA_ID, txtViewId);
+        updateTextViewIntent.putExtra(ZWaveWidgetMain.UPDATE_TEXTVIEW_EXTRA_TEXT, text);
+        sendBroadcast(updateTextViewIntent);
 
-        final PendingIntent intent = PendingIntent.getBroadcast(this, 0, updateImageViewIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        try {
-            intent.send();
-        }
-        catch (PendingIntent.CanceledException ce) {
-            Log.i("ZWaveWidgetService", "updateTextView: Exception: " + ce.toString());
-        }
     }
 
     private void updateImageView(String imgViewId, String icontype_base, int level) {
@@ -299,43 +286,12 @@ public class ZWaveWidgetService extends IntentService {
         int imgId = level == 0 ? iconOffId : iconOnId;
 
         // Notify main class of view to refresh
-        //final Intent updateImageViewIntent = new Intent(this, ZWaveWidgetMain.class);
-        /*
-        final Intent updateImageViewIntent = new Intent("whatever");
-        updateImageViewIntent.setAction(ZWaveWidgetMain.UPDATE_IMAGEVIEW_ACTION);
-        updateImageViewIntent.putExtra(ZWaveWidgetMain.UPDATE_IMAGEVIEW_EXTRA_VIEWID, imageViewId);
-        updateImageViewIntent.putExtra(ZWaveWidgetMain.UPDATE_IMAGEVIEW_EXTRA_IMGID, imgId);
-*/
         Intent updateImageViewIntent = new Intent();
         updateImageViewIntent.setAction(ZWaveWidgetMain.UPDATE_IMAGEVIEW_ACTION);
         updateImageViewIntent.addCategory(Intent.CATEGORY_DEFAULT);
         updateImageViewIntent.putExtra(ZWaveWidgetMain.UPDATE_IMAGEVIEW_EXTRA_VIEWID, imageViewId);
         updateImageViewIntent.putExtra(ZWaveWidgetMain.UPDATE_IMAGEVIEW_EXTRA_IMGID, imgId);
         sendBroadcast(updateImageViewIntent);
-        Log.i("ZWaveWidgetService", "sending broacast intent....");
-
-
-
-        //final PendingIntent intent = PendingIntent.getBroadcast(this, 0, updateImageViewIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        //try {
-            //intent.send();
-
-
-
-
-
-            //sendBroadcast(updateImageViewIntent);
-
-
-  //      }
-        /*catch (PendingIntent.CanceledException ce) {
-            Log.i("ZWaveWidgetService", "updateImageView: Exception: " + ce.toString());
-        }*/
-
-
-
-       // rv.setImageViewResource(imageViewId, level == 0 ? iconOffId : iconOnId);
     }
 
     private void getServerTime() {
