@@ -89,10 +89,6 @@ public class ZWaveWidgetService extends IntentService {
             String[] temp = getResources().getStringArray(arrayId);
             toggleDevice(temp[0], temp[1], temp[2], temp[6], temp[7], temp[8], deviceName);
         }
-
-        // Finally, refresh the widget with these new UI states.
-        //TODO
-
     }
 
     private JSONObject getIncrementalUpdate(long timestamp){
@@ -272,7 +268,6 @@ public class ZWaveWidgetService extends IntentService {
         updateTextViewIntent.putExtra(ZWaveWidgetMain.UPDATE_TEXTVIEW_EXTRA_ID, txtViewId);
         updateTextViewIntent.putExtra(ZWaveWidgetMain.UPDATE_TEXTVIEW_EXTRA_TEXT, text);
         sendBroadcast(updateTextViewIntent);
-
     }
 
     private void updateImageView(String imgViewId, String icontype_base, int level) {
