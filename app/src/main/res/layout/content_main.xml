@@ -66,12 +66,19 @@
                 android:layout_weight="5"
                 android:orientation="horizontal" >
 
-
+                <fragment android:name="com.gbbtbb.homehub.PhotoFrameWidgetMain"
+                    android:id="@+id/your_id_unique"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    tools:layout="@layout/photoframewidget_layout" />
+<!--
                 <include android:id="@+id/photoframe_widget_frame"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    layout="@layout/photoframe_layout"/>
+                    layout="@layout/photoframewidget_layout"/>
+                    -->
 
 
                 <Button
