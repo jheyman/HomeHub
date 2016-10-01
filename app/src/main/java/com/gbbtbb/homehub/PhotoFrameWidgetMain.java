@@ -15,12 +15,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.io.File;
 
 public class PhotoFrameWidgetMain extends Fragment {
 
-    public static String SENDEMAIL_ACTION = "com.gbbtbb.PhotoFrameWidgetProvider.SENDEMAIL_ACTION";
     public static String GETLOWRESIMAGE_ACTION = "com.gbbtbb.PhotoFrameWidgetProvider.GETLOWRESIMAGE_ACTION";
     public static String LOWRESLOADINGDONE_ACTION = "com.gbbtbb.PhotoFrameWidgetProvider.LOWRESLOADINGDONE_ACTION";
     public static String FULLRESSAVE_ACTION = "com.gbbtbb.PhotoFrameWidgetProvider.FULLRESSAVE_ACTION";
@@ -30,6 +30,8 @@ public class PhotoFrameWidgetMain extends Fragment {
     private static int imageHeight ;
     private static int imageWidth ;
     private static int imageOrientation ;
+
+    String imageDumpPath;
 
     public Handler handler = new Handler();
     private Context ctx;
@@ -48,6 +50,22 @@ public class PhotoFrameWidgetMain extends Fragment {
         Intent intent = new Intent(ctx.getApplicationContext(), PhotoFrameWidgetService.class);
         intent.setAction(GETLOWRESIMAGE_ACTION);
         ctx.startService(intent);
+    }
+
+    private void sendAsEmail() {
+        // Show progress bar, this saving the image to disk may take a while
+        ProgressBar pb = (ProgressBar)getView().findViewById(R.id.loadingProgress);
+        pb.setVisibility(View.VISIBLE);
+
+        // Build the intent to save full res image to disk
+        Intent saveImgIntent = new Intent(ctx.getApplicationContext(), PhotoFrameWidgetService.class);
+        saveImgIntent.setAction(FULLRESSAVE_ACTION);
+        saveImgIntent.putExtra("savepath", imageDumpPath);
+        saveImgIntent.putExtra("imagepath", imageName);
+        saveImgIntent.putExtra("height", imageHeight);
+        saveImgIntent.putExtra("width", imageWidth);
+        saveImgIntent.putExtra("orientation", imageOrientation);
+        ctx.startService(saveImgIntent);
     }
 
     @Override
@@ -69,13 +87,14 @@ public class PhotoFrameWidgetMain extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         IntentFilter filter = new IntentFilter();
-        filter.addAction(SENDEMAIL_ACTION);
         filter.addAction(FULLRESSAVINGDONE_ACTION);
         filter.addAction(LOWRESLOADINGDONE_ACTION);
         filter.addCategory(Intent.CATEGORY_DEFAULT);
 
         getActivity().registerReceiver(photoFrameViewBroadcastReceiver, filter);
         ctx = getActivity();
+
+        imageDumpPath = ctx.getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString();
 
         ImageView iv = (ImageView)getView().findViewById(R.id.imageView);
 
@@ -86,10 +105,14 @@ public class PhotoFrameWidgetMain extends Fragment {
             }
         });
 
+        ImageView emailIV = (ImageView)getView().findViewById(R.id.emailicon);
 
-
-        Log.i("PhotoFrameWidgetMain", "onActivityCreated");
-
+        //  register a click event on the image itself
+        emailIV.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                sendAsEmail();
+            }
+        });
 
         // Initial call to the service
         Intent intent = new Intent(ctx.getApplicationContext(), PhotoFrameWidgetService.class);
@@ -106,26 +129,9 @@ public class PhotoFrameWidgetMain extends Fragment {
         public void onReceive(Context context, Intent intent)
         {
             final String action = intent.getAction();
-            String path = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString();
 
             //Log.i("PhotoFrameWidgetMain", "onReceive " + action);
-            if (action.equals(SENDEMAIL_ACTION)) {
-
-                // Show progress bar, this saving the image to disk may take a while
-                ProgressBar pb = (ProgressBar)getView().findViewById(R.id.loadingProgress);
-                pb.setVisibility(View.VISIBLE);
-
-                // Build the intent to save full res image to disk
-                Intent saveImgIntent = new Intent(ctx.getApplicationContext(), PhotoFrameWidgetService.class);
-                saveImgIntent.setAction(FULLRESSAVE_ACTION);
-                saveImgIntent.putExtra("savepath", path);
-                saveImgIntent.putExtra("imagepath", imageName);
-                saveImgIntent.putExtra("height", imageHeight);
-                saveImgIntent.putExtra("width", imageWidth);
-                saveImgIntent.putExtra("orientation", imageOrientation);
-                ctx.startService(saveImgIntent);
-
-            } else if (action.equals(FULLRESSAVINGDONE_ACTION)) {
+            if (action.equals(FULLRESSAVINGDONE_ACTION)) {
 
                 // Hide progress bar now
                 ProgressBar pb = (ProgressBar)getView().findViewById(R.id.loadingProgress);
@@ -139,25 +145,12 @@ public class PhotoFrameWidgetMain extends Fragment {
                 emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Photo");
                 emailIntent.putExtra(Intent.EXTRA_TEXT, imageName);
 
-                File f = new File(path, "temp.png");
+                File f = new File(imageDumpPath, "temp.png");
 
                 emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(f));
 
                 ctx.startActivity(emailIntent);
             } else if (action.equals(LOWRESLOADINGDONE_ACTION)) {
-
-                // image is about to be displayed: hide progress bar now.
-                ProgressBar pb = (ProgressBar)getView().findViewById(R.id.loadingProgress);
-                pb.setVisibility(View.GONE);
-
-                // TODO get extra + set Text
-                //rv.setTextViewText(R.id.textView, );
-
-                // Update view
-
-                //Bitmap bitmap = (Bitmap) intent.getParcelableExtra("BitmapImage");
-                ImageView iv = (ImageView)getView().findViewById(R.id.imageView);
-                iv.setImageBitmap(Globals.photoFrameBitmap);
 
                 imageName = intent.getStringExtra("imagepath");
                 imageWidth = intent.getIntExtra("width", 0);
@@ -168,9 +161,17 @@ public class PhotoFrameWidgetMain extends Fragment {
                 Log.i("PhotoFrameWidgetProvidr", "imageHeight is " + Integer.toString(imageHeight));
                 Log.i("PhotoFrameWidgetProvidr", "imageWidth is " + Integer.toString(imageWidth));
                 Log.i("PhotoFrameWidgetProvidr", "imageOrientation is " + Integer.toString(imageOrientation));
+                // image is about to be displayed: hide progress bar now.
+                ProgressBar pb = (ProgressBar)getView().findViewById(R.id.loadingProgress);
+                pb.setVisibility(View.GONE);
 
+                // Update image title/path
+                TextView tv = (TextView)getView().findViewById(R.id.textView);
+                tv.setText(imageName);
 
-
+                //Bitmap bitmap = (Bitmap) intent.getParcelableExtra("BitmapImage");
+                ImageView iv = (ImageView)getView().findViewById(R.id.imageView);
+                iv.setImageBitmap(Globals.photoFrameBitmap);
             }
         }
     };
