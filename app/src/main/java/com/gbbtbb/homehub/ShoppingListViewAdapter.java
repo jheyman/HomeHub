@@ -11,10 +11,6 @@ import android.widget.TextView;
 
 import java.util.List;
 
-/**
- * Created by etabli on 25/09/16.
- */
-
 public class ShoppingListViewAdapter extends ArrayAdapter<ShoppingListRowItem> {
 
     Context context;

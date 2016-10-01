@@ -1,8 +1,5 @@
 package com.gbbtbb.homehub;
 
-/**
- * Created by etabli on 25/09/16.
- */
 public class ShoppingListRowItem {
     private int imageId;
     private String title;

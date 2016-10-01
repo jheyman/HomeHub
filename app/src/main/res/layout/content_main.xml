@@ -13,26 +13,18 @@
         android:layout_height="match_parent"
         android:orientation="vertical" >
 
-        <include android:id="@+id/shoppinglist_widget_frame"
+        <fragment android:name="com.gbbtbb.homehub.ShoppingListWidgetMain"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="50"
             android:layout_gravity="center"
-            layout="@layout/shoppinglist_layout"/>
-
+            tools:layout="@layout/shoppinglist_layout"/>
 
         <fragment android:name="com.gbbtbb.homehub.ZWaveWidgetMain"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="50"
             tools:layout="@layout/zwavewidget_layout" />
-
-<!--        <include android:id="@+id/zwave_widget_frame"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="50"
-            layout="@layout/zwavewidget_layout"/>
-            -->
 
     </LinearLayout>
 
@@ -44,14 +36,11 @@
         android:layout_weight="4"
         android:orientation="vertical" >
 
-
-
         <include android:id="@+id/graphviewer_widget_frame"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="2"
             layout="@layout/graphviewer_layout"/>
-
 
             <Button
                 android:id="@+id/button5"
@@ -72,14 +61,6 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     tools:layout="@layout/photoframewidget_layout" />
-<!--
-                <include android:id="@+id/photoframe_widget_frame"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    layout="@layout/photoframewidget_layout"/>
-                    -->
-
 
                 <Button
                     android:id="@+id/button7"

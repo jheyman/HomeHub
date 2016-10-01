@@ -25,6 +25,9 @@
         <service
             android:name=".PhotoFrameWidgetService"
             android:exported="false"/>
+        <service
+            android:name=".ShoppingListWidgetService"
+            android:exported="false"/>
     </application>
 
 </manifest>
