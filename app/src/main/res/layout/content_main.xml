@@ -13,14 +13,14 @@
         android:layout_height="match_parent"
         android:orientation="vertical" >
 
-        <fragment android:name="com.gbbtbb.homehub.ShoppingListWidgetMain"
+        <fragment android:name="com.gbbtbb.homehub.shoppinglist.ShoppingListWidgetMain"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="50"
             android:layout_gravity="center"
             tools:layout="@layout/shoppinglist_layout"/>
 
-        <fragment android:name="com.gbbtbb.homehub.ZWaveWidgetMain"
+        <fragment android:name="com.gbbtbb.homehub.zwavewidget.ZWaveWidgetMain"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="50"
@@ -55,7 +55,7 @@
                 android:layout_weight="5"
                 android:orientation="horizontal" >
 
-                <fragment android:name="com.gbbtbb.homehub.PhotoFrameWidgetMain"
+                <fragment android:name="com.gbbtbb.homehub.photoframe.PhotoFrameWidgetMain"
                     android:id="@+id/your_id_unique"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"

@@ -1,4 +1,4 @@
-package com.gbbtbb.homehub;
+package com.gbbtbb.homehub.photoframe;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -7,6 +7,9 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.Debug;
 import android.util.Log;
+
+import com.gbbtbb.homehub.Globals;
+import com.gbbtbb.homehub.R;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;

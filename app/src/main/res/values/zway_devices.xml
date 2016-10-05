@@ -26,8 +26,8 @@
         <item name="devId_notified">1</item>
         <item name="instanceId_notified">1</item>
         <item name="commandclass_notified">32</item>
-        <item name="imageViewId">view00</item>
-        <item name="textViewId">view00Text</item>
+        <item name="imageViewId">zwavewidget_view00</item>
+        <item name="textViewId">zwavewidget_view00Text</item>
         <item name="icontype">bulb</item>
     </string-array>
 
@@ -38,8 +38,8 @@
         <item name="devId_notified">14</item>
         <item name="instanceId_notified">0</item>
         <item name="commandclass_notified">38</item>
-        <item name="imageViewId">view01</item>
-        <item name="textViewId">view01Text</item>
+        <item name="imageViewId">zwavewidget_view01</item>
+        <item name="textViewId">zwavewidget_view01Text</item>
         <item name="icontype">bulb</item>
     </string-array>
 
@@ -50,8 +50,8 @@
         <item name="devId_notified">16</item>
         <item name="instanceId_notified">0</item>
         <item name="commandclass_notified">38</item>
-        <item name="imageViewId">view02</item>
-        <item name="textViewId">view02Text</item>
+        <item name="imageViewId">zwavewidget_view02</item>
+        <item name="textViewId">zwavewidget_view02Text</item>
         <item name="icontype">bulb</item>
     </string-array>
 
@@ -62,8 +62,8 @@
         <item name="devId_notified">18</item>
         <item name="instanceId_notified">0</item>
         <item name="commandclass_notified">38</item>
-        <item name="imageViewId">view10</item>
-        <item name="textViewId">view10Text</item>
+        <item name="imageViewId">zwavewidget_view10</item>
+        <item name="textViewId">zwavewidget_view10Text</item>
         <item name="icontype">bulb</item>
     </string-array>
 
@@ -74,8 +74,8 @@
         <item name="devId_notified">19</item>
         <item name="instanceId_notified">0</item>
         <item name="commandclass_notified">38</item>
-        <item name="imageViewId">view11</item>
-        <item name="textViewId">view11Text</item>
+        <item name="imageViewId">zwavewidget_view11</item>
+        <item name="textViewId">zwavewidget_view11Text</item>
         <item name="icontype">bulb</item>
     </string-array>
 
@@ -86,8 +86,8 @@
         <item name="devId_notified">20</item>
         <item name="instanceId_notified">0</item>
         <item name="commandclass_notified">38</item>
-        <item name="imageViewId">view12</item>
-        <item name="textViewId">view12Text</item>
+        <item name="imageViewId">zwavewidget_view12</item>
+        <item name="textViewId">zwavewidget_view12Text</item>
         <item name="icontype">bulb</item>
     </string-array>
 
@@ -98,8 +98,8 @@
         <item name="devId_notified">21</item>
         <item name="instanceId_notified">0</item>
         <item name="commandclass_notified">38</item>
-        <item name="imageViewId">view20</item>
-        <item name="textViewId">view20Text</item>
+        <item name="imageViewId">zwavewidget_view20</item>
+        <item name="textViewId">zwavewidget_view20Text</item>
         <item name="icontype">bulb</item>
     </string-array>
 
@@ -110,8 +110,8 @@
         <item name="devId_notified">22</item>
         <item name="instanceId_notified">0</item>
         <item name="commandclass_notified">38</item>
-        <item name="imageViewId">view21</item>
-        <item name="textViewId">view21Text</item>
+        <item name="imageViewId">zwavewidget_view21</item>
+        <item name="textViewId">zwavewidget_view21Text</item>
         <item name="icontype">bulb</item>
     </string-array>
 
@@ -122,8 +122,8 @@
         <item name="devId_notified">23</item>
         <item name="instanceId_notified">0</item>
         <item name="commandclass_notified">38</item>
-        <item name="imageViewId">view22</item>
-        <item name="textViewId">view22Text</item>
+        <item name="imageViewId">zwavewidget_view22</item>
+        <item name="textViewId">zwavewidget_view22Text</item>
         <item name="icontype">bulb</item>
     </string-array>
 
@@ -134,8 +134,8 @@
         <item name="devId_notified">8</item>
         <item name="instanceId_notified">0</item>
         <item name="commandclass_notified">38</item>
-        <item name="imageViewId">view03</item>
-        <item name="textViewId">view03Text</item>
+        <item name="imageViewId">zwavewidget_view03</item>
+        <item name="textViewId">zwavewidget_view03Text</item>
         <item name="icontype">bulb</item>
     </string-array>
 
@@ -146,8 +146,8 @@
         <item name="devId_notified">10</item>
         <item name="instanceId_notified">0</item>
         <item name="commandclass_notified">37</item>
-        <item name="imageViewId">view23</item>
-        <item name="textViewId">view23Text</item>
+        <item name="imageViewId">zwavewidget_view23</item>
+        <item name="textViewId">zwavewidget_view23Text</item>
         <item name="icontype">plug</item>
     </string-array>
 
@@ -158,8 +158,8 @@
         <item name="devId_notified">5</item>
         <item name="instanceId_notified">0</item>
         <item name="commandclass_notified">37</item>
-        <item name="imageViewId">view30</item>
-        <item name="textViewId">view30Text</item>
+        <item name="imageViewId">zwavewidget_view30</item>
+        <item name="textViewId">zwavewidget_view30Text</item>
         <item name="icontype">plug</item>
     </string-array>
 
@@ -170,8 +170,8 @@
         <item name="devId_notified">11</item>
         <item name="instanceId_notified">0</item>
         <item name="commandclass_notified">37</item>
-        <item name="imageViewId">view31</item>
-        <item name="textViewId">view31Text</item>
+        <item name="imageViewId">zwavewidget_view31</item>
+        <item name="textViewId">zwavewidget_view31Text</item>
         <item name="icontype">plug</item>
     </string-array>
 
@@ -182,8 +182,8 @@
         <item name="devId_notified">17</item>
         <item name="instanceId_notified">0</item>
         <item name="commandclass_notified">37</item>
-        <item name="imageViewId">view32</item>
-        <item name="textViewId">view32Text</item>
+        <item name="imageViewId">zwavewidget_view32</item>
+        <item name="textViewId">zwavewidget_view32Text</item>
         <item name="icontype">plug</item>
     </string-array>
 
@@ -194,8 +194,8 @@
         <item name="devId_notified">0</item>
         <item name="instanceId_notified">0</item>
         <item name="commandclass_notified">37</item>
-        <item name="imageViewId">view33</item>
-        <item name="textViewId">view33Text</item>
+        <item name="imageViewId">zwavewidget_view33</item>
+        <item name="textViewId">zwavewidget_view33Text</item>
         <item name="icontype">plug</item>
     </string-array>
 
@@ -206,8 +206,8 @@
         <item name="devId_notified">8</item>
         <item name="instanceId_notified">0</item>
         <item name="commandclass_notified">38</item>
-        <item name="imageViewId">view13</item>
-        <item name="textViewId">view13Text</item>
+        <item name="imageViewId">zwavewidget_view13</item>
+        <item name="textViewId">zwavewidget_view13Text</item>
         <item name="icontype">bulb</item>
     </string-array>
 

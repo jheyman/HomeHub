@@ -1,9 +1,11 @@
-package com.gbbtbb.homehub;
+package com.gbbtbb.homehub.zwavewidget;
 
 import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.util.Log;
+
+import com.gbbtbb.homehub.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;

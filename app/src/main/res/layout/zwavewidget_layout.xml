@@ -2,7 +2,7 @@
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/Layout1"
+        android:id="@+id/zwavewidget_Layout1"
         android:background="#000000"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -10,7 +10,7 @@
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/row0"
+            android:id="@+id/zwavewidget_row0"
             android:background="#000000"
             android:layout_weight="1"
             android:layout_width="match_parent"
@@ -23,7 +23,7 @@
                 android:orientation="vertical"
                 android:layout_weight="1">
                 <TextView
-                    android:id="@+id/view00Text"
+                    android:id="@+id/zwavewidget_view00Text"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -34,7 +34,7 @@
                     android:textSize="@dimen/zwave_widget_text_size"
                     android:textColor="#FFFFFF"/>
                 <ImageView
-                    android:id="@+id/view00"
+                    android:id="@+id/zwavewidget_view00"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:layout_weight="10"
@@ -47,7 +47,7 @@
                 android:orientation="vertical"
                 android:layout_weight="1">
                 <TextView
-                    android:id="@+id/view01Text"
+                    android:id="@+id/zwavewidget_view01Text"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -58,7 +58,7 @@
                     android:textSize="@dimen/zwave_widget_text_size"
                     android:textColor="#FFFFFF"/>
                 <ImageView
-                    android:id="@+id/view01"
+                    android:id="@+id/zwavewidget_view01"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:layout_weight="10"
@@ -71,7 +71,7 @@
                 android:orientation="vertical"
                 android:layout_weight="1">
                 <TextView
-                    android:id="@+id/view02Text"
+                    android:id="@+id/zwavewidget_view02Text"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -82,7 +82,7 @@
                     android:textSize="@dimen/zwave_widget_text_size"
                     android:textColor="#FFFFFF"/>
                 <ImageView
-                    android:id="@+id/view02"
+                    android:id="@+id/zwavewidget_view02"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:layout_weight="10"
@@ -95,7 +95,7 @@
                 android:orientation="vertical"
                 android:layout_weight="1">
                 <TextView
-                    android:id="@+id/view03Text"
+                    android:id="@+id/zwavewidget_view03Text"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -106,7 +106,7 @@
                     android:textSize="@dimen/zwave_widget_text_size"
                     android:textColor="#FFFFFF"/>
                 <ImageView
-                    android:id="@+id/view03"
+                    android:id="@+id/zwavewidget_view03"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:layout_weight="10"
@@ -117,7 +117,7 @@
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/row1"
+            android:id="@+id/zwavewidget_row1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -129,7 +129,7 @@
                 android:orientation="vertical"
                 android:layout_weight="1">
                 <TextView
-                    android:id="@+id/view10Text"
+                    android:id="@+id/zwavewidget_view10Text"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -140,7 +140,7 @@
                     android:textSize="@dimen/zwave_widget_text_size"
                     android:textColor="#FFFFFF"/>
                 <ImageView
-                    android:id="@+id/view10"
+                    android:id="@+id/zwavewidget_view10"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:layout_weight="10"
@@ -153,7 +153,7 @@
                 android:orientation="vertical"
                 android:layout_weight="1">
                 <TextView
-                    android:id="@+id/view11Text"
+                    android:id="@+id/zwavewidget_view11Text"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -164,7 +164,7 @@
                     android:textSize="@dimen/zwave_widget_text_size"
                     android:textColor="#FFFFFF"/>
                 <ImageView
-                    android:id="@+id/view11"
+                    android:id="@+id/zwavewidget_view11"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:layout_weight="10"
@@ -177,7 +177,7 @@
                 android:orientation="vertical"
                 android:layout_weight="1">
                 <TextView
-                    android:id="@+id/view12Text"
+                    android:id="@+id/zwavewidget_view12Text"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -188,7 +188,7 @@
                     android:textSize="@dimen/zwave_widget_text_size"
                     android:textColor="#FFFFFF"/>
                 <ImageView
-                    android:id="@+id/view12"
+                    android:id="@+id/zwavewidget_view12"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:layout_weight="10"
@@ -201,7 +201,7 @@
                 android:orientation="vertical"
                 android:layout_weight="1">
                 <TextView
-                    android:id="@+id/view13Text"
+                    android:id="@+id/zwavewidget_view13Text"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -212,7 +212,7 @@
                     android:textSize="@dimen/zwave_widget_text_size"
                     android:textColor="#FFFFFF"/>
                 <ImageView
-                    android:id="@+id/view13"
+                    android:id="@+id/zwavewidget_view13"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:layout_weight="10"
@@ -223,7 +223,7 @@
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/row2"
+            android:id="@+id/zwavewidget_row2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -235,7 +235,7 @@
                 android:orientation="vertical"
                 android:layout_weight="1">
                 <TextView
-                    android:id="@+id/view20Text"
+                    android:id="@+id/zwavewidget_view20Text"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -246,7 +246,7 @@
                     android:textSize="@dimen/zwave_widget_text_size"
                     android:textColor="#FFFFFF"/>
                 <ImageView
-                    android:id="@+id/view20"
+                    android:id="@+id/zwavewidget_view20"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:layout_weight="10"
@@ -259,7 +259,7 @@
                 android:orientation="vertical"
                 android:layout_weight="1">
                 <TextView
-                    android:id="@+id/view21Text"
+                    android:id="@+id/zwavewidget_view21Text"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -270,7 +270,7 @@
                     android:textSize="@dimen/zwave_widget_text_size"
                     android:textColor="#FFFFFF"/>
                 <ImageView
-                    android:id="@+id/view21"
+                    android:id="@+id/zwavewidget_view21"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:layout_weight="10"
@@ -283,7 +283,7 @@
                 android:orientation="vertical"
                 android:layout_weight="1">
                 <TextView
-                    android:id="@+id/view22Text"
+                    android:id="@+id/zwavewidget_view22Text"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -294,7 +294,7 @@
                     android:textSize="@dimen/zwave_widget_text_size"
                     android:textColor="#FFFFFF"/>
                 <ImageView
-                    android:id="@+id/view22"
+                    android:id="@+id/zwavewidget_view22"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:layout_weight="10"
@@ -307,7 +307,7 @@
                 android:orientation="vertical"
                 android:layout_weight="1">
                 <TextView
-                    android:id="@+id/view23Text"
+                    android:id="@+id/zwavewidget_view23Text"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -318,7 +318,7 @@
                     android:textSize="@dimen/zwave_widget_text_size"
                     android:textColor="#FFFFFF"/>
                 <ImageView
-                    android:id="@+id/view23"
+                    android:id="@+id/zwavewidget_view23"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:layout_weight="10"
@@ -328,7 +328,7 @@
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/row3"
+            android:id="@+id/zwavewidget_row3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -340,7 +340,7 @@
                 android:orientation="vertical"
                 android:layout_weight="1">
                 <TextView
-                    android:id="@+id/view30Text"
+                    android:id="@+id/zwavewidget_view30Text"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -351,7 +351,7 @@
                     android:textSize="@dimen/zwave_widget_text_size"
                     android:textColor="#FFFFFF"/>
                 <ImageView
-                    android:id="@+id/view30"
+                    android:id="@+id/zwavewidget_view30"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:layout_weight="10"
@@ -364,7 +364,7 @@
                 android:orientation="vertical"
                 android:layout_weight="1">
                 <TextView
-                    android:id="@+id/view31Text"
+                    android:id="@+id/zwavewidget_view31Text"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -375,7 +375,7 @@
                     android:textSize="@dimen/zwave_widget_text_size"
                     android:textColor="#FFFFFF"/>
                 <ImageView
-                    android:id="@+id/view31"
+                    android:id="@+id/zwavewidget_view31"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:layout_weight="10"
@@ -388,7 +388,7 @@
                 android:orientation="vertical"
                 android:layout_weight="1">
                 <TextView
-                    android:id="@+id/view32Text"
+                    android:id="@+id/zwavewidget_view32Text"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -399,7 +399,7 @@
                     android:textSize="@dimen/zwave_widget_text_size"
                     android:textColor="#FFFFFF"/>
                 <ImageView
-                    android:id="@+id/view32"
+                    android:id="@+id/zwavewidget_view32"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:layout_weight="10"
@@ -412,7 +412,7 @@
                 android:orientation="vertical"
                 android:layout_weight="1">
                 <TextView
-                    android:id="@+id/view33Text"
+                    android:id="@+id/zwavewidget_view33Text"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -423,7 +423,7 @@
                     android:textSize="@dimen/zwave_widget_text_size"
                     android:textColor="#FFFFFF"/>
                 <ImageView
-                    android:id="@+id/view33"
+                    android:id="@+id/zwavewidget_view33"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:layout_weight="10"

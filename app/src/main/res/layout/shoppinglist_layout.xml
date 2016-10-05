@@ -1,53 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/LinearLayoutShoppingListWidget"
+    android:id="@+id/shoppingwidget_LinearLayoutShoppingListWidget"
     android:layout_width="wrap_content"
-    android:layout_height="0dp"
-    android:layout_weight="60"
-    android:background="#458733"
+    android:layout_height="match_parent"
     android:layout_gravity="center"
     android:orientation="vertical" >
 
     <FrameLayout
+        android:id="@+id/shoppingwidget_FrameLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:orientation="horizontal">
 
         <ImageView
-            android:id="@+id/textShoppingTitle"
+            android:id="@+id/shoppingwidget_textShoppingTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:src="@drawable/paperpad_top"/>
 
         <LinearLayout
-            android:id="@+id/LinearLayoutButtons"
+            android:id="@+id/shoppingwidget_LinearLayoutButtons"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:orientation="horizontal"
-            android:layout_gravity="center|right">
+            android:layout_gravity="right"
+            android:gravity="center|right">
 
-            <ImageButton
-                android:id="@+id/reloadList"
+            <FrameLayout
+                android:id="@+id/shoppingwidget_reloadFrameLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="5dp"
-                android:paddingBottom="4dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="0dp"
-                android:background="#00000000"
-                android:src="@drawable/reload_button"/>
-
-            <ProgressBar
-                android:id="@+id/loadingProgress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone"/>
+                android:layout_gravity="center">
+                <ImageButton
+                    android:id="@+id/shoppingwidget_reloadList"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="4dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="0dp"
+                    android:background="#00000000"
+                    android:src="@drawable/reload_button"/>
+                <ProgressBar
+                    android:id="@+id/shoppingwidget_loadingProgress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="#00000000"
+                    android:visibility="gone"/>
+            </FrameLayout>
 
             <ImageButton
-                android:id="@+id/cleanList"
+                android:id="@+id/shoppingwidget_cleanList"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="5dp"
@@ -57,7 +64,7 @@
                 android:background="#00000000"
                 android:src="@drawable/trash_button"/>
             <ImageButton
-                android:id="@+id/addItem"
+                android:id="@+id/shoppingwidget_addItem"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:scaleType="fitXY"
@@ -72,14 +79,14 @@
     </FrameLayout>
 
     <LinearLayout
-        android:id="@+id/LinearLayoutListView"
+        android:id="@+id/shoppingwidget_LinearLayoutListView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="100"
         android:orientation="vertical" >
 
         <ListView
-            android:id="@+id/shopping_list"
+            android:id="@+id/shoppingwidget_shopping_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:divider="@null"
@@ -87,12 +94,12 @@
             android:layout_gravity="center"/>
 
         <TextView
-            android:id="@+id/empty_view"
+            android:id="@+id/shoppingwidget_empty_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:text="EMPTY"
-            android:textColor="#000000"
+            android:background="#40FF00"
             android:paddingLeft="50dp"
             android:paddingTop="1dp"
             android:textSize="16sp"
@@ -100,7 +107,7 @@
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/footer"
+        android:id="@+id/shoppingwidget_footer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

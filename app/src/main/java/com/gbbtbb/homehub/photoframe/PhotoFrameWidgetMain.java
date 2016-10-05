@@ -1,4 +1,4 @@
-package com.gbbtbb.homehub;
+package com.gbbtbb.homehub.photoframe;
 
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
@@ -16,6 +16,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.gbbtbb.homehub.Globals;
+import com.gbbtbb.homehub.R;
 
 import java.io.File;
 
@@ -35,7 +38,7 @@ public class PhotoFrameWidgetMain extends Fragment {
 
     public Handler handler = new Handler();
     private Context ctx;
-    private static int REFRESH_DELAY = 30000;
+    private static int REFRESH_DELAY = 60000;
 
     Runnable refreshView = new Runnable()
     {
@@ -54,7 +57,7 @@ public class PhotoFrameWidgetMain extends Fragment {
 
     private void sendAsEmail() {
         // Show progress bar, this saving the image to disk may take a while
-        ProgressBar pb = (ProgressBar)getView().findViewById(R.id.loadingProgress);
+        ProgressBar pb = (ProgressBar)getView().findViewById(R.id.photoframe_loadingProgress);
         pb.setVisibility(View.VISIBLE);
 
         // Build the intent to save full res image to disk
@@ -96,16 +99,18 @@ public class PhotoFrameWidgetMain extends Fragment {
 
         imageDumpPath = ctx.getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString();
 
-        ImageView iv = (ImageView)getView().findViewById(R.id.imageView);
+        ImageView iv = (ImageView)getView().findViewById(R.id.photoframe_imageView);
 
         //  register a click event on the image itself
         iv.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                ProgressBar pb = (ProgressBar)getView().findViewById(R.id.photoframe_loadingProgress);
+                pb.setVisibility(View.VISIBLE);
                 refresh();
             }
         });
 
-        ImageView emailIV = (ImageView)getView().findViewById(R.id.emailicon);
+        ImageView emailIV = (ImageView)getView().findViewById(R.id.photoframe_emailicon);
 
         //  register a click event on the image itself
         emailIV.setOnClickListener(new View.OnClickListener() {
@@ -129,12 +134,12 @@ public class PhotoFrameWidgetMain extends Fragment {
         public void onReceive(Context context, Intent intent)
         {
             final String action = intent.getAction();
+            ProgressBar pb = (ProgressBar)getView().findViewById(R.id.photoframe_loadingProgress);
 
             //Log.i("PhotoFrameWidgetMain", "onReceive " + action);
             if (action.equals(FULLRESSAVINGDONE_ACTION)) {
 
                 // Hide progress bar now
-                ProgressBar pb = (ProgressBar)getView().findViewById(R.id.loadingProgress);
                 pb.setVisibility(View.GONE);
 
                 // Then send it as an attachment in an email
@@ -162,16 +167,17 @@ public class PhotoFrameWidgetMain extends Fragment {
                 Log.i("PhotoFrameWidgetProvidr", "imageWidth is " + Integer.toString(imageWidth));
                 Log.i("PhotoFrameWidgetProvidr", "imageOrientation is " + Integer.toString(imageOrientation));
                 // image is about to be displayed: hide progress bar now.
-                ProgressBar pb = (ProgressBar)getView().findViewById(R.id.loadingProgress);
                 pb.setVisibility(View.GONE);
 
                 // Update image title/path
-                TextView tv = (TextView)getView().findViewById(R.id.textView);
+                TextView tv = (TextView)getView().findViewById(R.id.photoframe_textView);
                 tv.setText(imageName);
 
                 //Bitmap bitmap = (Bitmap) intent.getParcelableExtra("BitmapImage");
-                ImageView iv = (ImageView)getView().findViewById(R.id.imageView);
+                ImageView iv = (ImageView)getView().findViewById(R.id.photoframe_imageView);
                 iv.setImageBitmap(Globals.photoFrameBitmap);
+
+                pb.setVisibility(View.GONE);
             }
         }
     };

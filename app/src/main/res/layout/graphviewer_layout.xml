@@ -25,14 +25,14 @@
     android:paddingBottom="0px">
 
     <FrameLayout
-        android:id="@+id/LinearLayout1"
+        android:id="@+id/graphviewer_LinearLayout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="#FF0000">
 
         <ImageView
-            android:id="@+id/textGraphTitle"
+            android:id="@+id/graphviewer_textGraphTitle"
             android:layout_width="fill_parent"
             android:layout_height="64px"
             android:background="#FFFFFF"
@@ -40,7 +40,7 @@
             android:layout_gravity="left"/>
 
         <LinearLayout
-            android:id="@+id/LinearLayoutButtons"
+            android:id="@+id/graphviewer_LinearLayoutButtons"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
@@ -50,7 +50,7 @@
             android:orientation="horizontal" >
 
             <ImageButton
-                android:id="@+id/reloadList"
+                android:id="@+id/graphviewer_reloadList"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="0dp"
@@ -62,7 +62,7 @@
                 />
 
             <ProgressBar
-                android:id="@+id/loadingProgress"
+                android:id="@+id/graphviewer_loadingProgress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="0dp"
@@ -73,7 +73,7 @@
             </ProgressBar>
 
             <ImageButton
-                android:id="@+id/settings"
+                android:id="@+id/graphviewer_settings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="0dp"
@@ -88,7 +88,7 @@
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/LinearLayout_separator"
+        android:id="@+id/graphviewer_LinearLayout_separator"
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:orientation="horizontal"
@@ -103,7 +103,7 @@
         android:background="#000000">
 
         <ImageView
-            android:id="@+id/GraphBody"
+            android:id="@+id/graphviewer_GraphBody"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#FF5500"
@@ -111,7 +111,7 @@
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/LayoutBottom"
+        android:id="@+id/graphviewer_LayoutBottom"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="#FF0000">
@@ -120,7 +120,7 @@
                 android:paddingRight="5dip"
                 android:paddingBottom="5dip"-->
         <ImageView
-            android:id="@+id/footer"
+            android:id="@+id/graphviewer_footer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="fitXY"

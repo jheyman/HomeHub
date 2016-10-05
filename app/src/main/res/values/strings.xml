@@ -3,4 +3,8 @@
     <string name="action_settings">Settings</string>
     <string name="zwaveserver_base">http://192.168.0.13:8083</string>
 
+    <string name="shoppinglist_title_activity_additem_menu">AddItemMenuActivity</string>
+    <string name="shoppinglist_title_activity_cleanlist_menu">CleanListMenuActivity</string>
+    <string name="shoppinglist_title_activity_deleteitem_menu">DeleteMenuActivity</string>
+
 </resources>

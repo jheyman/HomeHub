@@ -1,4 +1,4 @@
-package com.gbbtbb.homehub;
+package com.gbbtbb.homehub.zwavewidget;
 
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.gbbtbb.homehub.R;
 
 public class ZWaveWidgetMain extends Fragment {
 

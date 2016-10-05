@@ -1,11 +1,13 @@
-package com.gbbtbb.homehub;
+package com.gbbtbb.homehub.shoppinglist;
+
+import com.gbbtbb.homehub.R;
 
 public class ShoppingListRowItem {
-    private int imageId;
+    private static int imageId = R.drawable.paperpad_one_row;
+
     private String title;
 
-    public ShoppingListRowItem(int imageId, String title) {
-        this.imageId = imageId;
+    public ShoppingListRowItem(String title) {
         this.title = title;
     }
     public int getImageId() {

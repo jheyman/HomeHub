@@ -1,8 +1,10 @@
-package com.gbbtbb.homehub;
+package com.gbbtbb.homehub.shoppinglist;
 
 import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
+
+import com.gbbtbb.homehub.Globals;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,6 +42,38 @@ public class ShoppingListWidgetService extends IntentService {
             doneIntent.addCategory(Intent.CATEGORY_DEFAULT);
             sendBroadcast(doneIntent);
         }
+        else if (action.equals(ShoppingListWidgetMain.ADDITEM_ACTION)) {
+
+            String item = intent.getStringExtra(ShoppingListWidgetMain.EXTRA_ITEM_ID);
+            addItem(item);
+
+            Intent doneIntent = new Intent();
+            doneIntent.setAction(ShoppingListWidgetMain.ADDITEMDONE_ACTION);
+            doneIntent.addCategory(Intent.CATEGORY_DEFAULT);
+            doneIntent.putExtra(ShoppingListWidgetMain.EXTRA_ITEM_ID, item);
+            sendBroadcast(doneIntent);
+        }
+        else if (action.equals(ShoppingListWidgetMain.DELETEITEM_ACTION)) {
+
+            String item = intent.getStringExtra(ShoppingListWidgetMain.EXTRA_ITEM_ID);
+            int position = intent.getIntExtra(ShoppingListWidgetMain.EXTRA_DELETEDITEM_POSITION, 0);
+            deleteItem(item);
+
+            Intent doneIntent = new Intent();
+            doneIntent.setAction(ShoppingListWidgetMain.DELETEITEMDONE_ACTION);
+            doneIntent.addCategory(Intent.CATEGORY_DEFAULT);
+            doneIntent.putExtra(ShoppingListWidgetMain.EXTRA_ITEM_ID, item);
+            doneIntent.putExtra(ShoppingListWidgetMain.EXTRA_DELETEDITEM_POSITION, position);
+            sendBroadcast(doneIntent);
+        }
+        else if (action.equals(ShoppingListWidgetMain.CLEANLIST_ACTION)) {
+
+            deleteItem("*");
+            Intent doneIntent = new Intent();
+            doneIntent.setAction(ShoppingListWidgetMain.CLEANLISTDONE_ACTION);
+            doneIntent.addCategory(Intent.CATEGORY_DEFAULT);
+            sendBroadcast(doneIntent);
+        }
     }
 
     public ArrayList<String> getItems() {
@@ -64,10 +98,17 @@ public class ShoppingListWidgetService extends IntentService {
         }
 
         // Add a few empty items so that the list looks good even with no item present
-        for(int i=0;i<25;i++){
+        for(int i=0;i<ShoppingListWidgetMain.NB_DUMMY_ITEMS;i++){
             list.add("");
         }
+/*
+        try {
+            Thread.sleep(4000);
+        }
+        catch (InterruptedException e) {
 
+        }
+*/
         return list;
     }
 
