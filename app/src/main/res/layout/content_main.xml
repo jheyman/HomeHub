@@ -1,75 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/MasterHorizontalLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FF0000"
-    android:orientation="horizontal">
+    android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/LeftTopLevelVerticalLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="vertical" >
-
-        <fragment android:name="com.gbbtbb.homehub.shoppinglist.ShoppingListWidgetMain"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="50"
-            android:layout_gravity="center"
-            tools:layout="@layout/shoppinglist_layout"/>
-
-        <fragment android:name="com.gbbtbb.homehub.zwavewidget.ZWaveWidgetMain"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="50"
-            tools:layout="@layout/zwavewidget_layout" />
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:id="@+id/RightTopLevelVerticalLayout"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:layout_weight="4"
-        android:orientation="vertical" >
+        android:orientation="horizontal" >
 
-        <include android:id="@+id/graphviewer_widget_frame"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="2"
-            layout="@layout/graphviewer_layout"/>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical" >
 
             <Button
-                android:id="@+id/button5"
+                android:id="@+id/button1"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:text="Button5" />
+                android:text="Button1" />
+<!--
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="5"
+                android:text="Button2" />
+                     -->
+            <fragment android:name="com.gbbtbb.homehub.photoframe.PhotoFrameWidgetMain"
+                android:id="@+id/photoframefragment"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="4"
+                tools:layout="@layout/photoframewidget_layout" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+            <Button
+                android:id="@+id/button3"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="Button3" />
+
+            <Button
+                android:id="@+id/button4"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="Button4" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="5"
+                android:layout_weight="4"
                 android:orientation="horizontal" >
-
-                <fragment android:name="com.gbbtbb.homehub.photoframe.PhotoFrameWidgetMain"
-                    android:id="@+id/your_id_unique"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    tools:layout="@layout/photoframewidget_layout" />
-
+<!--
                 <Button
                     android:id="@+id/button7"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="Button7" />
+                    -->
+
+                <fragment android:name="com.gbbtbb.homehub.shoppinglist.ShoppingListWidgetMain"
+                    android:id="@+id/shoppinglistfragment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    tools:layout="@layout/shoppinglist_layout"/>
+
+                <Button
+                    android:id="@+id/button8"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="Button8" />
             </LinearLayout>
 
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/BottomInnerHLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/button5"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Button5" />
+
+            <Button
+                android:id="@+id/button6"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Button6" />
     </LinearLayout>
 
 </LinearLayout>
