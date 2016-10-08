@@ -32,7 +32,14 @@
             android:label="@string/shoppinglist_title_activity_cleanlist_menu"
             android:theme="@android:style/Theme.Dialog">
         </activity>
-
+        <activity  android:name=".graphviewer.SettingsActivity"
+            android:label="@string/graphviewer_header_text"
+            android:theme="@android:style/Theme.Dialog">
+            <intent-filter>
+                <action android:name="com.gbbtbb.graphviewerwidget.UpdateAction" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <service
             android:name=".zwavewidget.ZWaveWidgetService"
             android:exported="false"/>
@@ -41,6 +48,9 @@
             android:exported="false"/>
         <service
             android:name=".shoppinglist.ShoppingListWidgetService"
+            android:exported="false"/>
+        <service
+            android:name=".graphviewer.GraphViewerWidgetService"
             android:exported="false"/>
     </application>
 

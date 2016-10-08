@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
+  <header android:fragment="com.gbbtbb.homehub.graphviewer.SettingsActivity$GraphSettingsFragment"
+          android:icon="@drawable/graphviewer_ic_action_full_screen"
+          android:title="Graph Settings"
+          android:summary="various graph widget settings" />
+
+</preference-headers>

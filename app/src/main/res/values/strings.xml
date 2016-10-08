@@ -7,4 +7,8 @@
     <string name="shoppinglist_title_activity_cleanlist_menu">CleanListMenuActivity</string>
     <string name="shoppinglist_title_activity_deleteitem_menu">DeleteMenuActivity</string>
 
+    <string name="graphviewer_header_text">Historique</string>
+    <string name="graphviewer_special_time_start">07:00</string>
+    <string name="graphviewer_special_time_stop">9:30</string>
+
 </resources>

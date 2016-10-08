@@ -3,4 +3,19 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="graphviewer_background_color">#FFFFFF</color>
+    <color name="graphviewer_text_color">#000000</color>
+    <color name="graphviewer_lineplot_color">#0099FF</color>
+    <color name="graphviewer_bargraph_normal_color">#0099FF</color>
+    <color name="graphviewer_bargraph_special_color">#9966FF</color>
+    <color name="graphviewer_bargraph_stats_text_color">#0099FF</color>
+    <color name="graphviewer_axis_color">#000000</color>
+    <color name="graphviewer_divider_color">#000000</color>
+    <color name="graphviewer_graph_label_text_background">#808080</color>
+    <color name="graphviewer_graph_label_text_color">#FFFFFF</color>
+
 </resources>
+
+
+

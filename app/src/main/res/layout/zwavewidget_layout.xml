@@ -35,6 +35,7 @@
                     android:textColor="#FFFFFF"/>
                 <ImageView
                     android:id="@+id/zwavewidget_view00"
+                    android:layout_gravity="center"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:layout_weight="10"
@@ -59,6 +60,7 @@
                     android:textColor="#FFFFFF"/>
                 <ImageView
                     android:id="@+id/zwavewidget_view01"
+                    android:layout_gravity="center"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:layout_weight="10"
@@ -83,6 +85,7 @@
                     android:textColor="#FFFFFF"/>
                 <ImageView
                     android:id="@+id/zwavewidget_view02"
+                    android:layout_gravity="center"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:layout_weight="10"
@@ -107,6 +110,7 @@
                     android:textColor="#FFFFFF"/>
                 <ImageView
                     android:id="@+id/zwavewidget_view03"
+                    android:layout_gravity="center"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:layout_weight="10"
@@ -141,6 +145,7 @@
                     android:textColor="#FFFFFF"/>
                 <ImageView
                     android:id="@+id/zwavewidget_view10"
+                    android:layout_gravity="center"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:layout_weight="10"
@@ -165,6 +170,7 @@
                     android:textColor="#FFFFFF"/>
                 <ImageView
                     android:id="@+id/zwavewidget_view11"
+                    android:layout_gravity="center"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:layout_weight="10"
@@ -189,6 +195,7 @@
                     android:textColor="#FFFFFF"/>
                 <ImageView
                     android:id="@+id/zwavewidget_view12"
+                    android:layout_gravity="center"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:layout_weight="10"
@@ -213,6 +220,7 @@
                     android:textColor="#FFFFFF"/>
                 <ImageView
                     android:id="@+id/zwavewidget_view13"
+                    android:layout_gravity="center"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:layout_weight="10"
@@ -247,6 +255,7 @@
                     android:textColor="#FFFFFF"/>
                 <ImageView
                     android:id="@+id/zwavewidget_view20"
+                    android:layout_gravity="center"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:layout_weight="10"
@@ -271,6 +280,7 @@
                     android:textColor="#FFFFFF"/>
                 <ImageView
                     android:id="@+id/zwavewidget_view21"
+                    android:layout_gravity="center"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:layout_weight="10"
@@ -295,6 +305,7 @@
                     android:textColor="#FFFFFF"/>
                 <ImageView
                     android:id="@+id/zwavewidget_view22"
+                    android:layout_gravity="center"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:layout_weight="10"
@@ -319,6 +330,7 @@
                     android:textColor="#FFFFFF"/>
                 <ImageView
                     android:id="@+id/zwavewidget_view23"
+                    android:layout_gravity="center"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:layout_weight="10"
@@ -352,6 +364,7 @@
                     android:textColor="#FFFFFF"/>
                 <ImageView
                     android:id="@+id/zwavewidget_view30"
+                    android:layout_gravity="center"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:layout_weight="10"
@@ -376,6 +389,7 @@
                     android:textColor="#FFFFFF"/>
                 <ImageView
                     android:id="@+id/zwavewidget_view31"
+                    android:layout_gravity="center"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:layout_weight="10"
@@ -400,6 +414,7 @@
                     android:textColor="#FFFFFF"/>
                 <ImageView
                     android:id="@+id/zwavewidget_view32"
+                    android:layout_gravity="center"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:layout_weight="10"
@@ -424,6 +439,7 @@
                     android:textColor="#FFFFFF"/>
                 <ImageView
                     android:id="@+id/zwavewidget_view33"
+                    android:layout_gravity="center"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:layout_weight="10"

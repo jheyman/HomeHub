@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+  <PreferenceCategory android:title="Graph Size">
+    <ListPreference android:key="com.gbbtbb.graphviewerwidget.NumHours"
+                    android:title="History Length"
+                    android:entries="@array/history_length_display"
+                    android:entryValues="@array/history_length_values" />
+  </PreferenceCategory>
+
+</PreferenceScreen>

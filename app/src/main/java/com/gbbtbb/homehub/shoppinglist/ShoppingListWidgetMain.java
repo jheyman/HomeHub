@@ -200,9 +200,9 @@ public class ShoppingListWidgetMain extends Fragment implements AdapterView.OnIt
         //Log.i(ShoppingListWidgetMain.TAG, "setLoadingInProgress " + Boolean.toString(state));
 
         ProgressBar pb = (ProgressBar)getView().findViewById(R.id.shoppingwidget_loadingProgress);
-        pb.setVisibility(state ? View.VISIBLE: View.INVISIBLE);
+        pb.setVisibility(state ? View.VISIBLE: View.GONE);
 
         ImageView iv = (ImageView)getView().findViewById(R.id.shoppingwidget_reloadList);
-        iv.setVisibility(state ? View.INVISIBLE: View.VISIBLE);
+        iv.setVisibility(state ? View.GONE: View.VISIBLE);
     }
 }

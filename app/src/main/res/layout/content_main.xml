@@ -17,13 +17,20 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical" >
-
+<!--
             <Button
                 android:id="@+id/button1"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:text="Button1" />
+                -->
+            <fragment android:name="com.gbbtbb.homehub.graphviewer.GraphViewerWidgetMain"
+                android:id="@+id/graphviewerfragment"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="3"
+                tools:layout="@layout/graphviewer_layout" />
 <!--
             <Button
                 android:id="@+id/button2"
@@ -86,7 +93,7 @@
                     android:id="@+id/button8"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_weight="6"
                     android:text="Button8" />
             </LinearLayout>
 
@@ -100,13 +107,20 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="horizontal" >
-
+<!--
             <Button
                 android:id="@+id/button5"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="Button5" />
+-->
+
+        <fragment android:name="com.gbbtbb.homehub.zwavewidget.ZWaveWidgetMain"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            tools:layout="@layout/zwavewidget_layout" />
 
             <Button
                 android:id="@+id/button6"

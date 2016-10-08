@@ -55,7 +55,7 @@ public class ShoppingListViewAdapter extends ArrayAdapter<ShoppingListRowItem> {
         } else
             holder = (ViewHolder) convertView.getTag();
 
-        holder.imageView.setImageBitmap(drawTextOnList(context, rowItem.getTitle(), 20, rowItem.getImageId()));
+        holder.imageView.setImageBitmap(drawTextOnList(context, rowItem.getTitle(), 15, rowItem.getImageId()));
 
         return convertView;
     }
