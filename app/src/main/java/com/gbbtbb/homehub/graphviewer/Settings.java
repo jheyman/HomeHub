@@ -3,6 +3,7 @@ package com.gbbtbb.homehub.graphviewer;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 public class Settings {
     private SharedPreferences mPreferences;
@@ -12,8 +13,8 @@ public class Settings {
     private Settings() {
     }
 
-    public GraphSettings getGraphSettings(int appWidgetId) {
-        String prefix = String.format("%s(%d).", PREF_PREFIX, appWidgetId);
+    public GraphSettings getGraphSettings() {
+        String prefix = PREF_PREFIX;
 
         // If custom preferences for this widget instance do not exists yet, get
         // default values, this will initialize all parameters such that they
@@ -23,7 +24,7 @@ public class Settings {
             gs.save(mPreferences, prefix);
         }
 
-        return GraphSettings.get(mPreferences, String.format("%s(%d).", PREF_PREFIX, appWidgetId));
+        return GraphSettings.get(mPreferences, PREF_PREFIX);
     }
 
     public static Settings get(Context context) {
@@ -43,6 +44,7 @@ public class Settings {
             GraphSettings gs = new GraphSettings();
             gs.mPrefix = prefix;
             gs.mNumHours = Integer.parseInt(pref.getString(prefix + "NumHours", Integer.toString(24)));
+            Log.i("PREFERENCE", "NumHours CHANGED TO" + Integer.toString(gs.mNumHours));
             return gs;
         }
 

@@ -23,14 +23,15 @@ import android.widget.ProgressBar;
 
 import com.gbbtbb.homehub.Globals;
 import com.gbbtbb.homehub.R;
+import com.gbbtbb.homehub.Utilities;
 
 public class GraphViewerWidgetMain extends Fragment {
 
     public static final String TAG = "GraphViewerWidgetMain";
 
     public static final String REFRESH_ACTION ="com.gbbtbb.graphviewerwidget.REFRESH_ACTION";
+    public static final String SETTINGSCHANGED_ACTION ="com.gbbtbb.graphviewerwidget.SETTINGSCHANGED_ACTION";
     public static final String GRAPHREFRESHEDDONE_ACTION ="com.gbbtbb.graphviewerwidget.GRAPHREFRESHEDDONE_ACTION";
-
 
     public static final int NB_VERTICAL_MARKERS = 15;
     public static int mHistoryLengthInHours;
@@ -52,7 +53,7 @@ public class GraphViewerWidgetMain extends Fragment {
 
     private Context ctx;
     public Handler handler = new Handler();
-    private static int REFRESH_DELAY = 60000;
+    private static int REFRESH_DELAY = 300000;
 
     Runnable refreshView = new Runnable()
     {
@@ -65,13 +66,25 @@ public class GraphViewerWidgetMain extends Fragment {
         }
     };
 
-    public static void notifyRefresh(Context context) {
-        Intent intent = new Intent(context.getApplicationContext(), GraphViewerWidgetService.class);
-        intent.setAction(REFRESH_ACTION);
-        context.startService(intent);
-    }
-
     private void refresh(){
+
+        getPrefs(ctx);
+        mSettings = Settings.get(ctx);
+        Settings.GraphSettings gs = mSettings.getGraphSettings();
+        mHistoryLengthInHours = gs.getHistoryLength();
+
+        timeLastUpdated = Utilities.getCurrentTime();
+        timestamp_end = Utilities.getCurrentTimeStamp();
+        timestamp_start = timestamp_end - mHistoryLengthInHours*60*60*1000;
+
+        final ImageView title = (ImageView)getView().findViewById(R.id.graphviewer_textGraphTitle);
+        final ImageView footer = (ImageView)getView().findViewById(R.id.graphviewer_footer);
+
+        setLoadingInProgress(true);
+
+        title.setImageBitmap(drawCommonHeader(ctx, mHeaderWidth, mHeaderHeight));
+        footer.setImageBitmap(drawCommonFooter(ctx, mGraphWidth, mFooterHeight));
+
         Intent intent = new Intent(ctx.getApplicationContext(), GraphViewerWidgetService.class);
         intent.setAction(REFRESH_ACTION);
         ctx.startService(intent);
@@ -88,7 +101,9 @@ public class GraphViewerWidgetMain extends Fragment {
     @Override
     public void onDestroyView()
     {
+        handler.removeCallbacksAndMessages(refreshView);
         getActivity().unregisterReceiver(GraphViewBroadcastReceiver);
+        super.onDestroyView();
     }
 
     @Override
@@ -96,19 +111,11 @@ public class GraphViewerWidgetMain extends Fragment {
         super.onActivityCreated(savedInstanceState);
         IntentFilter filter = new IntentFilter();
         filter.addAction(GRAPHREFRESHEDDONE_ACTION);
+        filter.addAction(SETTINGSCHANGED_ACTION);
         filter.addCategory(Intent.CATEGORY_DEFAULT);
 
         getActivity().registerReceiver(GraphViewBroadcastReceiver, filter);
         ctx = getActivity();
-
-        getPrefs(ctx);
-        mSettings = Settings.get(ctx);
-        Settings.GraphSettings gs = mSettings.getGraphSettings(0);
-        mHistoryLengthInHours = gs.getHistoryLength();
-
-        timeLastUpdated = Utilities.getCurrentTime();
-        timestamp_end = Utilities.getCurrentTimeStamp();
-        timestamp_start = timestamp_end - mHistoryLengthInHours*60*60*1000;
 
         final ImageView title = (ImageView)getView().findViewById(R.id.graphviewer_textGraphTitle);
         final ImageView footer = (ImageView)getView().findViewById(R.id.graphviewer_footer);
@@ -135,9 +142,6 @@ public class GraphViewerWidgetMain extends Fragment {
                 else
                     title.getViewTreeObserver().removeGlobalOnLayoutListener(this);
 
-                title.setImageBitmap(drawCommonHeader(ctx, mHeaderWidth, mHeaderHeight));
-                footer.setImageBitmap(drawCommonFooter(ctx, mGraphWidth, mFooterHeight));
-
                 // It is now also safe to refresh the graph itself, with correct dimensions
                 refresh();
             }
@@ -160,7 +164,6 @@ public class GraphViewerWidgetMain extends Fragment {
         //  register a click event on the settings button
         settingsIcon.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                setLoadingInProgress(true);
                 Intent intent = new Intent(ctx.getApplicationContext(), SettingsActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
@@ -200,6 +203,9 @@ public class GraphViewerWidgetMain extends Fragment {
 
                 ImageView iv = (ImageView)getView().findViewById(R.id.graphviewer_GraphBody);
                 iv.setImageBitmap(Globals.graphBitmap);
+            }
+            else if (SETTINGSCHANGED_ACTION.equals(action)) {
+                refresh();
             }
         }
     };

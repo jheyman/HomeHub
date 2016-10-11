@@ -17,6 +17,7 @@ import android.util.Log;
 
 import com.gbbtbb.homehub.Globals;
 import com.gbbtbb.homehub.R;
+import com.gbbtbb.homehub.Utilities;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,6 +42,8 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 public class GraphViewerWidgetService extends IntentService {
+
+    public static final String TAG = "GraphViewerWidgetSvc";
 
     private Context mContext;
     private Cursor mDataCursor;
@@ -86,70 +89,73 @@ public class GraphViewerWidgetService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        Log.i(GraphViewerWidgetMain.TAG, "onHandleIntent "+ intent.getAction());
+        String action = intent.getAction();
+        Log.i(TAG, "onHandleIntent " + action);
 
-        init();
+        if (GraphViewerWidgetMain.REFRESH_ACTION.equals(action)) {
+            init();
 
-        getFreshData();
+            getFreshData();
 
-        int width = GraphViewerWidgetMain.mGraphWidth;
-        int height = GraphViewerWidgetMain.mGraphHeight;
+            int width = GraphViewerWidgetMain.mGraphWidth;
+            int height = GraphViewerWidgetMain.mGraphHeight;
 
-        Log.i(GraphViewerWidgetMain.TAG, "onHandleIntent: width=" + Integer.toString(width) + ", height=" + Integer.toString(height));
+            Log.i(TAG, "onHandleIntent: width=" + Integer.toString(width) + ", height=" + Integer.toString(height));
 
-        Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bmp);
+            Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bmp);
 
-        Utilities.fillCanvas(canvas, mContext.getResources().getColor(R.color.graphviewer_background_color));
+            Utilities.fillCanvas(canvas, mContext.getResources().getColor(R.color.graphviewer_background_color));
 
-        drawTimestampMarkers(canvas, width, height);
+            drawTimestampMarkers(canvas, width, height);
 
-        int graphHeight = (int)(0.4f* height);
-        int graphOffset = graphHeight;
+            int graphHeight = (int) (0.4f * height);
+            int graphOffset = graphHeight;
 
-        drawGraph(canvas, "waterMeter", width, graphHeight, graphOffset);
+            drawGraph(canvas, "waterMeter", width, graphHeight, graphOffset);
 
-        int pingStatusHeight = 5;
-        int pingDelta = (height - graphHeight)/9;
-        int pingStatusOffset = graphOffset + pingDelta ;
+            int pingStatusHeight = 5;
+            int pingDelta = (height - graphHeight) / 9;
+            int pingStatusOffset = graphOffset + pingDelta;
 
-        drawGraph(canvas, "camerapi_ping", width, pingStatusHeight, pingStatusOffset);
+            drawGraph(canvas, "camerapi_ping", width, pingStatusHeight, pingStatusOffset);
 
-        pingStatusOffset += pingDelta;
-        drawGraph(canvas, "sdbtbbpi_ping", width, pingStatusHeight, pingStatusOffset);
+            pingStatusOffset += pingDelta;
+            drawGraph(canvas, "sdbtbbpi_ping", width, pingStatusHeight, pingStatusOffset);
 
-        pingStatusOffset += pingDelta;
-        drawGraph(canvas, "cuisinepi_ping", width, pingStatusHeight, pingStatusOffset);
+            pingStatusOffset += pingDelta;
+            drawGraph(canvas, "cuisinepi_ping", width, pingStatusHeight, pingStatusOffset);
 
-        pingStatusOffset += pingDelta;
-        drawGraph(canvas, "intercompi1_ping", width, pingStatusHeight, pingStatusOffset);
+            pingStatusOffset += pingDelta;
+            drawGraph(canvas, "intercompi1_ping", width, pingStatusHeight, pingStatusOffset);
 
-        pingStatusOffset += pingDelta;
-        drawGraph(canvas, "intercompi2_ping", width, pingStatusHeight, pingStatusOffset);
+            pingStatusOffset += pingDelta;
+            drawGraph(canvas, "intercompi2_ping", width, pingStatusHeight, pingStatusOffset);
 
-        pingStatusOffset += pingDelta;
-        drawGraph(canvas, "nas_ping", width, pingStatusHeight, pingStatusOffset);
+            pingStatusOffset += pingDelta;
+            drawGraph(canvas, "nas_ping", width, pingStatusHeight, pingStatusOffset);
 
-        pingStatusOffset += pingDelta;
-        drawGraph(canvas, "garagepi_ping", width, pingStatusHeight, pingStatusOffset);
+            pingStatusOffset += pingDelta;
+            drawGraph(canvas, "garagepi_ping", width, pingStatusHeight, pingStatusOffset);
 
-        pingStatusOffset += pingDelta;
-        drawGraph(canvas, "alarme_ping", width, pingStatusHeight, pingStatusOffset);
+            pingStatusOffset += pingDelta;
+            drawGraph(canvas, "alarme_ping", width, pingStatusHeight, pingStatusOffset);
 
-        Globals.graphBitmap = bmp;
-        //rv.setImageViewBitmap(R.id.GraphBody, bmp);
+            Globals.graphBitmap = bmp;
+            //rv.setImageViewBitmap(R.id.GraphBody, bmp);
 
-        // graph has been redrawn: hide progress bar now.
-        //rv.setViewVisibility(R.id.loadingProgress, View.GONE);
-        //rv.setViewVisibility(R.id.reloadList, View.VISIBLE);
+            // graph has been redrawn: hide progress bar now.
+            //rv.setViewVisibility(R.id.loadingProgress, View.GONE);
+            //rv.setViewVisibility(R.id.reloadList, View.VISIBLE);
 
-        cleanUp();
+            cleanUp();
 
-        // Notify widget that graph has been refreshed
-        Intent doneIntent = new Intent();
-        doneIntent.setAction(GraphViewerWidgetMain.GRAPHREFRESHEDDONE_ACTION);
-        doneIntent.addCategory(Intent.CATEGORY_DEFAULT);
-        sendBroadcast(doneIntent);
+            // Notify widget that graph has been refreshed
+            Intent doneIntent = new Intent();
+            doneIntent.setAction(GraphViewerWidgetMain.GRAPHREFRESHEDDONE_ACTION);
+            doneIntent.addCategory(Intent.CATEGORY_DEFAULT);
+            sendBroadcast(doneIntent);
+        }
     }
 
     private void drawTimestampMarkers(Canvas canvas, int width, int height) {
@@ -175,7 +181,7 @@ public class GraphViewerWidgetService extends IntentService {
     }
 
     public void parseCursor() {
-        Log.i(GraphViewerWidgetMain.TAG, "---------------PARSING DATA ---------------");
+        Log.i(TAG, "---------------PARSING DATA ---------------");
 
         //////////////////////////////////////////////////////////
         // Parse the latest data refreshed by the content provider
@@ -201,7 +207,7 @@ public class GraphViewerWidgetService extends IntentService {
 
         }
 
-        Log.i(GraphViewerWidgetMain.TAG, "Cursor contains " + Integer.toString(mDataCursor.getCount()) + " elements");
+        Log.i(TAG, "Cursor contains " + Integer.toString(mDataCursor.getCount()) + " elements");
 
         mDataCursor.moveToFirst();
 
@@ -215,7 +221,7 @@ public class GraphViewerWidgetService extends IntentService {
             if (dataId.equals(DATAREFRESH_DATETIME)) {
                 final int valueColIndex = mDataCursor.getColumnIndex(Columns.VALUE);
                 mDataRefreshDateTime = mDataCursor.getString(valueColIndex);
-                Log.i(GraphViewerWidgetMain.TAG, "Retrieved data datetime is " + mDataRefreshDateTime);
+                Log.i(TAG, "Retrieved data datetime is " + mDataRefreshDateTime);
             }
             // handle graph data points
             else {
@@ -259,10 +265,10 @@ public class GraphViewerWidgetService extends IntentService {
         Iterator<String> keySetIterator = mDataPoints.keySet().iterator();
         while(keySetIterator.hasNext()){
             String key = keySetIterator.next();
-            Log.i(GraphViewerWidgetMain.TAG,"dataId: " + key );
+            Log.i(TAG,"dataId: " + key );
 
             ArrayList<DataPoint> dataPoints = mDataPoints.get(key);
-            Log.i(GraphViewerWidgetMain.TAG, "dataId: " + Integer.toString(dataPoints.size()) + " elements");
+            Log.i(TAG, "dataId: " + Integer.toString(dataPoints.size()) + " elements");
             float maxValue=-1.0f;
             float[] cv = new float[GraphViewerWidgetMain.NB_VERTICAL_MARKERS+1];
 
@@ -300,7 +306,7 @@ public class GraphViewerWidgetService extends IntentService {
                     if (!inSpecialZone) {
                         inSpecialZone = true;
                         specialZoneTimestampStart = temp.timestamp;
-                        //Log.i(GraphViewerWidgetMain.TAG,"START of special timezone: " + Utilities.getDateTimeFromTimeStamp(specialZoneTimestampStart) );
+                        //Log.i(TAG,"START of special timezone: " + Utilities.getDateTimeFromTimeStamp(specialZoneTimestampStart) );
                     }
                     else
                     {
@@ -314,10 +320,10 @@ public class GraphViewerWidgetService extends IntentService {
                     if (temp.timestamp == dataPoints.get(dataPoints.size()-1).timestamp) {
                         inSpecialZone = false;
                         // Use the timestamp of the PREVIOUS point (i.e. last point that was actually in the special zone) as the end time of the special zone
-                        //Log.i(GraphViewerWidgetMain.TAG,"STOP special timezone: " + Utilities.getDateTimeFromTimeStamp(specialZoneTimestampStop) );
+                        //Log.i(TAG,"STOP special timezone: " + Utilities.getDateTimeFromTimeStamp(specialZoneTimestampStop) );
                         long specialZoneMiddle = (specialZoneTimestampStop + specialZoneTimestampStart) / 2;
 
-                        //Log.i(GraphViewerWidgetMain.TAG,"MIDDLE of special timezone: " + Utilities.getDateTimeFromTimeStamp(specialZoneMiddle));
+                        //Log.i(TAG,"MIDDLE of special timezone: " + Utilities.getDateTimeFromTimeStamp(specialZoneMiddle));
                         // commit special cumulated value and the middle pôint of the special area
                         // but don't track zero or almost zero cumulated values
                         if (cumulatedSpecial > 0.1f) {
@@ -329,10 +335,10 @@ public class GraphViewerWidgetService extends IntentService {
                     if (inSpecialZone) {
                         inSpecialZone = false;
                         // Use the timestamp of the PREVIOUS point (i.e. last point that was actually in the special zone) as the end time of the special zone
-                        //Log.i(GraphViewerWidgetMain.TAG,"STOP special timezone: " + Utilities.getDateTimeFromTimeStamp(specialZoneTimestampStop) );
+                        //Log.i(TAG,"STOP special timezone: " + Utilities.getDateTimeFromTimeStamp(specialZoneTimestampStop) );
                         long specialZoneMiddle = (specialZoneTimestampStop+specialZoneTimestampStart)/2;
 
-                        //Log.i(GraphViewerWidgetMain.TAG,"MIDDLE of special timezone: " + Utilities.getDateTimeFromTimeStamp(specialZoneMiddle));
+                        //Log.i(TAG,"MIDDLE of special timezone: " + Utilities.getDateTimeFromTimeStamp(specialZoneMiddle));
                         // commit special cumulated value and the middle pôint of the special area
                         // but don't track zero or almost zero cumulated values
                         if (cumulatedSpecial > 0.1f) {
@@ -358,10 +364,10 @@ public class GraphViewerWidgetService extends IntentService {
 
             mCumulatedValues.put(key, cv);
 
-            Log.i(GraphViewerWidgetMain.TAG, "graph params: auto-scale = " + Float.toString(gp.scale) + ", type=" + gp.type);
+            Log.i(TAG, "graph params: auto-scale = " + Float.toString(gp.scale) + ", type=" + gp.type);
         }
 
-        Log.i(GraphViewerWidgetMain.TAG, "---------------DONE PARSING DATA---------------");
+        Log.i(TAG, "---------------DONE PARSING DATA---------------");
     }
 
     private String getGraphUnitForDataId (String dataID) {
@@ -715,7 +721,7 @@ public class GraphViewerWidgetService extends IntentService {
         String datetime = "Unknown timestamp";
         float value;
 
-        Log.i(GraphViewerWidgetMain.TAG, "getFreshData called");
+        Log.i(TAG, "getFreshData called");
 
         // Refresh the cursors
         if (mDataCursor != null) {
@@ -749,14 +755,14 @@ public class GraphViewerWidgetService extends IntentService {
                     URLEncoder.encode(param_period, charset));
         }
         catch (UnsupportedEncodingException e) {
-            Log.e(GraphViewerWidgetMain.TAG, "Error encoding URL params: " + e.toString());
+            Log.e(TAG, "Error encoding URL params: " + e.toString());
         }
 
         String result = httpRequest(query);
 
         // Parse the received JSON data
         if (!result.equals("")) {
-            Log.i(GraphViewerWidgetMain.TAG, "Parsing received JSON data");
+            Log.i(TAG, "Parsing received JSON data");
             try {
                 JSONObject jdata = new JSONObject(result);
 
@@ -793,7 +799,7 @@ public class GraphViewerWidgetService extends IntentService {
                         datetime = pstFormat.format(date);
                     }
                     catch (ParseException p) {
-                        Log.i(GraphViewerWidgetMain.TAG, "ERROR in parsing date string: " + datetime);
+                        Log.i(TAG, "ERROR in parsing date string: " + datetime);
                     }
 
                     // Graph Id is stored in second field of each point
@@ -802,15 +808,15 @@ public class GraphViewerWidgetService extends IntentService {
                     // Value is stored in third field of each point
                     double value = myArray.getDouble(2);
 
-                    //Log.i(GraphViewerWidgetMain.TAG, "POINT: datetime= " + datetime + ", dataId=" + dataId + ", value=" + Double.toString(value));
+                    //Log.i(TAG, "POINT: datetime= " + datetime + ", dataId=" + dataId + ", value=" + Double.toString(value));
 
                     c_data.addRow(new Object[]{dataId, datetime, value});
                 }
 
             } catch (JSONException e) {
-                Log.e(GraphViewerWidgetMain.TAG, "Error parsing data: " + e.toString());
+                Log.e(TAG, "Error parsing data: " + e.toString());
             }
-            Log.i(GraphViewerWidgetMain.TAG, "JSON data parsing completed");
+            Log.i(TAG, "JSON data parsing completed");
         }
 
         return c_data;
@@ -819,7 +825,7 @@ public class GraphViewerWidgetService extends IntentService {
     private static String httpRequest(String url/*, ArrayList<NameValuePair> nameValuePairs*/) {
         String result = "";
 
-        Log.i(GraphViewerWidgetMain.TAG, "Performing HTTP request " + url);
+        Log.i(TAG, "Performing HTTP request " + url);
 
         try {
 
@@ -833,7 +839,7 @@ public class GraphViewerWidgetService extends IntentService {
                 urlConnection.disconnect();
             }
         } catch(Exception e) {
-            Log.e(GraphViewerWidgetMain.TAG, "httpRequest: Error in http connection "+e.toString());
+            Log.e(TAG, "httpRequest: Error in http connection "+e.toString());
         }
 
         String data ;
@@ -842,7 +848,7 @@ public class GraphViewerWidgetService extends IntentService {
         else
             data = "[long data....]";
 
-        Log.i(GraphViewerWidgetMain.TAG, "httpRequest completed, received "+ result.length() + " bytes: " + data);
+        Log.i(TAG, "httpRequest completed, received "+ result.length() + " bytes: " + data);
 
         return result;
     }

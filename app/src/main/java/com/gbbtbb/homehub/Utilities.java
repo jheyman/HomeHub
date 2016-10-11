@@ -1,4 +1,4 @@
-package com.gbbtbb.homehub.graphviewer;
+package com.gbbtbb.homehub;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -15,6 +15,7 @@ import java.util.Date;
 public class Utilities {
 
    // public float mPixelDensity = 1.0f;
+   public static final String TAG = "CommGbbTbbUtilities";
 
     public static long getTimeStampFromDateTime(String datetime) {
 
@@ -27,7 +28,7 @@ public class Utilities {
             timestamp = date.getTime();
         }
         catch (ParseException p) {
-            Log.i(GraphViewerWidgetMain.TAG, "ERROR in parsing date string: " + datetime);
+            Log.i(TAG, "ERROR in parsing date string: " + datetime);
             timestamp = 0;
         }
 

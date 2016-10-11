@@ -61,6 +61,7 @@ public class ShoppingListWidgetMain extends Fragment implements AdapterView.OnIt
     public void onDestroyView()
     {
         getActivity().unregisterReceiver(photoFrameViewBroadcastReceiver);
+        super.onDestroyView();
     }
 
     @Override
@@ -118,8 +119,8 @@ public class ShoppingListWidgetMain extends Fragment implements AdapterView.OnIt
         listView.setOnItemClickListener(this);
 
         // Draw title
-        ImageView titleView = (ImageView) getView().findViewById(R.id.shoppingwidget_textShoppingTitle);
-        titleView.setImageBitmap(adapter.drawTextOnList(ctx, "Courses", 30, R.drawable.paperpad_top));
+        //ImageView titleView = (ImageView) getView().findViewById(R.id.shoppingwidget_textShoppingTitle);
+       // titleView.setImageBitmap(adapter.drawTextOnList(ctx, "Courses", 30, R.drawable.paperpad_top));
 
         // Initialize list
         reloadList();

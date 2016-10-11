@@ -3,13 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FF0000"
+    android:background="#000000"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="4"
+        android:layout_weight="90"
         android:orientation="horizontal" >
 
         <LinearLayout
@@ -71,7 +71,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="4"
+                android:layout_weight="3"
                 android:orientation="horizontal" >
 <!--
                 <Button
@@ -105,7 +105,7 @@
         android:id="@+id/BottomInnerHLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="10"
         android:orientation="horizontal" >
 <!--
             <Button
@@ -117,17 +117,21 @@
 -->
 
         <fragment android:name="com.gbbtbb.homehub.zwavewidget.ZWaveWidgetMain"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             tools:layout="@layout/zwavewidget_layout" />
-
+<!--
             <Button
                 android:id="@+id/button6"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="Button6" />
+                -->
+        <fragment android:name="com.gbbtbb.homehub.networkwidget.NetworkWidgetMain"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            tools:layout="@layout/networkwidget_layout" />
     </LinearLayout>
 
 </LinearLayout>

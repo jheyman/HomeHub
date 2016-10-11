@@ -2,6 +2,7 @@ package com.gbbtbb.homehub.graphviewer;
 
 // Code borrowed from this guy:  https://github.com/codeka/advbatterygraph
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.ListPreference;
@@ -10,22 +11,20 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.gbbtbb.homehub.R;
 
 import java.lang.reflect.Method;
 import java.util.List;
 
-public class SettingsActivity extends PreferenceActivity
-        implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String TAG = "SettingsActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        PreferenceManager.getDefaultSharedPreferences(this)
-                .registerOnSharedPreferenceChangeListener(this);
+        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
@@ -50,12 +49,15 @@ public class SettingsActivity extends PreferenceActivity
      //When preferences change, notify the graph to update itself.
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        GraphViewerWidgetMain.notifyRefresh(this);
+        //GraphViewerWidgetMain.notifySettingsChanged(this);
+        Log.i("SettingsActivity", "notifySettingsChanged called");
+        Intent refreshIntent = new Intent();
+        refreshIntent.setAction(GraphViewerWidgetMain.SETTINGSCHANGED_ACTION);
+        sendBroadcast(refreshIntent);
     }
 
      // Base class for our various preference fragments.
-    public static abstract class BasePreferenceFragment extends PreferenceFragment
-            implements SharedPreferences.OnSharedPreferenceChangeListener {
+    public static abstract class BasePreferenceFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -75,20 +77,7 @@ public class SettingsActivity extends PreferenceActivity
         private void updateKeys(PreferenceGroup parent) {
             for (int i = 0; i < parent.getPreferenceCount(); i++) {
                 Preference pref = parent.getPreference(i);
-                boolean changed = false;
-/*
-                if (pref.getKey() != null && pref.getKey().contains("%d")) {
-                    pref.setKey(String.format(pref.getKey(), mAppWidgetId));
-                    changed = true;
-                }
-                if (pref.getDependency() != null && pref.getDependency().contains("%d")) {
-                    pref.setDependency(String.format(pref.getDependency(), mAppWidgetId));
-                    changed = true;
-                }
-*/
-                if (changed) {
-                    reloadPreference(pref);
-                }
+
                 if (pref instanceof PreferenceGroup) {
                     updateKeys((PreferenceGroup) pref);
                 }

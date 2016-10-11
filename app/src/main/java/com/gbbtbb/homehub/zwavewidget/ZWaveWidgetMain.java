@@ -66,7 +66,9 @@ public class ZWaveWidgetMain extends Fragment {
     @Override
     public void onDestroyView()
     {
+        handler.removeCallbacksAndMessages(refreshView);
         getActivity().unregisterReceiver(zWaveViewBroadcastReceiver);
+        super.onDestroyView();
     }
 
     @Override

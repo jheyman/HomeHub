@@ -8,8 +8,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
-import android.text.Layout;
-import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.gbbtbb.homehub.R;
+import com.gbbtbb.homehub.Utilities;
 
 import java.util.List;
 
@@ -55,7 +54,7 @@ public class ShoppingListViewAdapter extends ArrayAdapter<ShoppingListRowItem> {
         } else
             holder = (ViewHolder) convertView.getTag();
 
-        holder.imageView.setImageBitmap(drawTextOnList(context, rowItem.getTitle(), 15, rowItem.getImageId()));
+        holder.imageView.setImageBitmap(drawTextOnList(context, rowItem.getTitle(), 17, rowItem.getImageId()));
 
         return convertView;
     }
@@ -77,12 +76,8 @@ public class ShoppingListViewAdapter extends ArrayAdapter<ShoppingListRowItem> {
         textPaint.setAntiAlias(true);
         textPaint.setSubpixelText(true);
 
-        StaticLayout sl = new StaticLayout(textToDisplay, textPaint, ((int)90*myCanvas.getWidth())/100, Layout.Alignment.ALIGN_NORMAL, 1, 1, false);
-
-        myCanvas.save();
-        myCanvas.translate(55, 10);
-        sl.draw(myCanvas);
-        myCanvas.restore();
+        float textHeight = Utilities.getTextHeight(textPaint, "0");
+        myCanvas.drawText(textToDisplay, 0.2f*myCanvas.getWidth(), (0.5f) * myCanvas.getHeight() + 0.5f * textHeight, textPaint);
 
         return mutableBitmap;
     }

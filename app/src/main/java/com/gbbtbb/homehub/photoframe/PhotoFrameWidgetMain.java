@@ -82,7 +82,9 @@ public class PhotoFrameWidgetMain extends Fragment {
     @Override
     public void onDestroyView()
     {
+        handler.removeCallbacksAndMessages(refreshView);
         getActivity().unregisterReceiver(photoFrameViewBroadcastReceiver);
+        super.onDestroyView();
     }
 
     @Override
