@@ -6,7 +6,11 @@
         android:background="#000000"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+    android:paddingTop="0px"
+    android:paddingLeft="@dimen/general_widgets_padding"
+    android:paddingRight="@dimen/general_widgets_padding"
+    android:paddingBottom="0px">
 
     <LinearLayout
         android:layout_width="wrap_content"

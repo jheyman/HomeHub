@@ -15,25 +15,25 @@
      limitations under the License.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/graphviewer_TopLevelLayout"
+    android:id="@+id/agendaviewer_TopLevelLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#00000000"
     android:paddingTop="@dimen/general_widgets_padding"
-    android:paddingLeft="@dimen/general_widgets_padding"
+    android:paddingLeft="0px"
     android:paddingRight="@dimen/general_widgets_padding"
     android:paddingBottom="@dimen/general_widgets_padding">
 
     <FrameLayout
-        android:id="@+id/graphviewer_LinearLayout1"
+        android:id="@+id/agendaviewer_LinearLayout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="#FF0000">
 
         <ImageView
-            android:id="@+id/graphviewer_textGraphTitle"
+            android:id="@+id/agendaviewer_textAgendaTitle"
             android:layout_width="fill_parent"
             android:layout_height="64px"
             android:background="#FFFFFF"
@@ -41,7 +41,7 @@
             android:layout_gravity="left"/>
 
         <LinearLayout
-            android:id="@+id/graphviewer_LinearLayoutButtons"
+            android:id="@+id/agendaviewer_LinearLayoutButtons"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
@@ -51,7 +51,7 @@
             android:orientation="horizontal" >
 
             <ImageButton
-                android:id="@+id/graphviewer_reloadList"
+                android:id="@+id/agendaviewer_reloadList"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="0dp"
@@ -63,7 +63,7 @@
                 />
 
             <ProgressBar
-                android:id="@+id/graphviewer_loadingProgress"
+                android:id="@+id/agendaviewer_loadingProgress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="0dp"
@@ -74,7 +74,7 @@
             </ProgressBar>
 
             <ImageButton
-                android:id="@+id/graphviewer_settings"
+                android:id="@+id/agendaviewer_settings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="0dp"
@@ -82,14 +82,14 @@
                 android:paddingLeft="0dp"
                 android:paddingRight="0dp"
                 android:background="#FFFFFF"
-                android:src="@drawable/graphviewer_settings_icon"
+                android:src="@drawable/agendaviewer_settings_icon"
                 />
         </LinearLayout>
 
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/graphviewer_LinearLayout_separator"
+        android:id="@+id/agendaviewer_LinearLayout_separator"
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:orientation="horizontal"
@@ -104,7 +104,7 @@
         android:background="#000000">
 
         <ImageView
-            android:id="@+id/graphviewer_GraphBody"
+            android:id="@+id/agendaviewer_AgendaBody"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#FF5500"
@@ -112,7 +112,7 @@
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/graphviewer_LayoutBottom"
+        android:id="@+id/agendaviewer_LayoutBottom"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="#FF0000">
@@ -121,7 +121,7 @@
                 android:paddingRight="5dip"
                 android:paddingBottom="5dip"-->
         <ImageView
-            android:id="@+id/graphviewer_footer"
+            android:id="@+id/agendaviewer_footer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="fitXY"

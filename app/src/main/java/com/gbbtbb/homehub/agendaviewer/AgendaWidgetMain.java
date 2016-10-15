@@ -1,4 +1,4 @@
-package com.gbbtbb.homehub.graphviewer;
+package com.gbbtbb.homehub.agendaviewer;
 
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
@@ -25,21 +25,21 @@ import com.gbbtbb.homehub.Globals;
 import com.gbbtbb.homehub.R;
 import com.gbbtbb.homehub.Utilities;
 
-public class GraphViewerWidgetMain extends Fragment {
+public class AgendaWidgetMain extends Fragment {
 
-    public static final String TAG = "GraphViewerWidgetMain";
+    public static final String TAG = "AgendaWidgetMain";
 
-    public static final String REFRESH_ACTION ="com.gbbtbb.graphviewerwidget.REFRESH_ACTION";
-    public static final String SETTINGSCHANGED_ACTION ="com.gbbtbb.graphviewerwidget.SETTINGSCHANGED_ACTION";
-    public static final String GRAPHREFRESHEDDONE_ACTION ="com.gbbtbb.graphviewerwidget.GRAPHREFRESHEDDONE_ACTION";
+    public static final String REFRESH_ACTION ="com.gbbtbb.agendaviewerwidget.REFRESH_ACTION";
+    public static final String SETTINGSCHANGED_ACTION ="com.gbbtbb.agendaviewerwidget.SETTINGSCHANGED_ACTION";
+    public static final String AGENDAREFRESHEDDONE_ACTION ="com.gbbtbb.agendaviewerwidget.agendaREFRESHEDDONE_ACTION";
 
     public static final int NB_VERTICAL_MARKERS = 15;
     public static int mHistoryLengthInHours;
 
-    public static final String SETTING_BASE = "com.gbbtbb.graphviewerviewerwidget";
+    public static final String SETTING_BASE = "com.gbbtbb.agendaviewerwidget";
 
-    public static int mGraphWidth;
-    public static int mGraphHeight;
+    public static int mAgendaWidth;
+    public static int mAgendaHeight;
     public static int mHeaderHeight;
     public static int mHeaderWidth;
     public static int mFooterHeight;
@@ -49,7 +49,7 @@ public class GraphViewerWidgetMain extends Fragment {
 
     private String timeLastUpdated;
 
-    private Settings mSettings;
+    private com.gbbtbb.homehub.agendaviewer.Settings mSettings;
 
     private Context ctx;
     public Handler handler = new Handler();
@@ -69,23 +69,23 @@ public class GraphViewerWidgetMain extends Fragment {
     private void refresh(){
 
         getPrefs(ctx);
-        mSettings = Settings.get(ctx);
-        Settings.GraphSettings gs = mSettings.getGraphSettings();
+        mSettings = com.gbbtbb.homehub.agendaviewer.Settings.get(ctx);
+        Settings.AgendaSettings gs = mSettings.getAgendaSettings();
         mHistoryLengthInHours = gs.getHistoryLength();
 
         timeLastUpdated = Utilities.getCurrentTime();
         timestamp_end = Utilities.getCurrentTimeStamp();
         timestamp_start = timestamp_end - mHistoryLengthInHours*60*60*1000;
 
-        final ImageView title = (ImageView)getView().findViewById(R.id.graphviewer_textGraphTitle);
-        final ImageView footer = (ImageView)getView().findViewById(R.id.graphviewer_footer);
+        final ImageView title = (ImageView)getView().findViewById(R.id.agendaviewer_textAgendaTitle);
+        final ImageView footer = (ImageView)getView().findViewById(R.id.agendaviewer_footer);
 
         setLoadingInProgress(true);
 
         title.setImageBitmap(drawCommonHeader(ctx, mHeaderWidth, mHeaderHeight));
-        footer.setImageBitmap(drawCommonFooter(ctx, mGraphWidth, mFooterHeight));
+        footer.setImageBitmap(drawCommonFooter(ctx, mAgendaWidth, mFooterHeight));
 
-        Intent intent = new Intent(ctx.getApplicationContext(), GraphViewerWidgetService.class);
+        Intent intent = new Intent(ctx.getApplicationContext(), AgendaWidgetService.class);
         intent.setAction(REFRESH_ACTION);
         ctx.startService(intent);
     }
@@ -95,14 +95,14 @@ public class GraphViewerWidgetMain extends Fragment {
                              Bundle savedInstanceState) {
 
         super.onCreateView(inflater, container, savedInstanceState);
-        return inflater.inflate(R.layout.graphviewer_layout, container, false);
+        return inflater.inflate(R.layout.agenda_layout, container, false);
     }
 
     @Override
     public void onDestroyView()
     {
         handler.removeCallbacksAndMessages(refreshView);
-        getActivity().unregisterReceiver(GraphViewBroadcastReceiver);
+        getActivity().unregisterReceiver(agendaViewBroadcastReceiver);
         super.onDestroyView();
     }
 
@@ -110,16 +110,16 @@ public class GraphViewerWidgetMain extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         IntentFilter filter = new IntentFilter();
-        filter.addAction(GRAPHREFRESHEDDONE_ACTION);
+        filter.addAction(AGENDAREFRESHEDDONE_ACTION);
         filter.addAction(SETTINGSCHANGED_ACTION);
         filter.addCategory(Intent.CATEGORY_DEFAULT);
 
-        getActivity().registerReceiver(GraphViewBroadcastReceiver, filter);
+        getActivity().registerReceiver(agendaViewBroadcastReceiver, filter);
         ctx = getActivity();
 
-        final ImageView title = (ImageView)getView().findViewById(R.id.graphviewer_textGraphTitle);
-        final ImageView footer = (ImageView)getView().findViewById(R.id.graphviewer_footer);
-        final ImageView graph = (ImageView)getView().findViewById(R.id.graphviewer_GraphBody);
+        final ImageView title = (ImageView)getView().findViewById(R.id.agendaviewer_textAgendaTitle);
+        final ImageView footer = (ImageView)getView().findViewById(R.id.agendaviewer_footer);
+        final ImageView agenda = (ImageView)getView().findViewById(R.id.agendaviewer_AgendaBody);
 
         // Register a callback for when the fragment and its views have been layed out on the screen, and it is now safe to get their dimensions.
         ViewGroup parentLayout = ((ViewGroup) getView().getParent());
@@ -127,39 +127,39 @@ public class GraphViewerWidgetMain extends Fragment {
             @Override
             @SuppressWarnings("deprecation")
             public void onGlobalLayout() {
-                mGraphWidth = graph.getWidth();
-                mGraphHeight = graph.getHeight();
+                mAgendaWidth = agenda.getWidth();
+                mAgendaHeight = agenda.getHeight();
                 mHeaderHeight = title.getHeight();
                 mHeaderWidth = title.getWidth();
                 mFooterHeight = footer.getHeight();
 
-                //Log.i(GraphViewerWidgetMain.TAG, "onGlobalLayout TITLE: " + Integer.toString(mHeaderWidth) + ", " + Integer.toString(mHeaderHeight));
-                //Log.i(GraphViewerWidgetMain.TAG, "onGlobalLayout GRAPH: " + Integer.toString(mGraphWidth) + ", " + Integer.toString(mGraphHeight));
-                //Log.i(GraphViewerWidgetMain.TAG, "onGlobalLayout FOOTER: " + Integer.toString(mGraphWidth) + ", " + Integer.toString(mFooterHeight));
+                //Log.i(AgendaWidgetMain.TAG, "onGlobalLayout TITLE: " + Integer.toString(mHeaderWidth) + ", " + Integer.toString(mHeaderHeight));
+                //Log.i(AgendaWidgetMain.TAG, "onGlobalLayout agenda: " + Integer.toString(mAgendaWidth) + ", " + Integer.toString(mAgendaHeight));
+                //Log.i(AgendaWidgetMain.TAG, "onGlobalLayout FOOTER: " + Integer.toString(mAgendaWidth) + ", " + Integer.toString(mFooterHeight));
 
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN)
                     title.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 else
                     title.getViewTreeObserver().removeGlobalOnLayoutListener(this);
 
-                // It is now also safe to refresh the graph itself, with correct dimensions
+                // It is now also safe to refresh the agenda itself, with correct dimensions
                 refresh();
             }
         });
 
-        ImageView reloadIcon = (ImageView)getView().findViewById(R.id.graphviewer_reloadList);
+        ImageView reloadIcon = (ImageView)getView().findViewById(R.id.agendaviewer_reloadList);
 
         //  register a click event on the reload/refresh button
         reloadIcon.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 setLoadingInProgress(true);
-                Intent reloadIntent = new Intent(ctx.getApplicationContext(), GraphViewerWidgetService.class);
+                Intent reloadIntent = new Intent(ctx.getApplicationContext(), AgendaWidgetService.class);
                 reloadIntent.setAction(REFRESH_ACTION);
                 ctx.startService(reloadIntent);
             }
         });
         
-        ImageView settingsIcon = (ImageView)getView().findViewById(R.id.graphviewer_settings);
+        ImageView settingsIcon = (ImageView)getView().findViewById(R.id.agendaviewer_settings);
 
         //  register a click event on the settings button
         settingsIcon.setOnClickListener(new View.OnClickListener() {
@@ -175,10 +175,10 @@ public class GraphViewerWidgetMain extends Fragment {
 
     private void setLoadingInProgress(boolean state) {
 
-        ProgressBar pb = (ProgressBar)getView().findViewById(R.id.graphviewer_loadingProgress);
+        ProgressBar pb = (ProgressBar)getView().findViewById(R.id.agendaviewer_loadingProgress);
         pb.setVisibility(state ? View.VISIBLE: View.GONE);
 
-        ImageView iv = (ImageView)getView().findViewById(R.id.graphviewer_reloadList);
+        ImageView iv = (ImageView)getView().findViewById(R.id.agendaviewer_reloadList);
         iv.setVisibility(state ? View.GONE: View.VISIBLE);
     }
 
@@ -187,21 +187,21 @@ public class GraphViewerWidgetMain extends Fragment {
 
     }
 
-    private final BroadcastReceiver GraphViewBroadcastReceiver = new BroadcastReceiver()
+    private final BroadcastReceiver agendaViewBroadcastReceiver = new BroadcastReceiver()
     {
         @Override
         public void onReceive(Context context, Intent intent)
         {
             final String action = intent.getAction();
 
-            Log.i("GraphViewerWidgetMain", "onReceive " + action);
+            Log.i("AgendaWidgetMain", "onReceive " + action);
 
-            if (GRAPHREFRESHEDDONE_ACTION.equals(action)) {
+            if (AGENDAREFRESHEDDONE_ACTION.equals(action)) {
 
                 setLoadingInProgress(false);
 
-                ImageView iv = (ImageView)getView().findViewById(R.id.graphviewer_GraphBody);
-                iv.setImageBitmap(Globals.graphBitmap);
+                ImageView iv = (ImageView)getView().findViewById(R.id.agendaviewer_AgendaBody);
+                iv.setImageBitmap(Globals.agendaBitmap);
             }
             else if (SETTINGSCHANGED_ACTION.equals(action)) {
                 refresh();
@@ -210,7 +210,7 @@ public class GraphViewerWidgetMain extends Fragment {
     };
 
     private Bitmap drawCommonHeader(Context ctx, int width, int height) {
-        Log.i(GraphViewerWidgetMain.TAG, "drawCommonHeader");
+        Log.i(com.gbbtbb.homehub.agendaviewer.AgendaWidgetMain.TAG, "drawCommonHeader");
 
         Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bmp);
@@ -220,20 +220,20 @@ public class GraphViewerWidgetMain extends Fragment {
         TextPaint textPaint = new TextPaint();
         textPaint.setTypeface(myfont);
         textPaint.setStyle(Paint.Style.FILL);
-        textPaint.setTextSize(ctx.getResources().getDimension(R.dimen.graphviewer_header_text_size));
-        textPaint.setColor(ctx.getResources().getColor(R.color.graphviewer_text_color));
+        textPaint.setTextSize(ctx.getResources().getDimension(R.dimen.agendaviewer_header_text_size));
+        textPaint.setColor(ctx.getResources().getColor(R.color.agendaviewer_text_color));
 
         textPaint.setTextAlign(Paint.Align.LEFT);
         textPaint.setAntiAlias(true);
         textPaint.setSubpixelText(true);
 
         float textHeight = Utilities.getTextHeight(textPaint, "r");
-        canvas.drawText(ctx.getResources().getString(R.string.graphviewer_header_text) + ": " + mHistoryLengthInHours + " heures", 10.0f, 0.5f * (height + textHeight), textPaint);
+        canvas.drawText(ctx.getResources().getString(R.string.agendaviewer_header_text) + ": " + mHistoryLengthInHours + " heures", 10.0f, 0.5f * (height + textHeight), textPaint);
 
         TextPaint textPaintComments = new TextPaint();
         textPaintComments.setStyle(Paint.Style.FILL);
-        textPaintComments.setTextSize(ctx.getResources().getDimension(R.dimen.graphviewer_header_comments_size));
-        textPaintComments.setColor(ctx.getResources().getColor(R.color.graphviewer_text_color));
+        textPaintComments.setTextSize(ctx.getResources().getDimension(R.dimen.agendaviewer_header_comments_size));
+        textPaintComments.setColor(ctx.getResources().getColor(R.color.agendaviewer_text_color));
 
         String commentText = "(Dernière MAJ: " + timeLastUpdated + ")";
         canvas.drawText(commentText , 0.5f*width, 0.5f * (height + textHeight), textPaintComments);
@@ -243,17 +243,17 @@ public class GraphViewerWidgetMain extends Fragment {
 
     private Bitmap drawCommonFooter(Context ctx, int width, int height) {
 
-        Log.i(GraphViewerWidgetMain.TAG, "drawCommonFooter");
+        Log.i(com.gbbtbb.homehub.agendaviewer.AgendaWidgetMain.TAG, "drawCommonFooter");
 
         Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bmp);
 
-        Utilities.fillCanvas(canvas, ctx.getResources().getColor(R.color.graphviewer_background_color));
+        Utilities.fillCanvas(canvas, ctx.getResources().getColor(R.color.agendaviewer_background_color));
 
         TextPaint textPaint = new TextPaint();
         textPaint.setStyle(Paint.Style.FILL);
         textPaint.setTextSize(12);
-        textPaint.setColor(ctx.getResources().getColor(R.color.graphviewer_text_color));
+        textPaint.setColor(ctx.getResources().getColor(R.color.agendaviewer_text_color));
 
         textPaint.setTextAlign(Paint.Align.LEFT);
         textPaint.setAntiAlias(true);

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/todolist_border"
+    android:orientation="horizontal">
+
+    <com.gbbtbb.homehub.CustomTextView
+        android:id="@+id/todo_item"
+        android:layout_width="0dp"
+        android:layout_weight="4"
+        android:layout_height="match_parent"
+        android:text="-----ITEM TEXT-------"
+        android:textColor="#000000"
+        android:textSize="20dp"
+        android:paddingLeft="50dp"
+        android:gravity="center_vertical"
+        android:background="#00000000"/>
+
+    <com.gbbtbb.homehub.CustomTextView
+        android:id="@+id/todoitem_creationdate"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:text="-----CREATION DATE-------"
+        android:textColor="#000000"
+        android:textSize="10dp"
+        android:gravity="center_vertical|right"
+        android:background="#00000000" />
+
+    <ImageView
+        android:id="@+id/todoitem_priorityicon"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/priority2"
+        android:padding="10dp"
+        android:background="#00000000"/>
+
+</LinearLayout>

@@ -6,7 +6,12 @@ import java.util.ArrayList;
 
 public class Globals {
         public static Bitmap photoFrameBitmap;
+
         public static ArrayList<String> shoppingListItems;
+
+        public static ArrayList<String> todoListItems;
+
         public static Bitmap graphBitmap;
 
+        public static Bitmap agendaBitmap;
 }

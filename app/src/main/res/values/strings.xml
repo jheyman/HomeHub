@@ -11,4 +11,6 @@
     <string name="graphviewer_special_time_start">07:00</string>
     <string name="graphviewer_special_time_stop">9:30</string>
 
+    <string name="agendaviewer_header_text">Agenda</string>
+
 </resources>
