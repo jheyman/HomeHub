@@ -2,17 +2,23 @@ package com.gbbtbb.homehub.shoppinglist;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.Editable;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.gbbtbb.homehub.R;
+import com.gbbtbb.homehub.todolist.TodoListWidgetMain;
 
 /*
  * Activity implementing the pop-up menu for adding an item to the shopping list
@@ -63,16 +69,39 @@ public class AddItemMenuActivity extends Activity {
 				// Close this GUI activity
 				finish();
 			}
-		});		
+		});
 
-		WindowManager.LayoutParams wmlp = this.getWindow().getAttributes();
-		wmlp.gravity = Gravity.TOP | Gravity.LEFT;
+		// Register a callback for when the views have been layed out on the screen, and it is now safe to get their dimensions.
+		final Window window = this.getWindow();
+		final WindowManager.LayoutParams wmlp = this.getWindow().getAttributes();
 
-		// Get the x,y coordinates of the button that triggered this dialog, and align the dialog to it.
-		//Rect r = getIntent().getSourceBounds();
+		final LinearLayout ll = (LinearLayout)findViewById(R.id.ShoppingAddItemTopLayout);
+		ll.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+			@Override
+			@SuppressWarnings("deprecation")
+			public void onGlobalLayout() {
 
-		wmlp.x = 0;//r.left;  //x position
-		wmlp.y = 0;//r.top;   //y position
-		this.getWindow().setAttributes(wmlp);  	
+				Rect r = new Rect();
+				ll.getLocalVisibleRect(r);
+				Log.i(TodoListWidgetMain.TAG, "DeleteItemMenuActivity LinearLayout bounds= " + r);
+
+				if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN)
+					ll.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+				else
+					ll.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+
+				Display display = getWindowManager().getDefaultDisplay();
+				Point size = new Point();
+				display.getSize(size);
+				int screen_width = size.x;
+				int screen_height = size.y;
+
+				wmlp.x = screen_width / 2 - r.width() / 2;
+				wmlp.y = screen_height / 2 - r.height() / 2;
+
+				wmlp.gravity = Gravity.TOP | Gravity.LEFT;
+				window.setAttributes(wmlp);
+			}
+		});
 	}
 }

@@ -18,7 +18,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 
 public class TodoListWidgetService extends IntentService {
@@ -44,13 +46,21 @@ public class TodoListWidgetService extends IntentService {
         }
         else if (action.equals(com.gbbtbb.homehub.todolist.TodoListWidgetMain.ADDITEM_ACTION)) {
 
-            String item = intent.getStringExtra(com.gbbtbb.homehub.todolist.TodoListWidgetMain.EXTRA_ITEM_ID);
-            addItem(item);
+            String item = intent.getStringExtra(TodoListWidgetMain.EXTRA_ITEM_ID);
+            int priority = intent.getIntExtra(TodoListWidgetMain.EXTRA_ITEM_PRIO, 0);
+
+            Calendar c = Calendar.getInstance();
+            SimpleDateFormat df = new SimpleDateFormat("dd MMM yyyy à HH:mm");
+            String creationDate = df.format(c.getTime());
+
+            addItem(item, priority, creationDate);
 
             Intent doneIntent = new Intent();
             doneIntent.setAction(com.gbbtbb.homehub.todolist.TodoListWidgetMain.ADDITEMDONE_ACTION);
             doneIntent.addCategory(Intent.CATEGORY_DEFAULT);
-            doneIntent.putExtra(com.gbbtbb.homehub.todolist.TodoListWidgetMain.EXTRA_ITEM_ID, item);
+            doneIntent.putExtra(TodoListWidgetMain.EXTRA_ITEM_ID, item);
+            doneIntent.putExtra(TodoListWidgetMain.EXTRA_ITEM_PRIO, priority);
+            doneIntent.putExtra(TodoListWidgetMain.EXTRA_ITEM_CREATIONDATE, creationDate);
             sendBroadcast(doneIntent);
         }
         else if (action.equals(com.gbbtbb.homehub.todolist.TodoListWidgetMain.DELETEITEM_ACTION)) {
@@ -76,9 +86,9 @@ public class TodoListWidgetService extends IntentService {
         }
     }
 
-    public ArrayList<String> getItems() {
+    public ArrayList<TodoListRowItem> getItems() {
 
-        ArrayList<String> list = new ArrayList<String>();
+        ArrayList<TodoListRowItem> list = new ArrayList<TodoListRowItem>();
 
         String result = httpRequest("http://88.181.199.137:8081/todolist.php");
 
@@ -90,7 +100,10 @@ public class TodoListWidgetService extends IntentService {
             for(int i=0;i<jArray.length();i++){
                 JSONObject jobj = jArray.getJSONObject(i);
                 String item = jobj.getString("item");
-                list.add(item);
+                int priority = jobj.getInt("priority");
+                String creationDate = jobj.getString("creationdate");
+                TodoListRowItem newElement = new TodoListRowItem(item, priority, creationDate);
+                list.add(newElement);
             }
 
         } catch(JSONException e){
@@ -99,7 +112,7 @@ public class TodoListWidgetService extends IntentService {
 
         // Add a few empty items so that the list looks good even with no item present
         for(int i=0;i< com.gbbtbb.homehub.todolist.TodoListWidgetMain.NB_DUMMY_ITEMS;i++){
-            list.add("");
+            list.add(new TodoListRowItem("", 0, ""));
         }
 /*
         try {
@@ -112,14 +125,14 @@ public class TodoListWidgetService extends IntentService {
         return list;
     }
 
-    public void addItem(String newItemName) {
+    public void addItem(String newItemName, int priority, String creationDate) {
 
         String query = "";
         String charset = "UTF-8";
 
         try {
-            query = String.format("http://88.181.199.137:8081/todolist_insert.php?newitem=%s",
-                    URLEncoder.encode(newItemName, charset));
+            query = String.format("http://88.181.199.137:8081/todolist_insert.php?newitem=%s&priority=%d&creationdate=%s",
+                    URLEncoder.encode(newItemName, charset), priority, URLEncoder.encode(creationDate, charset));
         }
         catch (UnsupportedEncodingException e) {
             Log.e("PhotoFrameWidgetService", "getImage: Error encoding URL params: " + e.toString());

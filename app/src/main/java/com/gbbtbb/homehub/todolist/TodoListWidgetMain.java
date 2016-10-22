@@ -23,7 +23,7 @@ import java.util.List;
 
 public class TodoListWidgetMain extends Fragment implements AdapterView.OnItemClickListener {
 
-    public static final String TAG = "TodoList";
+    public static final String TAG = "TodoListWidgetMain";
 
     public static String CLEANLIST_ACTION = "com.gbbtbb.todolistwidget.CLEANLIST";
     public static String CLEANLISTDONE_ACTION = "com.gbbtbb.todolistwidget.CLEANLISTDONE";
@@ -37,7 +37,10 @@ public class TodoListWidgetMain extends Fragment implements AdapterView.OnItemCl
     public static String DELETEITEM_ACTION = "com.gbbtbb.todolistwidget.DELETEITEM";
     public static String DELETEITEMDONE_ACTION = "com.gbbtbb.todolistwidget.DELETEITEMDONE";
 
-    public static String EXTRA_ITEM_ID = "com.gbbtbb.todolistwidget.item";
+    public static String EXTRA_ITEM_ID = "com.gbbtbb.todolistwidget.itemid";
+    public static String EXTRA_ITEM_PRIO = "com.gbbtbb.todolistwidget.itemprio";
+    public static String EXTRA_ITEM_CREATIONDATE = "com.gbbtbb.todolistwidget.itemcreationdate";
+
     public static String EXTRA_DELETEDITEM_POSITION = "com.gbbtbb.todolistwidget.deleteditemposition";
 
     public static String ACTION_CANCELLED = "com.gbbtbb.todolistwidget.ACTION_CANCELLED";
@@ -60,7 +63,7 @@ public class TodoListWidgetMain extends Fragment implements AdapterView.OnItemCl
     @Override
     public void onDestroyView()
     {
-        getActivity().unregisterReceiver(photoFrameViewBroadcastReceiver);
+        getActivity().unregisterReceiver(TodoListBroadcastReceiver);
         super.onDestroyView();
     }
 
@@ -76,7 +79,7 @@ public class TodoListWidgetMain extends Fragment implements AdapterView.OnItemCl
         filter.addAction(ACTION_CANCELLED);
         filter.addCategory(Intent.CATEGORY_DEFAULT);
 
-        getActivity().registerReceiver(photoFrameViewBroadcastReceiver, filter);
+        getActivity().registerReceiver(TodoListBroadcastReceiver, filter);
         ctx = getActivity();
 
         ImageView addItemIcon = (ImageView)getView().findViewById(R.id.todowidget_addItem);
@@ -118,10 +121,6 @@ public class TodoListWidgetMain extends Fragment implements AdapterView.OnItemCl
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
 
-        // Draw title
-        //ImageView titleView = (ImageView) getView().findViewById(R.id.todowidget_textTodoTitle);
-       // titleView.setImageBitmap(adapter.drawTextOnList(ctx, "Courses", 30, R.drawable.paperpad_top));
-
         // Initialize list
         reloadList();
     }
@@ -137,7 +136,7 @@ public class TodoListWidgetMain extends Fragment implements AdapterView.OnItemCl
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
         setLoadingInProgress(true);
-        final String item = rowItems.get(position).getTitle();
+        final String item = rowItems.get(position).getItemName();
         Intent intent = new Intent(ctx.getApplicationContext(), DeleteItemMenuActivity.class);
         Bundle b = new Bundle();
         b.putString(EXTRA_ITEM_ID, item);
@@ -149,7 +148,7 @@ public class TodoListWidgetMain extends Fragment implements AdapterView.OnItemCl
         ctx.startActivity(intent);
     }
 
-    private final BroadcastReceiver photoFrameViewBroadcastReceiver = new BroadcastReceiver()
+    private final BroadcastReceiver TodoListBroadcastReceiver = new BroadcastReceiver()
     {
         @Override
         public void onReceive(Context context, Intent intent)
@@ -158,9 +157,15 @@ public class TodoListWidgetMain extends Fragment implements AdapterView.OnItemCl
 
             if (action.equals(ADDITEMDONE_ACTION)) {
                 setLoadingInProgress(false);
+
                 String new_item = intent.getStringExtra(EXTRA_ITEM_ID);
-                adapter.insert(new TodoListRowItem(new_item), adapter.getCount() - NB_DUMMY_ITEMS);
-                Log.i(com.gbbtbb.homehub.todolist.TodoListWidgetMain.TAG, "photoFrameViewBroadcastReceiver added item { " + new_item + "}");
+                int priority = intent.getIntExtra(EXTRA_ITEM_PRIO, 0);
+                String creation_date = intent.getStringExtra(EXTRA_ITEM_CREATIONDATE);
+
+                adapter.insert(new TodoListRowItem(new_item, priority, creation_date), adapter.getCount() - NB_DUMMY_ITEMS);
+                Log.i(com.gbbtbb.homehub.todolist.TodoListWidgetMain.TAG, "TodoListBroadcastReceiver added item { " + new_item +
+                        "} with priority " + Integer.toString(priority) +
+                        " and creation date " + creation_date);
             }
             else if (action.equals(CLEANLISTDONE_ACTION)) {
 
@@ -181,10 +186,10 @@ public class TodoListWidgetMain extends Fragment implements AdapterView.OnItemCl
                 setLoadingInProgress(false);
 
                 adapter.clear();
-                for (String e: Globals.todoListItems) {
+                for (TodoListRowItem e: Globals.todoListItems) {
 
-                    adapter.add(new TodoListRowItem(e));
-                    if (! "".equals(e)) {
+                    adapter.add(e);
+                    if (! "".equals(e.getItemName())) {
                         Log.i(com.gbbtbb.homehub.todolist.TodoListWidgetMain.TAG, "Adding todo item " + e);
                     }
                 }

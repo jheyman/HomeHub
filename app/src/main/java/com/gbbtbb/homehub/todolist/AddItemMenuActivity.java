@@ -2,15 +2,21 @@ package com.gbbtbb.homehub.todolist;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.Editable;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
 
 import com.gbbtbb.homehub.R;
 
@@ -25,11 +31,12 @@ public class AddItemMenuActivity extends Activity {
 
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-		//Log.i(TodoListWidgetMain.TAG, "AddItemMenuActivity creation, source bounds= "+getIntent().getSourceBounds());
-
-		setContentView(R.layout.additem_popup_menu);
+		setContentView(R.layout.todolist_additem_popup_menu);
 
 		final EditText input =  (EditText)findViewById(R.id.textViewItemName);
+		final RadioButton rb_prio1 = (RadioButton)findViewById(R.id.button_priority1);
+		final RadioButton rb_prio2 = (RadioButton)findViewById(R.id.button_priority2);
+		final RadioButton rb_prio3 = (RadioButton)findViewById(R.id.button_priority3);
 
 		Button buttonConfirm = (Button) findViewById(R.id.button_confirm);
 
@@ -38,10 +45,17 @@ public class AddItemMenuActivity extends Activity {
 				Editable value = input.getText();
 				Log.i(TodoListWidgetMain.TAG, "AddItemMenuActivity: new item to add is " + value.toString());
 
+                boolean prio1=rb_prio1.isChecked();
+                boolean prio2=rb_prio2.isChecked();
+                boolean prio3=rb_prio3.isChecked();
+
+				int priority = prio1 ? 1: (prio2 ? 2 : (prio3 ? 3: 0));
+
 				final Bundle extras = new Bundle();
 				Intent intent = new Intent(com.gbbtbb.homehub.todolist.AddItemMenuActivity.this, TodoListWidgetService.class);
 				intent.setAction(TodoListWidgetMain.ADDITEM_ACTION);
 				extras.putString(TodoListWidgetMain.EXTRA_ITEM_ID, value.toString());
+				intent.putExtra(TodoListWidgetMain.EXTRA_ITEM_PRIO, priority);
 				intent.putExtras(extras);
 				com.gbbtbb.homehub.todolist.AddItemMenuActivity.this.startService(intent);
 
@@ -63,16 +77,40 @@ public class AddItemMenuActivity extends Activity {
 				// Close this GUI activity
 				finish();
 			}
-		});		
+		});
 
-		WindowManager.LayoutParams wmlp = this.getWindow().getAttributes();
-		wmlp.gravity = Gravity.TOP | Gravity.LEFT;
+        // Register a callback for when the views have been layed out on the screen, and it is now safe to get their dimensions.
+        final Window window = this.getWindow();
+        final WindowManager.LayoutParams wmlp = this.getWindow().getAttributes();
 
-		// Get the x,y coordinates of the button that triggered this dialog, and align the dialog to it.
-		//Rect r = getIntent().getSourceBounds();
+        final LinearLayout ll = (LinearLayout)findViewById(R.id.TodoAddItemTopLayout);
+        ll.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            @SuppressWarnings("deprecation")
+            public void onGlobalLayout() {
 
-		wmlp.x = 0;//r.left;  //x position
-		wmlp.y = 0;//r.top;   //y position
-		this.getWindow().setAttributes(wmlp);  	
+                Rect r = new Rect();
+                ll.getLocalVisibleRect(r);
+                //Log.i(TodoListWidgetMain.TAG, "AddItemMenuActivity LinearLayout bounds= " + r);
+
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN)
+                    ll.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                else
+                    ll.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+
+                Display display = getWindowManager().getDefaultDisplay();
+                Point size = new Point();
+                display.getSize(size);
+                int screen_width = size.x;
+                int screen_height = size.y;
+
+                wmlp.x = screen_width/2 - r.width()/2;
+                wmlp.y = screen_height/2 - r.height()/2;
+
+                wmlp.gravity = Gravity.TOP | Gravity.LEFT;
+                window.setAttributes(wmlp);
+            }
+        });
+
 	}
 }

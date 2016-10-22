@@ -8,7 +8,7 @@ import android.util.Log;
 public class Settings {
     private SharedPreferences mPreferences;
 
-    public static final String PREF_PREFIX = "com.gbbtbb.Agendaviewerwidget.";
+    public static final String PREF_PREFIX = "com.gbbtbb.agendaviewerwidget.";
 
     private Settings() {
     }

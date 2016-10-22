@@ -2,6 +2,8 @@ package com.gbbtbb.homehub;
 
 import android.graphics.Bitmap;
 
+import com.gbbtbb.homehub.todolist.TodoListRowItem;
+
 import java.util.ArrayList;
 
 public class Globals {
@@ -9,7 +11,7 @@ public class Globals {
 
         public static ArrayList<String> shoppingListItems;
 
-        public static ArrayList<String> todoListItems;
+        public static ArrayList<TodoListRowItem> todoListItems;
 
         public static Bitmap graphBitmap;
 

@@ -1,17 +1,21 @@
 package com.gbbtbb.homehub.agendaviewer;
 
+import android.Manifest;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.TextPaint;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -73,9 +77,11 @@ public class AgendaWidgetMain extends Fragment {
         Settings.AgendaSettings gs = mSettings.getAgendaSettings();
         mHistoryLengthInHours = gs.getHistoryLength();
 
+        Log.i(AgendaWidgetMain.TAG, "mHistoryLengthInHours  " + Integer.toString(mHistoryLengthInHours) );
+
         timeLastUpdated = Utilities.getCurrentTime();
-        timestamp_end = Utilities.getCurrentTimeStamp();
-        timestamp_start = timestamp_end - mHistoryLengthInHours*60*60*1000;
+        timestamp_start = Utilities.getCurrentTimeStamp();
+        timestamp_end = timestamp_start + (long)(mHistoryLengthInHours)*60*60*1000;
 
         final ImageView title = (ImageView)getView().findViewById(R.id.agendaviewer_textAgendaTitle);
         final ImageView footer = (ImageView)getView().findViewById(R.id.agendaviewer_footer);
@@ -168,6 +174,41 @@ public class AgendaWidgetMain extends Fragment {
                 startActivity(intent);
             }
         });
+
+
+
+
+
+
+
+
+
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.READ_CALENDAR)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                    Manifest.permission.READ_CALENDAR)) {
+
+                // Show an expanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+
+            } else {
+
+                // No explanation needed, we can request the permission.
+
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{Manifest.permission.READ_CALENDAR},
+                        0);
+
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        }
+
 
         // Start background handler that will call refresh regularly
         handler.postDelayed(refreshView, REFRESH_DELAY);

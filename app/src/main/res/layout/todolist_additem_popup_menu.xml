@@ -1,12 +1,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/ShoppingAddItemTopLayout"
+    android:id="@+id/TodoAddItemTopLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    tools:context=".DeleteItemMenuActivity" >
-
+    tools:context=".AddItemMenuActivity" >
+    <TextView
+        android:id="@+id/textViewInvite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Action à ajouter:"
+        android:textSize="22sp"
+        />
     <FrameLayout
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
@@ -28,7 +34,35 @@
         android:text="                    "
         android:visibility="invisible"
 	/> 
-	</FrameLayout>  
+	</FrameLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="20dp" >
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <RadioButton
+                android:id="@+id/button_priority1"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="prio1"
+                android:textSize="22sp" />
+            <RadioButton
+                android:id="@+id/button_priority2"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="prio2"
+                android:textSize="22sp" />
+            <RadioButton
+                android:id="@+id/button_priority3"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="prio3"
+                android:textSize="22sp" />
+    </RadioGroup>
+    </LinearLayout>
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

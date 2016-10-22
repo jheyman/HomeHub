@@ -14,13 +14,12 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.gbbtbb.homehub.R;
-import com.gbbtbb.homehub.graphviewer.Settings;
 
 import java.lang.reflect.Method;
 import java.util.List;
 
 public class SettingsActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
-    private static final String TAG = "SettingsActivity";
+    private static final String TAG = "AgendaSettingsActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +29,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
     @Override
     public void onBuildHeaders(List<Header> target) {
-        loadHeadersFromResource(R.xml.settings_headers, target);
+        loadHeadersFromResource(R.xml.agenda_settings_headers, target);
         for (int i = 0; i < target.size(); i++) {
             Header header = target.get(i);
             if (header.fragmentArguments == null) {
@@ -51,7 +50,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         //AgendaWidgetMain.notifySettingsChanged(this);
-        Log.i("SettingsActivity", "notifySettingsChanged called");
+        Log.i("AgendaSettingsActivity", "notifySettingsChanged called");
         Intent refreshIntent = new Intent();
         refreshIntent.setAction(AgendaWidgetMain.SETTINGSCHANGED_ACTION);
         sendBroadcast(refreshIntent);
@@ -128,12 +127,12 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         protected abstract void refreshSummaries();
     }
 
-    public static class GraphSettingsFragment extends BasePreferenceFragment {
+    public static class AgendaSettingsFragment extends BasePreferenceFragment {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            PreferenceManager.setDefaultValues(getActivity(), R.xml.graph_settings, false);
-            addPreferencesFromResource(R.xml.graph_settings);
+            PreferenceManager.setDefaultValues(getActivity(), R.xml.agenda_settings, false);
+            addPreferencesFromResource(R.xml.agenda_settings);
         }
 
         @Override

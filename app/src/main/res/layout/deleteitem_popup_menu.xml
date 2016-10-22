@@ -1,11 +1,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/LinearLayout1"
+    android:id="@+id/DeleteItemPopupTopLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
     tools:context=".DeleteItemMenuActivity" >
+    <!--android:background="@drawable/popup_border"-->
 
     <TextView
         android:id="@+id/textViewItemName"
@@ -14,11 +15,13 @@
         android:gravity="center"
         android:text="(itemName)"
         android:textSize="22sp"
+        android:padding="20dp"
 	/>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="20dp"
         >
 
         <Button
@@ -26,14 +29,16 @@
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:text="OK"
-            android:textSize="22sp" />
+            android:textSize="22sp"
+            android:padding="20dp" />
 
         <Button
             android:id="@+id/button_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Annuler"
-            android:textSize="22sp" />
+            android:textSize="22sp"
+            android:padding="20dp"/>
     </LinearLayout>
 
 </LinearLayout>

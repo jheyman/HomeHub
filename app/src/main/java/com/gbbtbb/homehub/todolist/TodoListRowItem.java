@@ -1,31 +1,33 @@
 package com.gbbtbb.homehub.todolist;
 
-import com.gbbtbb.homehub.R;
-
 public class TodoListRowItem {
-    private static int imageId = R.drawable.paperpad_one_row;
 
-    private String title;
+    private String item_name;
+    private int priority;
+    private String creationDate;
 
-    public TodoListRowItem(String title) {
-        this.title = title;
-    }
-    public int getImageId() {
-        return imageId;
-    }
-    public void setImageId(int imageId) {
-        this.imageId = imageId;
+    public TodoListRowItem(String name, int priority, String creationDate) {
+        this.item_name = name;
+        this.priority = priority;
+        this.creationDate = creationDate;
     }
 
-    public String getTitle() {
-        return title;
+    public String getItemName() { return item_name; }
+    public void setItemName(String name) { this.item_name = item_name; }
+
+    public int getPriority() {
+        return priority;
     }
-    public void setTitle(String title) {
-        this.title = title;
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
+
+    public String getCreationDate() { return creationDate; }
+    public void setCreationDate(String date) { this.creationDate = date; }
+
     @Override
     public String toString() {
-        return title + "\n";
+        return item_name + "\n";
     }
 }
 

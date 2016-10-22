@@ -1,6 +1,8 @@
 package com.gbbtbb.homehub.agendaviewer;
 
 import android.app.IntentService;
+import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -10,6 +12,8 @@ import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.net.Uri;
+import android.provider.CalendarContract;
+import android.text.format.DateFormat;
 import android.util.Log;
 
 import com.gbbtbb.homehub.Globals;
@@ -22,6 +26,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.Format;
+import java.util.Locale;
 
 public class AgendaWidgetService extends IntentService {
 
@@ -30,15 +36,6 @@ public class AgendaWidgetService extends IntentService {
     private Context mContext;
     private Cursor mDataCursor;
 
-    private String mDataRefreshDateTime;
-
-    public static final Uri CONTENT_URI_DATAPOINTS = Uri.parse("content://com.gbbtbb.agendaviewerwidget.provider.datapoints");
-
-    public static final String DATAREFRESH_DATETIME = "current_datetime";
-    public static final String DATAITEMS = "items";
-
-
-    
     public AgendaWidgetService() {
         super(com.gbbtbb.homehub.agendaviewer.AgendaWidgetService.class.getName());
     }
@@ -67,6 +64,10 @@ public class AgendaWidgetService extends IntentService {
 
             Log.i(TAG, "onHandleIntent: width=" + Integer.toString(width) + ", height=" + Integer.toString(height));
 
+            /////////////////////////
+            // Render agenda timeline
+            /////////////////////////
+
             Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(bmp);
 
@@ -74,10 +75,7 @@ public class AgendaWidgetService extends IntentService {
 
             drawTimestampMarkers(canvas, width, height);
 
-            int graphHeight = (int) (0.4f * height);
-            int graphOffset = graphHeight;
-
-            drawGraph(canvas, "waterMeter", width, graphHeight, graphOffset);
+            drawTimeline(canvas, width, height);
 
             Globals.agendaBitmap = bmp;
             //rv.setImageViewBitmap(R.id.GraphBody, bmp);
@@ -118,27 +116,94 @@ public class AgendaWidgetService extends IntentService {
         }
     }
 
-    public void parseCursor() {
-        Log.i(TAG, "---------------PARSING DATA ---------------");
+    public void drawTimeline(Canvas canvas, int width, int height ) {
+        Log.i(TAG, "---------------RENDERING DATA ---------------");
+
+        if (mDataCursor != null) {
+
+            while (mDataCursor.moveToNext()) {
+
+                String title = null;
+                Long start = 0L;
+
+                title = mDataCursor.getString(0);
+                start = mDataCursor.getLong(2);
+
+                Format df = DateFormat.getDateFormat(this);
+                Format tf = DateFormat.getTimeFormat(this);
+
+                Log.i(TAG, "getFreshData:" + title + " on " + df.format(start) + " at " + tf.format(start));
+
+                Log.i(TAG, "getFreshData: start time " + df.format(AgendaWidgetMain.timestamp_start) + " at " + tf.format(AgendaWidgetMain.timestamp_start));
+                Log.i(TAG, "getFreshData: end time " + df.format(AgendaWidgetMain.timestamp_end) + " at " + tf.format(AgendaWidgetMain.timestamp_end));
 
 
-        Log.i(TAG, "---------------DONE PARSING DATA---------------");
+                Log.i(TAG, "getFreshData: start time: " + Long.toString(AgendaWidgetMain.timestamp_start));
+                Log.i(TAG, "getFreshData: end time: " + Long.toString(AgendaWidgetMain.timestamp_end));
+                Log.i(TAG, "getFreshData: item  time: " + Long.toString(start));
+
+                long timerange = AgendaWidgetMain.timestamp_end - AgendaWidgetMain.timestamp_start;
+                float x = width * (start - AgendaWidgetMain.timestamp_start) / timerange;
+                float y = height / 2;
+
+                drawAgendaItem(canvas, title, width, height, x, y);
+            }
+        }
+
+        Log.i(TAG, "---------------DONE RENDERING DATA---------------");
     }
 
+    private void drawAgendaItem(Canvas canvas, String text, int width, int height, float offset_x, float offset_y) {
 
-    private void drawGraph(Canvas canvas, String dataId, int width, int height, int offset_y) {
+            Paint paint = new Paint();
+            paint.setAntiAlias(true);
+            paint.setTextSize(10);
+            paint.setColor(mContext.getResources().getColor(R.color.agendaviewer_text_color));
+            String msg= String.format(Locale.getDefault(),"%s", text);
 
+            float textWidth = Utilities.getTextWidth(paint, msg);
+            float textHeight = Utilities.getTextHeight(paint, "0");
 
+            Paint boxpaint = new Paint();
+            boxpaint.setAntiAlias(true);
+            boxpaint.setColor(mContext.getResources().getColor(R.color.agendaviewer_text_background));
+            boxpaint.setStyle(Paint.Style.STROKE);
+
+            // Draw text brackground, and then text itself
+            canvas.drawRect(offset_x, offset_y - (0.5f*textHeight) - 2, offset_x+textWidth + 10, offset_y + (0.5f* textHeight) + 2, boxpaint);
+            canvas.drawText(msg, offset_x+5, offset_y + 0.5f*textHeight, paint);
     }
 
     public void getFreshData() {
 
         Log.i(TAG, "getFreshData called");
 
-        //mDataCursor = query(CONTENT_URI_DATAPOINTS, null, null,args, null);
-        parseCursor();
-    }
+        try {
 
+            String[] EVENT_PROJECTION = new String[]{
+                    CalendarContract.Events.TITLE,
+                    CalendarContract.Events.EVENT_LOCATION,
+                    CalendarContract.Instances.BEGIN,
+                    CalendarContract.Instances.END,
+                    CalendarContract.Events.ALL_DAY};
+
+            ContentResolver resolver = getContentResolver();
+            Uri.Builder eventsUriBuilder = CalendarContract.Instances.CONTENT_URI.buildUpon();
+
+            ContentUris.appendId(eventsUriBuilder, AgendaWidgetMain.timestamp_start);
+            ContentUris.appendId(eventsUriBuilder, AgendaWidgetMain.timestamp_end);
+
+            Uri eventUri = eventsUriBuilder.build();
+
+            //String selection = "((" + CalendarContract.Events.CALENDAR_ID + " = ?))";
+            //String[] selectionArgs = new String[]{"1"};
+
+            mDataCursor = resolver.query(eventUri, EVENT_PROJECTION, /*selection*/null, /*selectionArgs*/null, CalendarContract.Instances.BEGIN + " ASC");
+        }
+        catch (SecurityException e) {
+            Log.i(TAG, "getFreshData SecurityException" + e.toString());
+        }
+    }
 
     private static String httpRequest(String url/*, ArrayList<NameValuePair> nameValuePairs*/) {
         String result = "";

@@ -2,11 +2,18 @@ package com.gbbtbb.homehub.todolist;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.gbbtbb.homehub.R;
@@ -38,7 +45,7 @@ public class DeleteItemMenuActivity extends Activity {
 				Intent intent = new Intent(com.gbbtbb.homehub.todolist.DeleteItemMenuActivity.this, TodoListWidgetService.class);
 				intent.setAction(com.gbbtbb.homehub.todolist.TodoListWidgetMain.DELETEITEM_ACTION);
 				extras.putString(com.gbbtbb.homehub.todolist.TodoListWidgetMain.EXTRA_ITEM_ID, itemName);
-                extras.putInt(com.gbbtbb.homehub.todolist.TodoListWidgetMain.EXTRA_DELETEDITEM_POSITION, position);
+				extras.putInt(com.gbbtbb.homehub.todolist.TodoListWidgetMain.EXTRA_DELETEDITEM_POSITION, position);
 				intent.putExtras(extras);
 				com.gbbtbb.homehub.todolist.DeleteItemMenuActivity.this.startService(intent);
 
@@ -52,15 +59,48 @@ public class DeleteItemMenuActivity extends Activity {
 			public void onClick(View v) {
 				Log.i(com.gbbtbb.homehub.todolist.TodoListWidgetMain.TAG, "Canceled delete item");
 
-                Intent doneIntent = new Intent();
-                doneIntent.setAction(TodoListWidgetMain.ACTION_CANCELLED);
-                doneIntent.addCategory(Intent.CATEGORY_DEFAULT);
-                sendBroadcast(doneIntent);
+				Intent doneIntent = new Intent();
+				doneIntent.setAction(TodoListWidgetMain.ACTION_CANCELLED);
+				doneIntent.addCategory(Intent.CATEGORY_DEFAULT);
+				sendBroadcast(doneIntent);
 
 				// Close this GUI activity
 				finish();
 			}
-		});	
+		});
+
+		// Register a callback for when the views have been layed out on the screen, and it is now safe to get their dimensions.
+		final Window window = this.getWindow();
+		final WindowManager.LayoutParams wmlp = this.getWindow().getAttributes();
+
+		final LinearLayout ll = (LinearLayout)findViewById(R.id.DeleteItemPopupTopLayout);
+		ll.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+			@Override
+			@SuppressWarnings("deprecation")
+			public void onGlobalLayout() {
+
+				Rect r = new Rect();
+				ll.getLocalVisibleRect(r);
+				Log.i(TodoListWidgetMain.TAG, "DeleteItemMenuActivity LinearLayout bounds= " + r);
+
+				if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN)
+					ll.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+				else
+					ll.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+
+				Display display = getWindowManager().getDefaultDisplay();
+				Point size = new Point();
+				display.getSize(size);
+				int screen_width = size.x;
+				int screen_height = size.y;
+
+				wmlp.x = screen_width / 2 - r.width() / 2;
+				wmlp.y = screen_height / 2 - r.height() / 2;
+
+				wmlp.gravity = Gravity.TOP | Gravity.LEFT;
+				window.setAttributes(wmlp);
+			}
+		});
 	}
 
 }

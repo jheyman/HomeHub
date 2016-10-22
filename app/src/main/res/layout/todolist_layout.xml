@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="right"
         android:orientation="horizontal"
-        android:background="@drawable/todolist_border">
+        android:background="@drawable/todolist_border_fullslot">
 
         <ImageView
             android:id="@+id/todowidget_textTodoTitle"
