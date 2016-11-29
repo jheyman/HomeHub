@@ -302,6 +302,8 @@ public class AgendaWidgetMain extends Fragment {
 
         String latestDatePrinted = "";
 
+        canvas.drawLine((float)0, 0, (float)width, (float)0, textPaint);
+        /*
         for (int i=0; i<NB_VERTICAL_MARKERS; i++) {
             float x = (1.0f+i)*width/(NB_VERTICAL_MARKERS+1);
 
@@ -328,6 +330,7 @@ public class AgendaWidgetMain extends Fragment {
                 latestDatePrinted = datetext;
             }
         }
+        */
         return bmp;
     }
 

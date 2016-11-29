@@ -53,13 +53,14 @@ public class GraphViewerWidgetMain extends Fragment {
 
     private Context ctx;
     public Handler handler = new Handler();
-    private static int REFRESH_DELAY = 300000;
+    private static int REFRESH_DELAY = 60000;
 
     Runnable refreshView = new Runnable()
     {
         @Override
         public void run() {
 
+            Log.i("GraphViewerWidgetMain", "refreshView CALLED, ctx=" + ctx.toString());
             refresh();
 
             handler.postDelayed(this, REFRESH_DELAY);
