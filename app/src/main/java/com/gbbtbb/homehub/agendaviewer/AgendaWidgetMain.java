@@ -1,6 +1,7 @@
 package com.gbbtbb.homehub.agendaviewer;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -17,79 +18,61 @@ import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.TextPaint;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.gbbtbb.homehub.Globals;
 import com.gbbtbb.homehub.R;
 import com.gbbtbb.homehub.Utilities;
+import com.gbbtbb.homehub.todolist.TodoListRowItem;
+import com.gbbtbb.homehub.todolist.TodoListViewAdapter;
+
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class AgendaWidgetMain extends Fragment {
 
     public static final String TAG = "AgendaWidgetMain";
 
     public static final String REFRESH_ACTION ="com.gbbtbb.agendaviewerwidget.REFRESH_ACTION";
-    public static final String SETTINGSCHANGED_ACTION ="com.gbbtbb.agendaviewerwidget.SETTINGSCHANGED_ACTION";
     public static final String AGENDAREFRESHEDDONE_ACTION ="com.gbbtbb.agendaviewerwidget.agendaREFRESHEDDONE_ACTION";
 
-    public static final int NB_VERTICAL_MARKERS = 15;
-    public static int mHistoryLengthInHours;
-
-    public static final String SETTING_BASE = "com.gbbtbb.agendaviewerwidget";
-
-    public static int mAgendaWidth;
-    public static int mAgendaHeight;
-    public static int mHeaderHeight;
-    public static int mHeaderWidth;
-    public static int mFooterHeight;
-
-    public static long timestamp_start;
-    public static long timestamp_end;
-
-    private String timeLastUpdated;
-
-    private com.gbbtbb.homehub.agendaviewer.Settings mSettings;
+    private Typeface weatherFont;
 
     private Context ctx;
-    public Handler handler = new Handler();
-    private static int REFRESH_DELAY = 300000;
+    public Handler handler = new Handler();;
+    private static int REFRESH_DELAY = 30000;
 
     Runnable refreshView = new Runnable()
     {
         @Override
         public void run() {
-
             refresh();
-
             handler.postDelayed(this, REFRESH_DELAY);
         }
     };
 
+    private class ViewHolder {
+        TextView date;
+        TextView time;
+        TextView humidity;
+        TextView temperature;
+        TextView weatherId;
+    }
+
     private void refresh(){
-
-        getPrefs(ctx);
-        mSettings = com.gbbtbb.homehub.agendaviewer.Settings.get(ctx);
-        Settings.AgendaSettings gs = mSettings.getAgendaSettings();
-        mHistoryLengthInHours = gs.getHistoryLength();
-
-        Log.i(AgendaWidgetMain.TAG, "mHistoryLengthInHours  " + Integer.toString(mHistoryLengthInHours) );
-
-        timeLastUpdated = Utilities.getCurrentTime();
-        timestamp_start = Utilities.getCurrentTimeStamp();
-        timestamp_end = timestamp_start + (long)(mHistoryLengthInHours)*60*60*1000;
-
-        final ImageView title = (ImageView)getView().findViewById(R.id.agendaviewer_textAgendaTitle);
-        final ImageView footer = (ImageView)getView().findViewById(R.id.agendaviewer_footer);
-
         setLoadingInProgress(true);
-
-        title.setImageBitmap(drawCommonHeader(ctx, mHeaderWidth, mHeaderHeight));
-        footer.setImageBitmap(drawCommonFooter(ctx, mAgendaWidth, mFooterHeight));
 
         Intent intent = new Intent(ctx.getApplicationContext(), AgendaWidgetService.class);
         intent.setAction(REFRESH_ACTION);
@@ -107,7 +90,8 @@ public class AgendaWidgetMain extends Fragment {
     @Override
     public void onDestroyView()
     {
-        handler.removeCallbacksAndMessages(refreshView);
+        Log.i("AgendaWidgetMain", "onDestroyView ");
+        handler.removeCallbacksAndMessages(null);
         getActivity().unregisterReceiver(agendaViewBroadcastReceiver);
         super.onDestroyView();
     }
@@ -115,17 +99,19 @@ public class AgendaWidgetMain extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        Log.i("AgendaWidgetMain", "onActivityCreated");
+
+        weatherFont = Typeface.createFromAsset(getActivity().getAssets(), "fonts/weather.ttf");
+
         IntentFilter filter = new IntentFilter();
         filter.addAction(AGENDAREFRESHEDDONE_ACTION);
-        filter.addAction(SETTINGSCHANGED_ACTION);
         filter.addCategory(Intent.CATEGORY_DEFAULT);
 
         getActivity().registerReceiver(agendaViewBroadcastReceiver, filter);
         ctx = getActivity();
 
-        final ImageView title = (ImageView)getView().findViewById(R.id.agendaviewer_textAgendaTitle);
-        final ImageView footer = (ImageView)getView().findViewById(R.id.agendaviewer_footer);
-        final ImageView agenda = (ImageView)getView().findViewById(R.id.agendaviewer_AgendaBody);
+        final HorizontalScrollView hsv = (HorizontalScrollView)getView().findViewById(R.id.hsv);
 
         // Register a callback for when the fragment and its views have been layed out on the screen, and it is now safe to get their dimensions.
         ViewGroup parentLayout = ((ViewGroup) getView().getParent());
@@ -133,49 +119,19 @@ public class AgendaWidgetMain extends Fragment {
             @Override
             @SuppressWarnings("deprecation")
             public void onGlobalLayout() {
-                mAgendaWidth = agenda.getWidth();
-                mAgendaHeight = agenda.getHeight();
-                mHeaderHeight = title.getHeight();
-                mHeaderWidth = title.getWidth();
-                mFooterHeight = footer.getHeight();
 
-                //Log.i(AgendaWidgetMain.TAG, "onGlobalLayout TITLE: " + Integer.toString(mHeaderWidth) + ", " + Integer.toString(mHeaderHeight));
-                //Log.i(AgendaWidgetMain.TAG, "onGlobalLayout agenda: " + Integer.toString(mAgendaWidth) + ", " + Integer.toString(mAgendaHeight));
-                //Log.i(AgendaWidgetMain.TAG, "onGlobalLayout FOOTER: " + Integer.toString(mAgendaWidth) + ", " + Integer.toString(mFooterHeight));
+                //dimensions could be measured here
 
+                // remove observer now
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN)
-                    title.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    hsv.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 else
-                    title.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                    hsv.getViewTreeObserver().removeGlobalOnLayoutListener(this);
 
                 // It is now also safe to refresh the agenda itself, with correct dimensions
-                refresh();
+                handler.post(refreshView);
             }
         });
-
-        ImageView reloadIcon = (ImageView)getView().findViewById(R.id.agendaviewer_reloadList);
-
-        //  register a click event on the reload/refresh button
-        reloadIcon.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                setLoadingInProgress(true);
-                Intent reloadIntent = new Intent(ctx.getApplicationContext(), AgendaWidgetService.class);
-                reloadIntent.setAction(REFRESH_ACTION);
-                ctx.startService(reloadIntent);
-            }
-        });
-        
-        ImageView settingsIcon = (ImageView)getView().findViewById(R.id.agendaviewer_settings);
-
-        //  register a click event on the settings button
-        settingsIcon.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = new Intent(ctx.getApplicationContext(), SettingsActivity.class);
-                startActivity(intent);
-            }
-        });
-
-
 
 
 
@@ -208,24 +164,12 @@ public class AgendaWidgetMain extends Fragment {
                 // result of the request.
             }
         }
-
-
-        // Start background handler that will call refresh regularly
-        handler.postDelayed(refreshView, REFRESH_DELAY);
     }
 
     private void setLoadingInProgress(boolean state) {
 
         ProgressBar pb = (ProgressBar)getView().findViewById(R.id.agendaviewer_loadingProgress);
         pb.setVisibility(state ? View.VISIBLE: View.GONE);
-
-        ImageView iv = (ImageView)getView().findViewById(R.id.agendaviewer_reloadList);
-        iv.setVisibility(state ? View.GONE: View.VISIBLE);
-    }
-
-    private void getPrefs(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences(SETTING_BASE, Context.MODE_PRIVATE);
-
     }
 
     private final BroadcastReceiver agendaViewBroadcastReceiver = new BroadcastReceiver()
@@ -241,97 +185,74 @@ public class AgendaWidgetMain extends Fragment {
 
                 setLoadingInProgress(false);
 
-                ImageView iv = (ImageView)getView().findViewById(R.id.agendaviewer_AgendaBody);
-                iv.setImageBitmap(Globals.agendaBitmap);
-            }
-            else if (SETTINGSCHANGED_ACTION.equals(action)) {
-                refresh();
+                LinearLayout days_layout = (LinearLayout)getView().findViewById(R.id.innerLay);
+                days_layout.removeAllViews();
+
+                View dayView = null;
+                LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+                dayView = mInflater.inflate(R.layout.agenda_item, null);
+
+                for (AgendaItem e: Globals.agendaItems) {
+
+                    View weatherTimeSlotView = null;
+                    ViewHolder holder = null;
+
+                    // Build unitary weather time slot block
+                    weatherTimeSlotView = mInflater.inflate(R.layout.agenda_weatheritem, null);
+                    holder = new ViewHolder();
+                    holder.date = (TextView) weatherTimeSlotView.findViewById(R.id.agendaitem_date);
+                    holder.time = (TextView) weatherTimeSlotView.findViewById(R.id.agendaitem_time);
+                    holder.humidity = (TextView) weatherTimeSlotView.findViewById(R.id.agendaitem_humidity);
+                    holder.temperature = (TextView) weatherTimeSlotView.findViewById(R.id.agendaitem_temperature);
+                    holder.weatherId = (TextView) weatherTimeSlotView.findViewById(R.id.agendaitem_weatherId);
+                    holder.weatherId.setTypeface(weatherFont);
+
+                    // Fill its data
+                    Date date = new Date(e.getDatetime());
+                    SimpleDateFormat simpleDateFormat_time = new SimpleDateFormat("H");
+                    String timestring = simpleDateFormat_time.format(date) +"h";
+                    SimpleDateFormat simpleDateFormat_date = new SimpleDateFormat("EEEE dd/MM");
+                    String datestring = simpleDateFormat_date.format(date);
+
+                    String humidity = String.format("%d %%", e.getWeatherHumidity());
+                    String temperature = String.format("%.0f °C",e.getWeatherTemperature());
+
+                    holder.date.setText(datestring);
+                    holder.time.setText(timestring);
+                    holder.humidity.setText(humidity);
+                    holder.temperature.setText(temperature);
+                    holder.weatherId.setText(getWeatherIconText(e.getWeatherId()));
+
+                    // and insert it in weather slots layout for that day
+                    LinearLayout weatherlayout = (LinearLayout)dayView.findViewById(R.id.agenda_item_weatheritemslayout);
+                    weatherlayout.addView(weatherTimeSlotView);
+                }
+                days_layout.addView(dayView);
             }
         }
     };
 
-    private Bitmap drawCommonHeader(Context ctx, int width, int height) {
-        Log.i(com.gbbtbb.homehub.agendaviewer.AgendaWidgetMain.TAG, "drawCommonHeader");
-
-        Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bmp);
-
-        Typeface myfont = Typeface.createFromAsset(ctx.getAssets(), "fonts/passing_notes.ttf");
-
-        TextPaint textPaint = new TextPaint();
-        textPaint.setTypeface(myfont);
-        textPaint.setStyle(Paint.Style.FILL);
-        textPaint.setTextSize(ctx.getResources().getDimension(R.dimen.agendaviewer_header_text_size));
-        textPaint.setColor(ctx.getResources().getColor(R.color.agendaviewer_text_color));
-
-        textPaint.setTextAlign(Paint.Align.LEFT);
-        textPaint.setAntiAlias(true);
-        textPaint.setSubpixelText(true);
-
-        float textHeight = Utilities.getTextHeight(textPaint, "r");
-        canvas.drawText(ctx.getResources().getString(R.string.agendaviewer_header_text) + ": " + mHistoryLengthInHours + " heures", 10.0f, 0.5f * (height + textHeight), textPaint);
-
-        TextPaint textPaintComments = new TextPaint();
-        textPaintComments.setStyle(Paint.Style.FILL);
-        textPaintComments.setTextSize(ctx.getResources().getDimension(R.dimen.agendaviewer_header_comments_size));
-        textPaintComments.setColor(ctx.getResources().getColor(R.color.agendaviewer_text_color));
-
-        String commentText = "(Dernière MAJ: " + timeLastUpdated + ")";
-        canvas.drawText(commentText , 0.5f*width, 0.5f * (height + textHeight), textPaintComments);
-
-        return bmp;
-    }
-
-    private Bitmap drawCommonFooter(Context ctx, int width, int height) {
-
-        Log.i(com.gbbtbb.homehub.agendaviewer.AgendaWidgetMain.TAG, "drawCommonFooter");
-
-        Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bmp);
-
-        Utilities.fillCanvas(canvas, ctx.getResources().getColor(R.color.agendaviewer_background_color));
-
-        TextPaint textPaint = new TextPaint();
-        textPaint.setStyle(Paint.Style.FILL);
-        textPaint.setTextSize(12);
-        textPaint.setColor(ctx.getResources().getColor(R.color.agendaviewer_text_color));
-
-        textPaint.setTextAlign(Paint.Align.LEFT);
-        textPaint.setAntiAlias(true);
-        textPaint.setSubpixelText(true);
-
-        String latestDatePrinted = "";
-
-        canvas.drawLine((float)0, 0, (float)width, (float)0, textPaint);
-        /*
-        for (int i=0; i<NB_VERTICAL_MARKERS; i++) {
-            float x = (1.0f+i)*width/(NB_VERTICAL_MARKERS+1);
-
-            // On bottom half of the footer, under each marker, print corresponding date and time
-            //Rect bounds = new Rect();
-            float textHeight = Utilities.getTextHeight(textPaint, "0");
-            float textWidth;
-
-            long timerange = timestamp_end - timestamp_start;
-
-            // Compute and display time for this marker
-            long timestamp = timestamp_start + (long)(x * timerange / width);
-            String timetext = Utilities.getTimeFromTimeStamp(timestamp);
-
-            textWidth = Utilities.getTextWidth(textPaint, timetext);
-            canvas.drawText(timetext, x - 0.5f*textWidth, (0.25f)*height + 0.5f*textHeight, textPaint);
-
-            // Compute and display date for this marker
-            // But do not print the date on this marker if it is the same day as one of the previous markers
-            String datetext = Utilities.getDateFromTimeStamp(timestamp);
-            if (!datetext.equals(latestDatePrinted)) {
-                textWidth = Utilities.getTextWidth(textPaint, datetext);
-                canvas.drawText(datetext, x - 0.5f * textWidth, (0.75f) * height + 0.5f * textHeight, textPaint);
-                latestDatePrinted = datetext;
+    private String getWeatherIconText(int actualId){
+        int id = actualId / 100;
+        String icon = "";
+        if(actualId == 800){
+                icon = getActivity().getString(R.string.weather_sunny);
+        } else {
+            switch(id) {
+                case 2 : icon = getActivity().getString(R.string.weather_thunder);
+                    break;
+                case 3 : icon = getActivity().getString(R.string.weather_drizzle);
+                    break;
+                case 7 : icon = getActivity().getString(R.string.weather_foggy);
+                    break;
+                case 8 : icon = getActivity().getString(R.string.weather_cloudy);
+                    break;
+                case 6 : icon = getActivity().getString(R.string.weather_snowy);
+                    break;
+                case 5 : icon = getActivity().getString(R.string.weather_rainy);
+                    break;
             }
         }
-        */
-        return bmp;
+        return icon;
     }
-
 }

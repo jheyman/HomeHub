@@ -45,7 +45,6 @@ public class TodoListWidgetMain extends Fragment implements AdapterView.OnItemCl
 
     public static String ACTION_CANCELLED = "com.gbbtbb.todolistwidget.ACTION_CANCELLED";
 
-
     List<TodoListRowItem> rowItems;
     TodoListViewAdapter adapter;
     public static final int NB_DUMMY_ITEMS = 25;

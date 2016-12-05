@@ -102,14 +102,30 @@ public class GraphViewerWidgetMain extends Fragment {
     @Override
     public void onDestroyView()
     {
-        handler.removeCallbacksAndMessages(refreshView);
+        Log.i(GraphViewerWidgetMain.TAG, "onDestroyView" + this.toString());
+        handler.removeCallbacksAndMessages(null);
         getActivity().unregisterReceiver(GraphViewBroadcastReceiver);
         super.onDestroyView();
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        Log.i(GraphViewerWidgetMain.TAG, "onPause" + this.toString());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.i(GraphViewerWidgetMain.TAG, "onStop" + this.toString());
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        Log.i(GraphViewerWidgetMain.TAG, "onActivityCreated" + this.toString());
+
         IntentFilter filter = new IntentFilter();
         filter.addAction(GRAPHREFRESHEDDONE_ACTION);
         filter.addAction(SETTINGSCHANGED_ACTION);
@@ -144,7 +160,9 @@ public class GraphViewerWidgetMain extends Fragment {
                     title.getViewTreeObserver().removeGlobalOnLayoutListener(this);
 
                 // It is now also safe to refresh the graph itself, with correct dimensions
-                refresh();
+                Log.i(GraphViewerWidgetMain.TAG, "initial REFRESH triggered");
+                handler.post(refreshView);
+                //refresh();
             }
         });
 
@@ -171,7 +189,7 @@ public class GraphViewerWidgetMain extends Fragment {
         });
 
         // Start background handler that will call refresh regularly
-        handler.postDelayed(refreshView, REFRESH_DELAY);
+        //handler.postDelayed(refreshView, REFRESH_DELAY);
     }
 
     private void setLoadingInProgress(boolean state) {

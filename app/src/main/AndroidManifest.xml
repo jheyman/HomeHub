@@ -41,14 +41,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity  android:name=".agendaviewer.SettingsActivity"
-            android:label="@string/graphviewer_header_text"
-            android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="com.gbbtbb.graphviewerwidget.UpdateAction" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity  android:name=".todolist.DeleteItemMenuActivity"
             android:label="@string/shoppinglist_title_activity_deleteitem_menu"
             android:theme="@android:style/Theme.Holo.Light.Dialog">
