@@ -7,17 +7,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.IntegerRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.text.TextPaint;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,20 +21,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.HorizontalScrollView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.gbbtbb.homehub.CustomTextView;
 import com.gbbtbb.homehub.Globals;
 import com.gbbtbb.homehub.R;
-import com.gbbtbb.homehub.Utilities;
-import com.gbbtbb.homehub.todolist.TodoListRowItem;
-import com.gbbtbb.homehub.todolist.TodoListViewAdapter;
 
 import java.text.Format;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class AgendaWidgetMain extends Fragment {
@@ -177,66 +170,160 @@ public class AgendaWidgetMain extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent)
         {
-            final String action = intent.getAction();
+        final String action = intent.getAction();
 
-            Log.i("AgendaWidgetMain", "onReceive " + action);
+        Log.i("AgendaWidgetMain", "onReceive " + action);
 
-            if (AGENDAREFRESHEDDONE_ACTION.equals(action)) {
+        if (AGENDAREFRESHEDDONE_ACTION.equals(action)) {
 
-                setLoadingInProgress(false);
+            setLoadingInProgress(false);
 
-                LinearLayout days_layout = (LinearLayout)getView().findViewById(R.id.innerLay);
-                days_layout.removeAllViews();
+            LinearLayout MultiDaysLayout = (LinearLayout)getView().findViewById(R.id.innerLay);
+            MultiDaysLayout.removeAllViews();
 
-                View dayView = null;
+            Calendar now = Calendar.getInstance();
+
+            long startOfDay = now.getTimeInMillis();
+
+            now.set(Calendar.HOUR_OF_DAY, 24);
+            now.set(Calendar.MINUTE, 0);
+            now.set(Calendar.SECOND, 0);
+
+            long endOfDay = now.getTimeInMillis();
+
+            for (int day=0; day < 5; day++) {
+
+                View OneDayView = null;
                 LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-                dayView = mInflater.inflate(R.layout.agenda_item, null);
+                OneDayView = mInflater.inflate(R.layout.agenda_item, null);
 
-                for (AgendaItem e: Globals.agendaItems) {
+                Date date = new Date(startOfDay);
+                SimpleDateFormat simpleDateFormat_date = new SimpleDateFormat("EEEE dd MMM");
+                String datestring = simpleDateFormat_date.format(date);
 
-                    View weatherTimeSlotView = null;
-                    ViewHolder holder = null;
+                ViewHolder holder = new ViewHolder();
+                holder.date = (TextView) OneDayView.findViewById(R.id.agendaitem_date);
+                holder.date.setText(datestring);
 
-                    // Build unitary weather time slot block
-                    weatherTimeSlotView = mInflater.inflate(R.layout.agenda_weatheritem, null);
-                    holder = new ViewHolder();
-                    holder.date = (TextView) weatherTimeSlotView.findViewById(R.id.agendaitem_date);
-                    holder.time = (TextView) weatherTimeSlotView.findViewById(R.id.agendaitem_time);
-                    holder.humidity = (TextView) weatherTimeSlotView.findViewById(R.id.agendaitem_humidity);
-                    holder.temperature = (TextView) weatherTimeSlotView.findViewById(R.id.agendaitem_temperature);
-                    holder.weatherId = (TextView) weatherTimeSlotView.findViewById(R.id.agendaitem_weatherId);
-                    holder.weatherId.setTypeface(weatherFont);
+                for (WeatherItem e : Globals.weatherItems) {
 
-                    // Fill its data
-                    Date date = new Date(e.getDatetime());
-                    SimpleDateFormat simpleDateFormat_time = new SimpleDateFormat("H");
-                    String timestring = simpleDateFormat_time.format(date) +"h";
-                    SimpleDateFormat simpleDateFormat_date = new SimpleDateFormat("EEEE dd/MM");
-                    String datestring = simpleDateFormat_date.format(date);
+                    long weatherItemTime = e.getDatetime();
+                    Date weatherItemDate = new Date(e.getDatetime());
 
-                    String humidity = String.format("%d %%", e.getWeatherHumidity());
-                    String temperature = String.format("%.0f °C",e.getWeatherTemperature());
+                    if (weatherItemTime >= startOfDay && weatherItemTime <= endOfDay) {
 
-                    holder.date.setText(datestring);
-                    holder.time.setText(timestring);
-                    holder.humidity.setText(humidity);
-                    holder.temperature.setText(temperature);
-                    holder.weatherId.setText(getWeatherIconText(e.getWeatherId()));
+                        View weatherTimeSlotView = null;
 
-                    // and insert it in weather slots layout for that day
-                    LinearLayout weatherlayout = (LinearLayout)dayView.findViewById(R.id.agenda_item_weatheritemslayout);
-                    weatherlayout.addView(weatherTimeSlotView);
+                        // Build unitary weather time slot block
+                        weatherTimeSlotView = mInflater.inflate(R.layout.agenda_weatheritem, null);
+
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTime(weatherItemDate);
+                        int hours = cal.get(Calendar.HOUR_OF_DAY);
+
+                        if (hours <=6 || hours > 22) {
+                            weatherTimeSlotView.setBackgroundResource(R.drawable.weather_item_night);
+
+                            CustomTextView timeText = (CustomTextView) weatherTimeSlotView.findViewById(R.id.agendaitem_time);
+                            timeText.setTextColor(getResources().getColor(R.color.agendaviewer_nighttext_color));
+
+                            CustomTextView humText = (CustomTextView) weatherTimeSlotView.findViewById(R.id.agendaitem_humidity);
+                            humText.setTextColor(getResources().getColor(R.color.agendaviewer_nighttext_color));
+
+                            CustomTextView tempText = (CustomTextView) weatherTimeSlotView.findViewById(R.id.agendaitem_temperature);
+                            tempText.setTextColor(getResources().getColor(R.color.agendaviewer_nighttext_color));
+
+                            CustomTextView weatherIdText = (CustomTextView) weatherTimeSlotView.findViewById(R.id.agendaitem_weatherId);
+                            weatherIdText.setTextColor(getResources().getColor(R.color.agendaviewer_nighttext_color));
+
+                        } else if (hours > 6 && hours <=9) {
+                            weatherTimeSlotView.setBackgroundResource(R.drawable.weather_item_dawn);
+                        } else if (hours > 9 && hours <=18) {
+                            weatherTimeSlotView.setBackgroundResource(R.drawable.weather_item_day);
+                        } else if (hours > 18) {
+                            weatherTimeSlotView.setBackgroundResource(R.drawable.weather_item_dusk);
+                        }
+
+                        holder.time = (TextView) weatherTimeSlotView.findViewById(R.id.agendaitem_time);
+                        holder.humidity = (TextView) weatherTimeSlotView.findViewById(R.id.agendaitem_humidity);
+                        holder.temperature = (TextView) weatherTimeSlotView.findViewById(R.id.agendaitem_temperature);
+                        holder.weatherId = (TextView) weatherTimeSlotView.findViewById(R.id.agendaitem_weatherId);
+                        holder.weatherId.setTypeface(weatherFont);
+
+                        SimpleDateFormat simpleDateFormat_time = new SimpleDateFormat("H");
+                        String timestring = simpleDateFormat_time.format(weatherItemDate) + "h";
+
+                        String humidity = String.format("%d %%", e.getWeatherHumidity());
+                        String temperature = String.format("%.0f °C", e.getWeatherTemperature());
+
+                        holder.time.setText(timestring);
+                        holder.humidity.setText(humidity);
+                        holder.temperature.setText(temperature);
+
+                        holder.weatherId.setText(getWeatherIconText(e.getWeatherId(), e.getDatetime(),e.getSunrise() , e.getSunset()));
+
+                        // and insert it in weather slots layout for that day
+                        LinearLayout dailyweatherlayout = (LinearLayout) OneDayView.findViewById(R.id.agenda_item_weatheritemslayout);
+                        dailyweatherlayout.addView(weatherTimeSlotView);
+                    }
                 }
-                days_layout.addView(dayView);
+
+                // Now proceed to fill the agenda events view
+                LinearLayout agendaItemsLayout = (LinearLayout) OneDayView.findViewById(R.id.agenda_item_agendaitemslayout);
+
+                int nb_added = 0;
+                for (AgendaItem e : Globals.agendaItems) {
+                    long agendaItemTime = e.getDatetime();
+
+                    if (agendaItemTime >= startOfDay && agendaItemTime <= endOfDay) {
+                        nb_added++;
+                        View v = null;
+                        v = mInflater.inflate(R.layout.agenda_eventline, null);
+                        CustomTextView ctv = (CustomTextView) v.findViewById(R.id.agendaitem_eventline);
+
+                        Date agendadate = new Date(agendaItemTime);
+                        SimpleDateFormat sdf = new SimpleDateFormat("H");
+                        ctv.setText("à " + sdf.format(agendadate) + "h: " + e.getTitle());
+                        agendaItemsLayout.addView(v);
+                    }
+                }
+
+                // If there are no agenda events for that day, insert a dummy/empty event to show it
+                if (nb_added == 0) {
+                    View v = null;
+                    v = mInflater.inflate(R.layout.agenda_eventline, null);
+
+                    CustomTextView ctv = (CustomTextView) v.findViewById(R.id.agendaitem_eventline);
+                    ctv.setText("no event today");
+                    agendaItemsLayout.addView(v);
+                }
+
+                // finally add this view to the overall horizontal scrollview showing all days
+                MultiDaysLayout.addView(OneDayView);
+
+                startOfDay = endOfDay;
+                endOfDay += 24*60*60*1000;
             }
+        }
         }
     };
 
-    private String getWeatherIconText(int actualId){
+    private String getWeatherIconText(int actualId, long datetime, long sunrise, long sunset){
+
+        //Format df = DateFormat.getDateFormat(ctx);
+        //Format tf = DateFormat.getTimeFormat(ctx);
+        //Log.i(TAG, "getWeatherIconText: datetime is " + df.format(datetime) + " at " + tf.format(datetime));
+        //Log.i(TAG, "getWeatherIconText: sunrise is " + df.format(sunrise) + " at " + tf.format(sunrise));
+        //Log.i(TAG, "getWeatherIconText: sunset is " + df.format(sunset) + " at " + tf.format(sunset));
+
         int id = actualId / 100;
         String icon = "";
         if(actualId == 800){
+            if(datetime>=sunrise && datetime<sunset) {
                 icon = getActivity().getString(R.string.weather_sunny);
+            } else {
+                icon = getActivity().getString(R.string.weather_clear_night);
+            }
         } else {
             switch(id) {
                 case 2 : icon = getActivity().getString(R.string.weather_thunder);

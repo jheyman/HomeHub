@@ -6,37 +6,31 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.DashPathEffect;
-import android.graphics.Paint;
-import android.graphics.Path;
 import android.net.Uri;
 import android.provider.CalendarContract;
 import android.text.format.DateFormat;
 import android.util.Log;
 
 import com.gbbtbb.homehub.Globals;
-import com.gbbtbb.homehub.R;
 import com.gbbtbb.homehub.Utilities;
 
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.Period;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.text.Format;
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class AgendaWidgetService extends IntentService {
 
@@ -71,16 +65,14 @@ public class AgendaWidgetService extends IntentService {
         }
     }
 
-
     private static final String OPEN_WEATHER_MAP_API =
             "http://api.openweathermap.org/data/2.5/weather?q=%s&units=metric";
-
 
     public void getFreshData() {
 
         Log.i(TAG, "getFreshData called");
 
-
+        ArrayList<AgendaItem> agenda_list = new ArrayList<AgendaItem>();
         try {
 
             String[] EVENT_PROJECTION = new String[]{
@@ -106,24 +98,93 @@ public class AgendaWidgetService extends IntentService {
             //String[] selectionArgs = new String[]{"1"};
 
             mDataCursor = resolver.query(eventUri, EVENT_PROJECTION, /*selection*/null, /*selectionArgs*/null, CalendarContract.Instances.BEGIN + " ASC");
+
+            Log.i(TAG, "getFreshData querying agenda items...");
+            if (mDataCursor != null) {
+
+                while (mDataCursor.moveToNext()) {
+
+                    String title = null;
+                    Long start = 0L;
+
+                    title = mDataCursor.getString(0);
+                    start = mDataCursor.getLong(2);
+
+                    Format df = DateFormat.getDateFormat(this);
+                    Format tf = DateFormat.getTimeFormat(this);
+
+                    Log.i(TAG, "getFreshData:" + title + " on " + df.format(start) + " at " + tf.format(start));
+
+                    //Log.i(TAG, "getFreshData: start time " + df.format(timestamp_start) + " at " + tf.format(timestamp_start));
+                    //Log.i(TAG, "getFreshData: end time " + df.format(timestamp_end) + " at " + tf.format(timestamp_end));
+
+                    //Log.i(TAG, "getFreshData: start time: " + Long.toString(timestamp_start));
+                    //Log.i(TAG, "getFreshData: end time: " + Long.toString(timestamp_end));
+                    //Log.i(TAG, "getFreshData: item  time: " + Long.toString(start));
+
+                    agenda_list.add(new AgendaItem(start, title));
+                }
+            }
         }
         catch (SecurityException e) {
             Log.i(TAG, "getFreshData SecurityException" + e.toString());
         }
 
+        Globals.agendaItems = agenda_list;
 
 
 
 
 
 
-        ArrayList<AgendaItem> list = new ArrayList<AgendaItem>();
+        ArrayList<WeatherItem> list = new ArrayList<WeatherItem>();
 
         String charset = "UTF-8";
         String query = "";
 
         String appId = "2dee82fd5d7326c51ceb0d4b8a42e2b5";
+        String result = "";
 
+        Long timestamp_now = 0L;
+        Long timestamp_sunrise = 0L;
+        Long timestamp_sunset = 0L;
+
+        // First call is only to retrieve the sunrise/sunset times for today (that will be used as an approximation for the 5 day forecast
+        // This is silly, but OpenWeatherMap API does not include sunrise/sunset times in the 5-day forecast returned data....
+        try {
+            query = String.format("http://api.openweathermap.org/data/2.5/weather?q=Paris,FR&APPID=%s",
+                    URLEncoder.encode(appId, charset));
+        }
+        catch (UnsupportedEncodingException e) {
+            Log.e(TAG, "Error encoding URL params: " + e.toString());
+        }
+
+        result = httpRequest(query);
+
+        // Parse the received JSON data
+        if (!result.equals("")) {
+            Log.i(TAG, "Parsing received JSON data (1)");
+            try {
+                    JSONObject jdata = new JSONObject(result);
+
+                    timestamp_now = jdata.getLong("dt");
+                    timestamp_now *=1000;
+
+                    JSONObject sys = (JSONObject)jdata.getJSONObject("sys");
+                    timestamp_sunrise = sys.getLong("sunrise");
+                    timestamp_sunrise *=1000;
+
+                    timestamp_sunset = sys.getLong("sunset");
+                    timestamp_sunset *=1000;
+
+            } catch (JSONException e) {
+                Log.e(TAG, "Error parsing data: " + e.toString());
+            }
+            Log.i(TAG, "JSON data parsing completed");
+        }
+
+
+        // Now actually proceed to get the 5-day forecast from OpenWeatherMap
         try {
             query = String.format("http://api.openweathermap.org/data/2.5/forecast?units=metric&q=Paris,FR&APPID=%s",
                     URLEncoder.encode(appId, charset));
@@ -132,11 +193,11 @@ public class AgendaWidgetService extends IntentService {
             Log.e(TAG, "Error encoding URL params: " + e.toString());
         }
 
-        String result = httpRequest(query);
+        result = httpRequest(query);
 
         // Parse the received JSON data
         if (!result.equals("")) {
-            Log.i(TAG, "Parsing received JSON data");
+            Log.i(TAG, "Parsing received JSON data (2)");
             try {
                 JSONObject jdata = new JSONObject(result);
                 JSONArray series_values = (JSONArray) jdata.getJSONArray("list");
@@ -154,19 +215,29 @@ public class AgendaWidgetService extends IntentService {
                     JSONObject weatherObj = tmp.getJSONArray("weather").getJSONObject(0);;
                     int id = weatherObj.getInt("id");
 
-                    list.add(new AgendaItem(timestamp, id, humidity, temperature));
-                }
+                    // recompute an approximation of sunrise/sunset for this particular day, by just using the sunrise/sunset for
+                    // today and adding the proper number of full days between now and then
+                    DateTime dt_now = new DateTime(timestamp_now);
+                    DateTime dt_then = new DateTime(timestamp);
+                    int days_between = Days.daysBetween(dt_now.toLocalDate(), dt_then.toLocalDate()).getDays();
 
+                    DateTime sunrise = new DateTime(timestamp_sunrise);
+                    sunrise = sunrise.plusDays(days_between);
+
+                    DateTime sunset = new DateTime(timestamp_sunset);
+                    sunset = sunset.plusDays(days_between);
+
+                    // add the item to the day's layout
+                    list.add(new WeatherItem(timestamp, id, humidity, temperature, sunrise.getMillis(), sunset.getMillis()));
+                }
             } catch (JSONException e) {
                 Log.e(TAG, "Error parsing data: " + e.toString());
             }
             Log.i(TAG, "JSON data parsing completed");
         }
 
-
-
-        Globals.agendaItems = list;
-
+        // Store it in globals for later use by the UI thread
+        Globals.weatherItems = list;
    }
 
     private static String httpRequest(String url/*, ArrayList<NameValuePair> nameValuePairs*/) {

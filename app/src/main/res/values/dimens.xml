@@ -14,7 +14,7 @@
     <dimen name="graphviewer_header_text_size">30px</dimen>
     <dimen name="graphviewer_header_comments_size">15px</dimen>
 
-    <dimen name="agendaviewer_header_text_size">30px</dimen>
-    <dimen name="agendaviewer_header_comments_size">15px</dimen>
+    <dimen name="agendaviewer_text_size">15dp</dimen>
+    <dimen name="agendaviewer_weathericon_size">30dp</dimen>
 
 </resources>

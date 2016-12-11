@@ -18,6 +18,7 @@
     <color name="agendaviewer_background_color">#FFFFFF</color>
     <color name="agendaviewer_text_background">#FF0000</color>
     <color name="agendaviewer_text_color">#0000FF</color>
+    <color name="agendaviewer_nighttext_color">#FFFFFF</color>
 </resources>
 
 

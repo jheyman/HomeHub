@@ -3,61 +3,52 @@
     android:id="@+id/agenda_item_weatheritemlayout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/agenda_item_border"
+    android:background="@drawable/weather_item_night"
     android:orientation="vertical">
 
     <com.gbbtbb.homehub.CustomTextView
-        android:id="@+id/agendaitem_date"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:text="-DATE-"
-        android:textColor="#000000"
-        android:textSize="20dp"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:background="#00000000"/>
-
-    <com.gbbtbb.homehub.CustomTextView
         android:id="@+id/agendaitem_time"
-        android:layout_width="100dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="-TIME-"
         android:textColor="#000000"
-        android:textSize="20dp"
+        android:textSize="@dimen/agendaviewer_text_size"
         android:layout_gravity="center"
         android:gravity="center"
+        android:paddingTop="10dp"
         android:background="#00000000"/>
 
     <com.gbbtbb.homehub.CustomTextView
         android:id="@+id/agendaitem_humidity"
-        android:layout_width="100dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="- HUMIDITY -"
         android:textColor="#000000"
-        android:textSize="20dp"
+        android:textSize="@dimen/agendaviewer_text_size"
         android:layout_gravity="center"
         android:gravity="center"
         android:background="#00000000" />
 
     <com.gbbtbb.homehub.CustomTextView
         android:id="@+id/agendaitem_temperature"
-        android:layout_width="100dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="- TEMPERATURE -"
         android:textColor="#000000"
-        android:textSize="20dp"
+        android:textSize="@dimen/agendaviewer_text_size"
         android:layout_gravity="center"
         android:gravity="center"
         android:background="#00000000" />
 
     <com.gbbtbb.homehub.CustomTextView
         android:id="@+id/agendaitem_weatherId"
-        android:layout_width="100dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="X"
         android:textColor="#000000"
-        android:textSize="50dp"
+        android:textSize="@dimen/agendaviewer_weathericon_size"
         android:layout_gravity="center"
         android:gravity="center"
+        android:padding="10dp"
         android:background="#00000000" />
 </LinearLayout>

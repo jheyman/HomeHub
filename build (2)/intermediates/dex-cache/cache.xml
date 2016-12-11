@@ -3,57 +3,12 @@
 
     <item
         is-multidex="true"
-        jar="C:\Users\Julien\Google Drive\code\github\HomeHub\app\build\intermediates\exploded-aar\com.android.support\animated-vector-drawable\23.4.0\jars\classes.jar"
+        jar="C:\Users\Julien\Google Drive\code\github\HomeHub\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
         jumboMode="true"
         optimize="true"
         revision="23.0.0"
-        sha1="de4db3785756bfb0915a9f59a9b3f2fea7407be4">
-        <dex dex="C:\Users\Julien\Google Drive\code\github\HomeHub\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-animated-vector-drawable-23.4.0_4a833e9ec581f6182fb979da3395fa2ac62deeac\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Julien\Google Drive\code\github\HomeHub\app\build\intermediates\exploded-aar\com.android.support\design\23.4.0\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.0"
-        sha1="5326d9a850d491714fef8cbfaa9ea3416f0bf0d2">
-        <dex dex="C:\Users\Julien\Google Drive\code\github\HomeHub\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-design-23.4.0_c7eccf422af8451d982a8418bf031fc59550075e\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Julien\Google Drive\code\github\HomeHub\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.4.0\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.0"
-        sha1="67bd36ee9340ec7c254108936ad16b24bed160cc">
-        <dex dex="C:\Users\Julien\Google Drive\code\github\HomeHub\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-v4-23.4.0_3dd5ff22bdb07ed1ea242d30e10c6ef4efb8a9c7\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Julien\Google Drive\code\github\HomeHub\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.4.0\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.0"
-        sha1="548f06de403a9409f00554b3ee12a9fdea0e236c">
-        <dex dex="C:\Users\Julien\Google Drive\code\github\HomeHub\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-appcompat-v7-23.4.0_e1be11847b12de66aa84cf751db11b996c96b3a0\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Julien\Google Drive\code\github\HomeHub\app\build\intermediates\exploded-aar\com.android.support\support-vector-drawable\23.4.0\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.0"
-        sha1="c2c594cace5d83a3227b2b6e658ecbfd586d3ed9">
-        <dex dex="C:\Users\Julien\Google Drive\code\github\HomeHub\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-vector-drawable-23.4.0_945c6920569ef5bc803419597295fb3bd55661db\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Julien\Google Drive\code\github\HomeHub\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.4.0\jars\libs\internal_impl-23.4.0.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.0"
-        sha1="ea3c07504d2c8f4b13aa17c45c1b68ed9c1c3674">
-        <dex dex="C:\Users\Julien\Google Drive\code\github\HomeHub\app\build\intermediates\transforms\dex\debug\folders\1000\10\internal_impl-23.4.0_00affbc54142760d31c52506777f9588bf675e07\classes.dex" />
+        sha1="cbe911cd6682ebe89aebc61d34398259514ef7f5">
+        <dex dex="C:\Users\Julien\Google Drive\code\github\HomeHub\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_69c3e908148e4d77c65bcd9e49040dc7914f16b7\classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -61,35 +16,8 @@
         jumboMode="true"
         optimize="true"
         revision="23.0.0"
-        sha1="60f678e77b829a3b4f09a5d48100fdb05e2002c0">
+        sha1="62f8d37ef075a5698095877f2e968e2c55ad36eb">
         <dex dex="C:\Users\Julien\Google Drive\code\github\HomeHub\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_0fedd00512f769f331d4c6687b54d3002bdfdb32\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Julien\Google Drive\code\github\HomeHub\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.0"
-        sha1="98cd2c44f226bdd0eb8e507ebf2799139e5b25ba">
-        <dex dex="C:\Users\Julien\Google Drive\code\github\HomeHub\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_69c3e908148e4d77c65bcd9e49040dc7914f16b7\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Julien\AppData\Local\Android\Sdk\extras\android\m2repository\com\android\support\support-annotations\23.4.0\support-annotations-23.4.0.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.0"
-        sha1="ffbe55fdb2bb456b1485831706a9eac3300bb6b8">
-        <dex dex="C:\Users\Julien\Google Drive\code\github\HomeHub\app\build\intermediates\transforms\dex\debug\folders\1000\10\support-annotations-23.4.0_9362720c12a28f79a9aa32d0398ff7579db80ab6\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Julien\Google Drive\code\github\HomeHub\app\build\intermediates\exploded-aar\com.android.support\recyclerview-v7\23.4.0\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.0"
-        sha1="ec75036c3c52e451d0cde50a5aedaf5fd32354a0">
-        <dex dex="C:\Users\Julien\Google Drive\code\github\HomeHub\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-recyclerview-v7-23.4.0_23b26d5b404b1cc16de176b49902a8a81f0931da\classes.dex" />
     </item>
 
 </items>

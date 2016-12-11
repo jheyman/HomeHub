@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.gbbtbb.homehub.CustomTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/agendaitem_eventline"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="-EVENT-"
+    android:textColor="#000000"
+    android:textSize="@dimen/agendaviewer_text_size"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:paddingBottom="5dp"/>
