@@ -5,7 +5,6 @@ import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
-
 public class CustomTextView extends TextView {
 
     public CustomTextView(Context context) {
@@ -27,7 +26,7 @@ public class CustomTextView extends TextView {
     }
 
     private void applyCustomFont(Context context) {
-        Typeface customFont = FontCache.getTypeface("fonts/passing_notes.ttf", context);
+        Typeface customFont = FontCache.getTypeface(this.getResources().getString(R.string.app_fontPath), context);
         setTypeface(customFont);
     }
 }

@@ -5,10 +5,10 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:orientation="vertical"
-    android:paddingTop="0px"
+    android:paddingTop="@dimen/general_widgets_padding"
     android:paddingLeft="0px"
     android:paddingRight="@dimen/general_widgets_padding"
-    android:paddingBottom="@dimen/general_widgets_padding">
+    android:paddingBottom="0dp">
 
     <FrameLayout
         android:id="@+id/shoppingwidget_FrameLayout"

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="NetworkDeviceList">
+        <item>camerapi_ping</item>
+        <item>sdbtbbpi_ping</item>
+        <item>cuisinepi_ping</item>
+        <item>intercompi1_ping</item>
+        <item>intercompi2_ping</item>
+        <item>nas_ping</item>
+        <item>garagepi_ping</item>
+        <item>alarme_ping</item>
+    </string-array>
+
+    <string-array name="camerapi_ping">
+        <item name="imageViewId">networkwidget_view00</item>
+        <item name="textViewId">networkwidget_view00Text</item>
+        <item name="name">Camera</item>
+    </string-array>
+
+    <string-array name="sdbtbbpi_ping">
+        <item name="imageViewId">networkwidget_view01</item>
+        <item name="textViewId">networkwidget_view01Text</item>
+        <item name="name">Combles</item>
+    </string-array>
+
+    <string-array name="cuisinepi_ping">
+        <item name="imageViewId">networkwidget_view02</item>
+        <item name="textViewId">networkwidget_view02Text</item>
+        <item name="name">Cuisine</item>
+    </string-array>
+
+    <string-array name="intercompi1_ping">
+        <item name="imageViewId">networkwidget_view03</item>
+        <item name="textViewId">networkwidget_view03Text</item>
+        <item name="name">Intercom1</item>
+    </string-array>
+
+    <string-array name="intercompi2_ping">
+        <item name="imageViewId">networkwidget_view04</item>
+        <item name="textViewId">networkwidget_view04Text</item>
+        <item name="name">Intercom2</item>
+    </string-array>
+
+    <string-array name="nas_ping">
+        <item name="imageViewId">networkwidget_view05</item>
+        <item name="textViewId">networkwidget_view05Text</item>
+        <item name="name">NAS</item>
+    </string-array>
+
+    <string-array name="garagepi_ping">
+        <item name="imageViewId">networkwidget_view06</item>
+        <item name="textViewId">networkwidget_view06Text</item>
+        <item name="name">Garage</item>
+    </string-array>
+
+    <string-array name="alarme_ping">
+        <item name="imageViewId">networkwidget_view07</item>
+        <item name="textViewId">networkwidget_view07Text</item>
+        <item name="name">Alarme</item>
+    </string-array>
+
+</resources>

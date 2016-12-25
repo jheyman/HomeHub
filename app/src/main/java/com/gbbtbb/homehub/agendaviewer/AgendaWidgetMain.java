@@ -45,7 +45,7 @@ public class AgendaWidgetMain extends Fragment {
 
     private Context ctx;
     public Handler handler = new Handler();;
-    private static int REFRESH_DELAY = 30000;
+    private static int REFRESH_DELAY = 300000;
 
     Runnable refreshView = new Runnable()
     {
@@ -140,7 +140,7 @@ public class AgendaWidgetMain extends Fragment {
             if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
                     Manifest.permission.READ_CALENDAR)) {
 
-                // Show an expanation to the user *asynchronously* -- don't block
+                // Show an explanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
                 // sees the explanation, try again to request the permission.
 
@@ -221,28 +221,36 @@ public class AgendaWidgetMain extends Fragment {
                         cal.setTime(weatherItemDate);
                         int hours = cal.get(Calendar.HOUR_OF_DAY);
 
-                        if (hours <=6 || hours > 22) {
-                            weatherTimeSlotView.setBackgroundResource(R.drawable.weather_item_night);
+                        int selectedBackground = 0;
+                        int textColor = 0;
 
-                            CustomTextView timeText = (CustomTextView) weatherTimeSlotView.findViewById(R.id.agendaitem_time);
-                            timeText.setTextColor(getResources().getColor(R.color.agendaviewer_nighttext_color));
-
-                            CustomTextView humText = (CustomTextView) weatherTimeSlotView.findViewById(R.id.agendaitem_humidity);
-                            humText.setTextColor(getResources().getColor(R.color.agendaviewer_nighttext_color));
-
-                            CustomTextView tempText = (CustomTextView) weatherTimeSlotView.findViewById(R.id.agendaitem_temperature);
-                            tempText.setTextColor(getResources().getColor(R.color.agendaviewer_nighttext_color));
-
-                            CustomTextView weatherIdText = (CustomTextView) weatherTimeSlotView.findViewById(R.id.agendaitem_weatherId);
-                            weatherIdText.setTextColor(getResources().getColor(R.color.agendaviewer_nighttext_color));
-
+                        if (hours <=6 || hours >= 22) {
+                            selectedBackground = R.drawable.weather_item_night;
+                            textColor = R.color.agendaviewer_nighttext_color;
                         } else if (hours > 6 && hours <=9) {
-                            weatherTimeSlotView.setBackgroundResource(R.drawable.weather_item_dawn);
+                            selectedBackground = R.drawable.weather_item_dawn;
+                            textColor = R.color.agendaviewer_dawntext_color;
                         } else if (hours > 9 && hours <=18) {
-                            weatherTimeSlotView.setBackgroundResource(R.drawable.weather_item_day);
+                            selectedBackground = R.drawable.weather_item_day;
+                            textColor = R.color.agendaviewer_daytext_color;
                         } else if (hours > 18) {
-                            weatherTimeSlotView.setBackgroundResource(R.drawable.weather_item_dusk);
+                            selectedBackground = R.drawable.weather_item_dusk;
+                            textColor = R.color.agendaviewer_dusktext_color;
                         }
+
+                        weatherTimeSlotView.setBackgroundResource(selectedBackground);
+
+                        CustomTextView timeText = (CustomTextView) weatherTimeSlotView.findViewById(R.id.agendaitem_time);
+                        timeText.setTextColor(getResources().getColor(textColor));
+
+                        CustomTextView humText = (CustomTextView) weatherTimeSlotView.findViewById(R.id.agendaitem_humidity);
+                        humText.setTextColor(getResources().getColor(textColor));
+
+                        CustomTextView tempText = (CustomTextView) weatherTimeSlotView.findViewById(R.id.agendaitem_temperature);
+                        tempText.setTextColor(getResources().getColor(textColor));
+
+                        CustomTextView weatherIdText = (CustomTextView) weatherTimeSlotView.findViewById(R.id.agendaitem_weatherId);
+                        weatherIdText.setTextColor(getResources().getColor(textColor));
 
                         holder.time = (TextView) weatherTimeSlotView.findViewById(R.id.agendaitem_time);
                         holder.humidity = (TextView) weatherTimeSlotView.findViewById(R.id.agendaitem_humidity);
@@ -294,7 +302,7 @@ public class AgendaWidgetMain extends Fragment {
                     v = mInflater.inflate(R.layout.agenda_eventline, null);
 
                     CustomTextView ctv = (CustomTextView) v.findViewById(R.id.agendaitem_eventline);
-                    ctv.setText("no event today");
+                    ctv.setText(R.string.agendaviewer_noevent_text);
                     agendaItemsLayout.addView(v);
                 }
 
@@ -308,38 +316,173 @@ public class AgendaWidgetMain extends Fragment {
         }
     };
 
+
     private String getWeatherIconText(int actualId, long datetime, long sunrise, long sunset){
 
+        String icon="";
         //Format df = DateFormat.getDateFormat(ctx);
         //Format tf = DateFormat.getTimeFormat(ctx);
         //Log.i(TAG, "getWeatherIconText: datetime is " + df.format(datetime) + " at " + tf.format(datetime));
         //Log.i(TAG, "getWeatherIconText: sunrise is " + df.format(sunrise) + " at " + tf.format(sunrise));
         //Log.i(TAG, "getWeatherIconText: sunset is " + df.format(sunset) + " at " + tf.format(sunset));
 
-        int id = actualId / 100;
-        String icon = "";
-        if(actualId == 800){
-            if(datetime>=sunrise && datetime<sunset) {
-                icon = getActivity().getString(R.string.weather_sunny);
-            } else {
-                icon = getActivity().getString(R.string.weather_clear_night);
-            }
-        } else {
-            switch(id) {
-                case 2 : icon = getActivity().getString(R.string.weather_thunder);
-                    break;
-                case 3 : icon = getActivity().getString(R.string.weather_drizzle);
-                    break;
-                case 7 : icon = getActivity().getString(R.string.weather_foggy);
-                    break;
-                case 8 : icon = getActivity().getString(R.string.weather_cloudy);
-                    break;
-                case 6 : icon = getActivity().getString(R.string.weather_snowy);
-                    break;
-                case 5 : icon = getActivity().getString(R.string.weather_rainy);
-                    break;
-            }
+        Log.i(TAG, "getWeatherIconText: actualID is " + Integer.toString(actualId));
+
+        boolean isDaytime =  datetime>=sunrise && datetime<sunset;
+
+        switch(actualId) {
+            case 200 :
+            case 201 :
+            case 202 :
+            case 210 :
+            case 211 :
+            case 212 :
+            case 221 :
+            case 230 :
+            case 231 :
+            case 232 :
+                if(isDaytime) {
+                    icon = getActivity().getString(R.string.weather_thunder_day);
+                } else {
+                    icon = getActivity().getString(R.string.weather_thunder_night);
+                }
+                break;
+            case 300 :
+            case 301 :
+            case 302 :
+            case 310 :
+            case 311 :
+            case 312 :
+            case 313 :
+            case 314 :
+            case 321 :
+                if(isDaytime) {
+                    icon = getActivity().getString(R.string.weather_drizzle_day);
+                } else {
+                    icon = getActivity().getString(R.string.weather_drizzle_night);
+                }
+                break;
+            case 500 :
+                if(isDaytime) {
+                    icon = getActivity().getString(R.string.weather_lightrain_day);
+                } else {
+                    icon = getActivity().getString(R.string.weather_lightrain_night);
+                }
+                break;
+            case 501 :
+                if(isDaytime) {
+                    icon = getActivity().getString(R.string.weather_moderaterain_day);
+                } else {
+                    icon = getActivity().getString(R.string.weather_moderaterain_night);
+                }
+                break;
+            case 502 :
+                if(isDaytime) {
+                    icon = getActivity().getString(R.string.weather_heavyrain_day);
+                } else {
+                    icon = getActivity().getString(R.string.weather_heavyrain_night);
+                }
+                break;
+            case 503 :
+                if(isDaytime) {
+                    icon = getActivity().getString(R.string.weather_veryheavyrain_day);
+                } else {
+                    icon = getActivity().getString(R.string.weather_veryheavyrain_night);
+                }
+                break;
+            case 504 :
+                if(isDaytime) {
+                    icon = getActivity().getString(R.string.weather_extremerain_day);
+                } else {
+                    icon = getActivity().getString(R.string.weather_extremerain_night);
+                }
+                break;
+            case 511 :
+                if(isDaytime) {
+                    icon = getActivity().getString(R.string.weather_freezingrain_day);
+                } else {
+                    icon = getActivity().getString(R.string.weather_freezingrain_night);
+                }
+                break;
+            case 520 :
+                if(isDaytime) {
+                    icon = getActivity().getString(R.string.weather_lightshowerrain_day);
+                } else {
+                    icon = getActivity().getString(R.string.weather_lightshowerrain_night);
+                }
+                break;
+            case 521 :
+                if(isDaytime) {
+                    icon = getActivity().getString(R.string.weather_showerrain_day);
+                } else {
+                    icon = getActivity().getString(R.string.weather_showerrain_night);
+                }
+                break;
+            case 522 :
+                if(isDaytime) {
+                    icon = getActivity().getString(R.string.weather_heavyshower_day);
+                } else {
+                    icon = getActivity().getString(R.string.weather_heavyshower_night);
+                }
+                break;
+            case 531 :
+                if(isDaytime) {
+                    icon = getActivity().getString(R.string.weather_raggedshowerrain_day);
+                } else {
+                    icon = getActivity().getString(R.string.weather_raggedshowerrain_night);
+                }
+                break;
+            case 600 :
+                if(isDaytime) {
+                    icon = getActivity().getString(R.string.weather_snowy_day);
+                } else {
+                    icon = getActivity().getString(R.string.weather_snowy_night);
+                }
+                break;
+            case 741 :
+                if(isDaytime) {
+                    icon = getActivity().getString(R.string.weather_foggy_day);
+                } else {
+                    icon = getActivity().getString(R.string.weather_foggy_night);
+                }
+                break;
+            case 800 :
+                if(isDaytime) {
+                    icon = getActivity().getString(R.string.weather_sunny_day);
+                } else {
+                    icon = getActivity().getString(R.string.weather_clear_night);
+                }
+                break;
+            case 801 :
+                if(isDaytime) {
+                    icon = getActivity().getString(R.string.weather_fewclouds_day);
+                } else {
+                    icon = getActivity().getString(R.string.weather_fewclouds_night);
+                }
+                break;
+            case 802 :
+                if(isDaytime) {
+                    icon = getActivity().getString(R.string.weather_scatteredclouds_day);
+                } else {
+                    icon = getActivity().getString(R.string.weather_scatteredclouds_night);
+                }
+                break;
+            case 803 :
+                if(isDaytime) {
+                    icon = getActivity().getString(R.string.weather_brokenclouds_day);
+                } else {
+                    icon = getActivity().getString(R.string.weather_brokenclouds_night);
+                }
+                break;
+            case 804 :
+                if(isDaytime) {
+                    icon = getActivity().getString(R.string.weather_overcastclouds_day);
+                } else {
+                    icon = getActivity().getString(R.string.weather_overcastclouds_night);
+                }
+                break;
         }
+
         return icon;
     }
 }

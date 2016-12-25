@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,12 +40,13 @@ public class ZWaveWidgetMain extends Fragment {
 
     public Handler handler = new Handler();
     private Context ctx;
-    private static int REFRESH_DELAY = 2000;
+    private static int REFRESH_DELAY = 5000;
 
     Runnable refreshView = new Runnable()
     {
         @Override
         public void run() {
+            Log.i("ZWaveWidgetMain", "REFRESH VIEW TRIGGERED " );
 
             Intent intent = new Intent(ctx.getApplicationContext(), ZWaveWidgetService.class);
             intent.putExtra(LATEST_REFRESH_EXTRA, latestRefreshUnixTime);
@@ -66,7 +68,8 @@ public class ZWaveWidgetMain extends Fragment {
     @Override
     public void onDestroyView()
     {
-        handler.removeCallbacksAndMessages(refreshView);
+        Log.i("ZWaveWidgetMain", "onDestroyView" );
+        handler.removeCallbacksAndMessages(null);
         getActivity().unregisterReceiver(zWaveViewBroadcastReceiver);
         super.onDestroyView();
     }
@@ -82,9 +85,10 @@ public class ZWaveWidgetMain extends Fragment {
 
         getActivity().registerReceiver(zWaveViewBroadcastReceiver, filter);
         ctx = getActivity();
+        Log.i("ZWaveWidgetMain", "onActivityCreated" );
 
         // Parse the list of all declared devices, retrieve the associated imageView for each device, and register a click event on it
-        String[] deviceList = ctx.getResources().getStringArray(R.array.deviceList);
+        String[] deviceList = ctx.getResources().getStringArray(R.array.ZWaveDeviceList);
         for (String d : deviceList) {
             int arrayId = ctx.getResources().getIdentifier(d, "array", ctx.getPackageName());
             String[] temp = ctx.getResources().getStringArray(arrayId);

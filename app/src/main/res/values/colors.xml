@@ -19,6 +19,10 @@
     <color name="agendaviewer_text_background">#FF0000</color>
     <color name="agendaviewer_text_color">#0000FF</color>
     <color name="agendaviewer_nighttext_color">#FFFFFF</color>
+    <color name="agendaviewer_dawntext_color">#FFFFFF</color>
+    <color name="agendaviewer_dusktext_color">#FFFFFF</color>
+    <color name="agendaviewer_daytext_color">#000000</color>
+
 </resources>
 
 

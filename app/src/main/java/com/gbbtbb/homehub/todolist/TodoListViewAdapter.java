@@ -73,9 +73,10 @@ public class TodoListViewAdapter extends ArrayAdapter<com.gbbtbb.homehub.todolis
         if ("".equals(rowItem.getItemName())) {
 
             l.setBackgroundResource(R.drawable.todolist_border_emptyslot);
+            holder.priorityIcon.setVisibility(View.INVISIBLE);
         } else {
             l.setBackgroundResource(R.drawable.todolist_border_fullslot);
-
+            holder.priorityIcon.setVisibility(View.VISIBLE);
         }
 
         return convertView;

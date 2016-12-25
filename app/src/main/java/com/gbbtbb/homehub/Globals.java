@@ -7,6 +7,7 @@ import com.gbbtbb.homehub.agendaviewer.WeatherItem;
 import com.gbbtbb.homehub.todolist.TodoListRowItem;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Globals {
         public static Bitmap photoFrameBitmap;
@@ -21,5 +22,5 @@ public class Globals {
 
         public static Bitmap graphBitmap;
 
-        public static Bitmap agendaBitmap;
+        public static HashMap<String, Float> graphLatestValues;
 }

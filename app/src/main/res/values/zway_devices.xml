@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="deviceList">
+    <string-array name="ZWaveDeviceList">
         <item>Garage</item>
         <item>SdbTBB</item>
         <item>Dressing</item>
@@ -8,7 +8,7 @@
         <item>SdbGBB</item>
         <item>Escalier</item>
         <item>Entree</item>
-        <item>CouloirHaut</item>
+        <item>CouloirHt</item>
         <item>Bureau</item>
         <item>Salon</item>
         <item>TV</item>
@@ -103,7 +103,7 @@
         <item name="icontype">bulb</item>
     </string-array>
 
-    <string-array name="CouloirHaut">
+    <string-array name="CouloirHt">
         <item name="devId_setget">22</item>
         <item name="instanceId_setget">0</item>
         <item name="commandclass_setget">38</item>

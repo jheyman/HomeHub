@@ -58,7 +58,7 @@ public class ZWaveWidgetService extends IntentService {
             // retrieve server-side timestamp, since this will be used in incremental updates
             getServerTime();
 
-            String[] deviceList = getResources().getStringArray(R.array.deviceList);
+            String[] deviceList = getResources().getStringArray(R.array.ZWaveDeviceList);
 
             // now get data for every device
             for (String d : deviceList) {
@@ -76,7 +76,7 @@ public class ZWaveWidgetService extends IntentService {
             JSONObject jdata = getIncrementalUpdate(lastRefreshTime);
 
             // Parse the list of all declared devices, and figure out if a UI update is required
-            String[] deviceList = getResources().getStringArray(R.array.deviceList);
+            String[] deviceList = getResources().getStringArray(R.array.ZWaveDeviceList);
             for (String d : deviceList) {
                 int arrayId = this.getResources().getIdentifier(d, "array", this.getPackageName());
                 String[] temp = getResources().getStringArray(arrayId);
@@ -294,7 +294,7 @@ public class ZWaveWidgetService extends IntentService {
     private void getServerTime() {
 
         // Horrible hack until I find a proper way to get the current timestamp at server side : retrieve data from one arbitrary device and read its update timestamp
-        String[] deviceList = getResources().getStringArray(R.array.deviceList);
+        String[] deviceList = getResources().getStringArray(R.array.ZWaveDeviceList);
         int tempArrayId = this.getResources().getIdentifier(deviceList[0], "array", this.getPackageName());
         String[] val = getResources().getStringArray(tempArrayId);
         String devId = val[0];
@@ -349,14 +349,14 @@ public class ZWaveWidgetService extends IntentService {
         } catch (Exception e) {
             Log.e("ZWaveWidgetService", "httpRequest: Error in http connection " + e.toString());
         }
-/*
+
         String data;
         if (result.length() <= 2048)
             data = result;
         else
             data = "[long data....]";
-*/
-        Log.i("ZWaveWidgetService", "httpRequest completed, received " + result.length() + " bytes: " + result.replaceAll(" ", "").replaceAll("\r", "").replaceAll("\n", ""));
+
+        //Log.i("ZWaveWidgetService", "httpRequest completed, received " + result.length() + " bytes: " + result.replaceAll(" ", "").replaceAll("\r", "").replaceAll("\n", ""));
 
         return result;
     }

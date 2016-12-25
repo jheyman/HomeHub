@@ -1,6 +1,16 @@
 <resources>
     <string name="app_name">HomeHub</string>
+    <!--
+        <string name="app_fontPath">"fonts/Quicksand-Regular.otf"</string>
+    -->
+    <string name="app_fontPath">"fonts/OpenSans-Light.ttf"</string>
+    <string name="quitAppQuestion">"Quitter l'application ?"</string>
+    <string name="quitAppQuestionYes">"Oui"</string>
+    <string name="quitAppQuestionNo">"Non"</string>
+
     <string name="action_settings">Settings</string>
+
+    <!-- -->
     <string name="zwaveserver_base">http://192.168.0.13:8083</string>
 
     <string name="shoppinglist_title_activity_additem_menu">AddItemMenuActivity</string>
@@ -11,15 +21,67 @@
     <string name="graphviewer_special_time_start">07:00</string>
     <string name="graphviewer_special_time_stop">9:30</string>
 
-    <string name="agendaviewer_header_text">Agenda</string>
+    <string name="agendaviewer_noevent_text">pas de rdv</string>
     <string name="open_weather_maps_app_id">2dee82fd5d7326c51ceb0d4b8a42e2b5</string>
-    <string name="weather_sunny">&#xf00d;</string>
+
+    <string name="weather_sunny_day">&#xf00d;</string>
     <string name="weather_clear_night">&#xf02e;</string>
-    <string name="weather_foggy">&#xf014;</string>
-    <string name="weather_cloudy">&#xf013;</string>
-    <string name="weather_rainy">&#xf019;</string>
-    <string name="weather_snowy">&#xf01b;</string>
-    <string name="weather_thunder">&#xf01e;</string>
-    <string name="weather_drizzle">&#xf01c;</string>
+
+    <string name="weather_cloudy_night">&#xf086;</string>
+
+
+    <string name="weather_fewclouds_day">&#xf00c;</string>
+    <string name="weather_fewclouds_night">&#xf081;</string>
+
+    <string name="weather_scatteredclouds_day">&#xf002;</string>
+    <string name="weather_scatteredclouds_night">&#xf086;</string>
+
+    <string name="weather_brokenclouds_day">&#xf041;</string>
+    <string name="weather_brokenclouds_night">&#xf086;</string>
+
+    <string name="weather_overcastclouds_day">&#xf013;</string>
+    <string name="weather_overcastclouds_night">&#xf086;</string>
+
+    <string name="weather_lightrain_day">&#xf01a;</string>
+    <string name="weather_lightrain_night">&#xf029;</string>
+
+    <string name="weather_moderaterain_day">&#xf017;</string>
+    <string name="weather_moderaterain_night">&#xf026;</string>
+
+    <string name="weather_heavyrain_day">&#xf019;</string>
+    <string name="weather_heavyrain_night">&#xf028;</string>
+
+    <string name="weather_veryheavyrain_day">&#xf01e;</string>
+    <string name="weather_veryheavyrain_night">&#xf02d;</string>
+
+    <string name="weather_extremerain_day">&#xf01e;</string>
+    <string name="weather_extremerain_night">&#xf02d;</string>
+
+    <string name="weather_freezingrain_day">&#xf015;</string>
+    <string name="weather_freezingrain_night">&#xf024;</string>
+
+    <string name="weather_lightshowerrain_day">&#xf01a;</string>
+    <string name="weather_lightshowerrain_night">&#xf029;</string>
+
+    <string name="weather_showerrain_day">&#xf01a;</string>
+    <string name="weather_showerrain_night">&#xf029;</string>
+
+    <string name="weather_heavyshower_day">&#xf019;</string>
+    <string name="weather_heavyshower_night">&#xf028;</string>
+
+    <string name="weather_raggedshowerrain_day">&#xf019;</string>
+    <string name="weather_raggedshowerrain_night">&#xf028;</string>
+
+    <string name="weather_snowy_day">&#xf01b;</string>
+    <string name="weather_snowy_night">&#xf02a;</string>
+
+    <string name="weather_foggy_day">&#xf014;</string>
+    <string name="weather_foggy_night">&#xf04a;</string>
+
+    <string name="weather_thunder_day">&#xf01e;</string>
+    <string name="weather_thunder_night">&#xf02d;</string>
+
+    <string name="weather_drizzle_day">&#xf01c;</string>
+    <string name="weather_drizzle_night">&#xf039;</string>
 
 </resources>

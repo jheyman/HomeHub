@@ -15,7 +15,7 @@
         android:textSize="@dimen/agendaviewer_text_size"
         android:layout_gravity="center"
         android:gravity="center"
-        android:padding="10dp"
+        android:padding="5dp"
         android:background="@drawable/agenda_item_border"/>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"

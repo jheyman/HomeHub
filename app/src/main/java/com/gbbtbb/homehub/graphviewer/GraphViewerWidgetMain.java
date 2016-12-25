@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.gbbtbb.homehub.Globals;
 import com.gbbtbb.homehub.R;
@@ -78,12 +79,16 @@ public class GraphViewerWidgetMain extends Fragment {
         timestamp_end = Utilities.getCurrentTimeStamp();
         timestamp_start = timestamp_end - mHistoryLengthInHours*60*60*1000;
 
-        final ImageView title = (ImageView)getView().findViewById(R.id.graphviewer_textGraphTitle);
+        final TextView title = (TextView)getView().findViewById(R.id.graphviewer_textGraphTitle);
+        final TextView comment = (TextView)getView().findViewById(R.id.graphviewer_textGraphComment);
         final ImageView footer = (ImageView)getView().findViewById(R.id.graphviewer_footer);
 
         setLoadingInProgress(true);
 
-        title.setImageBitmap(drawCommonHeader(ctx, mHeaderWidth, mHeaderHeight));
+        title.setText(ctx.getResources().getString(R.string.graphviewer_header_text) + ": " + mHistoryLengthInHours + " heures");
+        //comment.setText("Dernière MAJ: " + timeLastUpdated);
+        comment.setText("");
+
         footer.setImageBitmap(drawCommonFooter(ctx, mGraphWidth, mFooterHeight));
 
         Intent intent = new Intent(ctx.getApplicationContext(), GraphViewerWidgetService.class);
@@ -134,7 +139,7 @@ public class GraphViewerWidgetMain extends Fragment {
         getActivity().registerReceiver(GraphViewBroadcastReceiver, filter);
         ctx = getActivity();
 
-        final ImageView title = (ImageView)getView().findViewById(R.id.graphviewer_textGraphTitle);
+        final TextView title = (TextView)getView().findViewById(R.id.graphviewer_textGraphTitle);
         final ImageView footer = (ImageView)getView().findViewById(R.id.graphviewer_footer);
         final ImageView graph = (ImageView)getView().findViewById(R.id.graphviewer_GraphBody);
 
@@ -150,9 +155,9 @@ public class GraphViewerWidgetMain extends Fragment {
                 mHeaderWidth = title.getWidth();
                 mFooterHeight = footer.getHeight();
 
-                //Log.i(GraphViewerWidgetMain.TAG, "onGlobalLayout TITLE: " + Integer.toString(mHeaderWidth) + ", " + Integer.toString(mHeaderHeight));
-                //Log.i(GraphViewerWidgetMain.TAG, "onGlobalLayout GRAPH: " + Integer.toString(mGraphWidth) + ", " + Integer.toString(mGraphHeight));
-                //Log.i(GraphViewerWidgetMain.TAG, "onGlobalLayout FOOTER: " + Integer.toString(mGraphWidth) + ", " + Integer.toString(mFooterHeight));
+                Log.i(GraphViewerWidgetMain.TAG, "onGlobalLayout TITLE: " + Integer.toString(mHeaderWidth) + ", " + Integer.toString(mHeaderHeight));
+                Log.i(GraphViewerWidgetMain.TAG, "onGlobalLayout GRAPH: " + Integer.toString(mGraphWidth) + ", " + Integer.toString(mGraphHeight));
+                Log.i(GraphViewerWidgetMain.TAG, "onGlobalLayout FOOTER: " + Integer.toString(mGraphWidth) + ", " + Integer.toString(mFooterHeight));
 
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN)
                     title.getViewTreeObserver().removeOnGlobalLayoutListener(this);
@@ -227,38 +232,6 @@ public class GraphViewerWidgetMain extends Fragment {
             }
         }
     };
-
-    private Bitmap drawCommonHeader(Context ctx, int width, int height) {
-        Log.i(GraphViewerWidgetMain.TAG, "drawCommonHeader");
-
-        Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bmp);
-
-        Typeface myfont = Typeface.createFromAsset(ctx.getAssets(), "fonts/passing_notes.ttf");
-
-        TextPaint textPaint = new TextPaint();
-        textPaint.setTypeface(myfont);
-        textPaint.setStyle(Paint.Style.FILL);
-        textPaint.setTextSize(ctx.getResources().getDimension(R.dimen.graphviewer_header_text_size));
-        textPaint.setColor(ctx.getResources().getColor(R.color.graphviewer_text_color));
-
-        textPaint.setTextAlign(Paint.Align.LEFT);
-        textPaint.setAntiAlias(true);
-        textPaint.setSubpixelText(true);
-
-        float textHeight = Utilities.getTextHeight(textPaint, "r");
-        canvas.drawText(ctx.getResources().getString(R.string.graphviewer_header_text) + ": " + mHistoryLengthInHours + " heures", 10.0f, 0.5f * (height + textHeight), textPaint);
-
-        TextPaint textPaintComments = new TextPaint();
-        textPaintComments.setStyle(Paint.Style.FILL);
-        textPaintComments.setTextSize(ctx.getResources().getDimension(R.dimen.graphviewer_header_comments_size));
-        textPaintComments.setColor(ctx.getResources().getColor(R.color.graphviewer_text_color));
-
-        String commentText = "(Dernière MAJ: " + timeLastUpdated + ")";
-        canvas.drawText(commentText , 0.5f*width, 0.5f * (height + textHeight), textPaintComments);
-
-        return bmp;
-    }
 
     private Bitmap drawCommonFooter(Context ctx, int width, int height) {
 

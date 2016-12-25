@@ -124,6 +124,7 @@ public class AgendaWidgetService extends IntentService {
 
                     agenda_list.add(new AgendaItem(start, title));
                 }
+                mDataCursor.close();
             }
         }
         catch (SecurityException e) {

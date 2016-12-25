@@ -192,6 +192,11 @@ public class GraphViewerWidgetService extends IntentService {
         mCumulatedValues.clear();
         mSpecialValues.clear();
 
+        if (Globals.graphLatestValues == null)
+            Globals.graphLatestValues = new HashMap<String, Float>();
+        else
+            Globals.graphLatestValues.clear();
+
         String dataId ="unknown dataset";
         String datetime = "Unknown timestamp";
         float value;
@@ -260,6 +265,8 @@ public class GraphViewerWidgetService extends IntentService {
             // move to next item
             mDataCursor.moveToNext();
         }
+
+        mDataCursor.close();
 
         // Parse each graph points, to figure out optimal scaling for display.
         Iterator<String> keySetIterator = mDataPoints.keySet().iterator();
@@ -365,6 +372,11 @@ public class GraphViewerWidgetService extends IntentService {
             mCumulatedValues.put(key, cv);
 
             Log.i(TAG, "graph params: auto-scale = " + Float.toString(gp.scale) + ", type=" + gp.type);
+
+            //Store latest value of each series in a global map for use by other widgets
+            DataPoint dp = dataPoints.get(dataPoints.size() - 1);
+            //Log.i(TAG, "Storing latest value in Globals: " + Float.toString(dp.value) + " under key " + key);
+            Globals.graphLatestValues.put(key, dp.value);
         }
 
         Log.i(TAG, "---------------DONE PARSING DATA---------------");
