@@ -18,6 +18,8 @@ import com.gbbtbb.homehub.R;
 
 public class ZWaveWidgetMain extends Fragment {
 
+    public static final String TAG = "ZWaveWidgetMain";
+
     public static final String INITIALIZE_ACTION ="com.gbbtbb.zwavewidget.INITIALIZE_ACTION";
     public static final String REFRESH_ACTION ="com.gbbtbb.zwavewidget.REFRESH_ACTION";
     public static final String TOGGLE_ACTION ="com.gbbtbb.zwavewidget.TOGGLE_ACTION";
@@ -46,8 +48,6 @@ public class ZWaveWidgetMain extends Fragment {
     {
         @Override
         public void run() {
-            Log.i("ZWaveWidgetMain", "REFRESH VIEW TRIGGERED " );
-
             Intent intent = new Intent(ctx.getApplicationContext(), ZWaveWidgetService.class);
             intent.putExtra(LATEST_REFRESH_EXTRA, latestRefreshUnixTime);
             intent.setAction(REFRESH_ACTION);
@@ -68,7 +68,7 @@ public class ZWaveWidgetMain extends Fragment {
     @Override
     public void onDestroyView()
     {
-        Log.i("ZWaveWidgetMain", "onDestroyView" );
+        Log.i(TAG, "onDestroyView" );
         handler.removeCallbacksAndMessages(null);
         getActivity().unregisterReceiver(zWaveViewBroadcastReceiver);
         super.onDestroyView();
@@ -85,7 +85,7 @@ public class ZWaveWidgetMain extends Fragment {
 
         getActivity().registerReceiver(zWaveViewBroadcastReceiver, filter);
         ctx = getActivity();
-        Log.i("ZWaveWidgetMain", "onActivityCreated" );
+        Log.i(TAG, "onActivityCreated" );
 
         // Parse the list of all declared devices, retrieve the associated imageView for each device, and register a click event on it
         String[] deviceList = ctx.getResources().getStringArray(R.array.ZWaveDeviceList);
@@ -128,12 +128,12 @@ public class ZWaveWidgetMain extends Fragment {
         {
             final String action = intent.getAction();
 
-            //Log.i("ZWaveWidgetMain", "onReceive " + action);
+            //Log.i(TAG, "onReceive " + action);
 
             if (STORE_REFRESH_TIME_ACTION.equals(action)) {
 
                 latestRefreshUnixTime = intent.getLongExtra(STORE_REFRESH_TIME_EXTRA, 0);
-                //Log.i("ZWaveWidgetProvider", "Updating latestRefreshUnixTime to " + Long.toString(latestRefreshUnixTime));
+                //Log.i(TAG, "Updating latestRefreshUnixTime to " + Long.toString(latestRefreshUnixTime));
             }
             else if (UPDATE_IMAGEVIEW_ACTION.equals(action)) {
                 int imageViewId = intent.getIntExtra(UPDATE_IMAGEVIEW_EXTRA_VIEWID, 0);

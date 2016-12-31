@@ -61,7 +61,7 @@ public class GraphViewerWidgetMain extends Fragment {
         @Override
         public void run() {
 
-            Log.i("GraphViewerWidgetMain", "refreshView CALLED, ctx=" + ctx.toString());
+            Log.i(TAG, "refreshView CALLED, ctx=" + ctx.toString());
             refresh();
 
             handler.postDelayed(this, REFRESH_DELAY);
@@ -159,10 +159,7 @@ public class GraphViewerWidgetMain extends Fragment {
                 Log.i(GraphViewerWidgetMain.TAG, "onGlobalLayout GRAPH: " + Integer.toString(mGraphWidth) + ", " + Integer.toString(mGraphHeight));
                 Log.i(GraphViewerWidgetMain.TAG, "onGlobalLayout FOOTER: " + Integer.toString(mGraphWidth) + ", " + Integer.toString(mFooterHeight));
 
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN)
-                    title.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                else
-                    title.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                title.getViewTreeObserver().removeGlobalOnLayoutListener(this);
 
                 // It is now also safe to refresh the graph itself, with correct dimensions
                 Log.i(GraphViewerWidgetMain.TAG, "initial REFRESH triggered");
@@ -218,7 +215,7 @@ public class GraphViewerWidgetMain extends Fragment {
         {
             final String action = intent.getAction();
 
-            Log.i("GraphViewerWidgetMain", "onReceive " + action);
+            Log.i(TAG, "onReceive " + action);
 
             if (GRAPHREFRESHEDDONE_ACTION.equals(action)) {
 

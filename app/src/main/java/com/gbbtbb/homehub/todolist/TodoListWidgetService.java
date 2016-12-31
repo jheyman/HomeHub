@@ -25,6 +25,8 @@ import java.util.Calendar;
 
 public class TodoListWidgetService extends IntentService {
 
+    public static final String TAG = "TodoListWidgetSvc";
+
     public TodoListWidgetService() {
         super(com.gbbtbb.homehub.todolist.TodoListWidgetService.class.getName());
     }
@@ -33,7 +35,7 @@ public class TodoListWidgetService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         final String action = intent.getAction();
 
-        Log.i("TodoListWidgetSvc", "onHandleIntent action= " + action);
+        Log.i(TAG, "onHandleIntent action= " + action);
 
         if (action.equals(com.gbbtbb.homehub.todolist.TodoListWidgetMain.RELOAD_ACTION)) {
 
@@ -107,21 +109,14 @@ public class TodoListWidgetService extends IntentService {
             }
 
         } catch(JSONException e){
-            Log.e(com.gbbtbb.homehub.todolist.TodoListWidgetMain.TAG, "Error parsing data "+e.toString());
+            Log.e(TAG, "Error parsing data "+e.toString());
         }
 
         // Add a few empty items so that the list looks good even with no item present
         for(int i=0;i< com.gbbtbb.homehub.todolist.TodoListWidgetMain.NB_DUMMY_ITEMS;i++){
             list.add(new TodoListRowItem("", 0, ""));
         }
-/*
-        try {
-            Thread.sleep(4000);
-        }
-        catch (InterruptedException e) {
 
-        }
-*/
         return list;
     }
 
@@ -135,16 +130,16 @@ public class TodoListWidgetService extends IntentService {
                     URLEncoder.encode(newItemName, charset), priority, URLEncoder.encode(creationDate, charset));
         }
         catch (UnsupportedEncodingException e) {
-            Log.e("PhotoFrameWidgetService", "getImage: Error encoding URL params: " + e.toString());
+            Log.e(TAG, "getImage: Error encoding URL params: " + e.toString());
         }
 
         httpRequest(query);
 
-        Log.i(com.gbbtbb.homehub.todolist.TodoListWidgetMain.TAG, "TodoListDataProvider: requested to add new item: " + newItemName);
+        Log.i(TAG, "TodoListDataProvider: requested to add new item: " + newItemName);
     }
 
     public void deleteItem(String selection) {
-        Log.i(TodoListWidgetMain.TAG, "TodoListDataProvider: request for deleting " + selection);
+        Log.i(TAG, "TodoListDataProvider: request for deleting " + selection);
 
         String query = "";
         String charset = "UTF-8";
@@ -154,7 +149,7 @@ public class TodoListWidgetService extends IntentService {
                     URLEncoder.encode(selection, charset));
         }
         catch (UnsupportedEncodingException e) {
-            Log.e("PhotoFrameWidgetService", "getImage: Error encoding URL params: " + e.toString());
+            Log.e(TAG, "getImage: Error encoding URL params: " + e.toString());
         }
 
         httpRequest(query);
@@ -163,7 +158,7 @@ public class TodoListWidgetService extends IntentService {
     private String httpRequest(String url) {
         String result = "";
 
-        Log.i("TodoListWidgetSvc", "Performing HTTP request " + url);
+        Log.i(TAG, "Performing HTTP request " + url);
 
         try {
 
@@ -177,7 +172,7 @@ public class TodoListWidgetService extends IntentService {
                 urlConnection.disconnect();
             }
         } catch(Exception e) {
-            Log.e("TodoListWidgetSvc", "httpRequest: Error in http connection "+e.toString());
+            Log.e(TAG, "httpRequest: Error in http connection "+e.toString());
         }
 
         String data ;
@@ -186,7 +181,7 @@ public class TodoListWidgetService extends IntentService {
         else
             data = "[long data....]";
 
-        Log.i("TodoListWidgetSvc", "httpRequest completed, received "+ result.length() + " bytes: " + data);
+        Log.i(TAG, "httpRequest completed, received "+ result.length() + " bytes: " + data);
 
         return result;
     }

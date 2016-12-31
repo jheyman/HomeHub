@@ -72,6 +72,9 @@ public class AgendaWidgetService extends IntentService {
 
         Log.i(TAG, "getFreshData called");
 
+        /////////////////////////////////////
+        // Get Calendar Events
+        /////////////////////////////////////
         ArrayList<AgendaItem> agenda_list = new ArrayList<AgendaItem>();
         try {
 
@@ -97,32 +100,30 @@ public class AgendaWidgetService extends IntentService {
             //String selection = "((" + CalendarContract.Events.CALENDAR_ID + " = ?))";
             //String[] selectionArgs = new String[]{"1"};
 
+            Log.i(TAG, "getFreshData querying agenda items...");
             mDataCursor = resolver.query(eventUri, EVENT_PROJECTION, /*selection*/null, /*selectionArgs*/null, CalendarContract.Instances.BEGIN + " ASC");
 
-            Log.i(TAG, "getFreshData querying agenda items...");
             if (mDataCursor != null) {
 
-                while (mDataCursor.moveToNext()) {
+                if (mDataCursor.getCount() == 0) {
+                    Log.i(TAG, "No agenda items");
+                }
+                else {
+                    while (mDataCursor.moveToNext()) {
 
-                    String title = null;
-                    Long start = 0L;
+                        String title = null;
+                        Long start = 0L;
 
-                    title = mDataCursor.getString(0);
-                    start = mDataCursor.getLong(2);
+                        title = mDataCursor.getString(0);
+                        start = mDataCursor.getLong(2);
 
-                    Format df = DateFormat.getDateFormat(this);
-                    Format tf = DateFormat.getTimeFormat(this);
+                        Format df = DateFormat.getDateFormat(this);
+                        Format tf = DateFormat.getTimeFormat(this);
 
-                    Log.i(TAG, "getFreshData:" + title + " on " + df.format(start) + " at " + tf.format(start));
+                        Log.i(TAG, "getFreshData:" + title + " on " + df.format(start) + " at " + tf.format(start));
 
-                    //Log.i(TAG, "getFreshData: start time " + df.format(timestamp_start) + " at " + tf.format(timestamp_start));
-                    //Log.i(TAG, "getFreshData: end time " + df.format(timestamp_end) + " at " + tf.format(timestamp_end));
-
-                    //Log.i(TAG, "getFreshData: start time: " + Long.toString(timestamp_start));
-                    //Log.i(TAG, "getFreshData: end time: " + Long.toString(timestamp_end));
-                    //Log.i(TAG, "getFreshData: item  time: " + Long.toString(start));
-
-                    agenda_list.add(new AgendaItem(start, title));
+                        agenda_list.add(new AgendaItem(start, title));
+                    }
                 }
                 mDataCursor.close();
             }
@@ -134,10 +135,9 @@ public class AgendaWidgetService extends IntentService {
         Globals.agendaItems = agenda_list;
 
 
-
-
-
-
+        /////////////////////////////////////
+        // Get Weather forecast
+        /////////////////////////////////////
         ArrayList<WeatherItem> list = new ArrayList<WeatherItem>();
 
         String charset = "UTF-8";
@@ -183,7 +183,6 @@ public class AgendaWidgetService extends IntentService {
             }
             Log.i(TAG, "JSON data parsing completed");
         }
-
 
         // Now actually proceed to get the 5-day forecast from OpenWeatherMap
         try {
@@ -285,5 +284,4 @@ public class AgendaWidgetService extends IntentService {
             return "";
         }
     }
-
 }

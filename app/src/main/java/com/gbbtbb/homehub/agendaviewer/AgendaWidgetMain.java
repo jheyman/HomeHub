@@ -1,6 +1,7 @@
 package com.gbbtbb.homehub.agendaviewer;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
@@ -83,7 +84,7 @@ public class AgendaWidgetMain extends Fragment {
     @Override
     public void onDestroyView()
     {
-        Log.i("AgendaWidgetMain", "onDestroyView ");
+        Log.i(TAG, "onDestroyView ");
         handler.removeCallbacksAndMessages(null);
         getActivity().unregisterReceiver(agendaViewBroadcastReceiver);
         super.onDestroyView();
@@ -93,7 +94,7 @@ public class AgendaWidgetMain extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        Log.i("AgendaWidgetMain", "onActivityCreated");
+        Log.i(TAG, "onActivityCreated");
 
         weatherFont = Typeface.createFromAsset(getActivity().getAssets(), "fonts/weather.ttf");
 
@@ -116,25 +117,19 @@ public class AgendaWidgetMain extends Fragment {
                 //dimensions could be measured here
 
                 // remove observer now
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN)
-                    hsv.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                else
-                    hsv.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                hsv.getViewTreeObserver().removeGlobalOnLayoutListener(this);
 
                 // It is now also safe to refresh the agenda itself, with correct dimensions
                 handler.post(refreshView);
             }
         });
 
-
-
-
-
-
-
+        // Manage calendar access rights
         if (ContextCompat.checkSelfPermission(getActivity(),
                 Manifest.permission.READ_CALENDAR)
                 != PackageManager.PERMISSION_GRANTED) {
+
+            Log.i(TAG, "calendar permission should be granted");
 
             // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
@@ -143,11 +138,11 @@ public class AgendaWidgetMain extends Fragment {
                 // Show an explanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
                 // sees the explanation, try again to request the permission.
-
+                Log.i(TAG, "No permission required");
             } else {
 
                 // No explanation needed, we can request the permission.
-
+                Log.i(TAG, "Requesting user permission...");
                 ActivityCompat.requestPermissions(getActivity(),
                         new String[]{Manifest.permission.READ_CALENDAR},
                         0);
@@ -172,7 +167,7 @@ public class AgendaWidgetMain extends Fragment {
         {
         final String action = intent.getAction();
 
-        Log.i("AgendaWidgetMain", "onReceive " + action);
+        Log.i(TAG, "onReceive " + action);
 
         if (AGENDAREFRESHEDDONE_ACTION.equals(action)) {
 
@@ -304,6 +299,7 @@ public class AgendaWidgetMain extends Fragment {
                     CustomTextView ctv = (CustomTextView) v.findViewById(R.id.agendaitem_eventline);
                     ctv.setText(R.string.agendaviewer_noevent_text);
                     agendaItemsLayout.addView(v);
+                    agendaItemsLayout.setBackgroundResource(R.drawable.agenda_item_border_noevent);
                 }
 
                 // finally add this view to the overall horizontal scrollview showing all days

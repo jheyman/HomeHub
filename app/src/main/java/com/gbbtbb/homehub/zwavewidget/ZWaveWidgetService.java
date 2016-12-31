@@ -19,6 +19,8 @@ import java.net.URL;
 
 public class ZWaveWidgetService extends IntentService {
 
+    public static final String TAG = "ZWaveWidgetService";
+
     public ZWaveWidgetService() {
         super(ZWaveWidgetService.class.getName());
     }
@@ -53,7 +55,7 @@ public class ZWaveWidgetService extends IntentService {
 
         if (ZWaveWidgetMain.INITIALIZE_ACTION.equals(action)) {
 
-            Log.i("ZWaveWidgetService", "onHandleIntent INITIALIZE_ACTION");
+            Log.i(TAG, "onHandleIntent INITIALIZE_ACTION");
 
             // retrieve server-side timestamp, since this will be used in incremental updates
             getServerTime();
@@ -70,7 +72,7 @@ public class ZWaveWidgetService extends IntentService {
         } else if (ZWaveWidgetMain.REFRESH_ACTION.equals(action)) {
 
             long lastRefreshTime = intent.getExtras().getLong(ZWaveWidgetMain.LATEST_REFRESH_EXTRA);
-            //Log.i("ZWaveWidgetService", "onHandleIntent REFRESH_ACTION date=" + Long.toString(lastRefreshTime));
+            //Log.i(TAG, "onHandleIntent REFRESH_ACTION date=" + Long.toString(lastRefreshTime));
 
             // Get all state changes since last update from the z-way server
             JSONObject jdata = getIncrementalUpdate(lastRefreshTime);
@@ -86,7 +88,7 @@ public class ZWaveWidgetService extends IntentService {
         }  else if (ZWaveWidgetMain.TOGGLE_ACTION.equals(action)) {
 
             String deviceName = intent.getExtras().getString(ZWaveWidgetMain.DEVICE_NAME_EXTRA);
-            Log.i("ZWaveWidgetService", "onHandleIntent TOGGLE_ACTION, toggle " + deviceName);
+            Log.i(TAG, "onHandleIntent TOGGLE_ACTION, toggle " + deviceName);
             int arrayId = this.getResources().getIdentifier(deviceName, "array", this.getPackageName());
             String[] temp = getResources().getStringArray(arrayId);
             toggleDevice(temp[0], temp[1], temp[2], temp[6], temp[7], temp[8], deviceName);
@@ -113,7 +115,7 @@ public class ZWaveWidgetService extends IntentService {
             sendBroadcast(storeTimeIntent);
 
         } catch(JSONException e){
-            Log.e("ZWaveWidgetService", "getIncrementalUpdate: Error parsing data " + e.toString());
+            Log.e(TAG, "getIncrementalUpdate: Error parsing data " + e.toString());
         }
 
         return jdata;
@@ -164,19 +166,19 @@ public class ZWaveWidgetService extends IntentService {
                     else
                         level = Integer.valueOf(j.getString("value"));
 
-                    Log.i("ZWaveWidgetService", "found change for " + key_main + " or "+ key_alt +" , level=" + Integer.toString(level));
+                    Log.i(TAG, "found change for " + key_main + " or "+ key_alt +" , level=" + Integer.toString(level));
 
                     // Refresh icon
                     updateImageView(imgViewId, icontype_base, level);
                 }
                 else {
-                    Log.i("ZWaveWidgetService", "STALE update for " + key_main + ", discarding ");
+                    Log.i(TAG, "STALE update for " + key_main + ", discarding ");
                 }
             } catch(JSONException e){
-                Log.e("ZWaveWidgetService", "refreshDevice: Error parsing data " + e.toString());
+                Log.e(TAG, "refreshDevice: Error parsing data " + e.toString());
             }
         } else {
-            //Log.i("ZWaveWidgetService", "No change detected for " + key_main + "or "+ key_alt);
+            //Log.i(TAG, "No change detected for " + key_main + "or "+ key_alt);
         }
     }
 
@@ -202,10 +204,10 @@ public class ZWaveWidgetService extends IntentService {
                 else
                     level = Integer.valueOf(jdata.getString("value"));
 
-                Log.i("ZWaveWidgetService", "updateSwitch (" + name + "): level=" + Integer.toString(level));
+                Log.i(TAG, "updateSwitch (" + name + "): level=" + Integer.toString(level));
 
             } catch (JSONException e) {
-                Log.e("ZWaveWidgetService", "toggleDevice: Error parsing data " + e.toString());
+                Log.e(TAG, "toggleDevice: Error parsing data " + e.toString());
             }
 
             // toggle current state
@@ -248,10 +250,10 @@ public class ZWaveWidgetService extends IntentService {
             else
                 level = Integer.valueOf(jdata.getString("value"));
 
-            Log.i("ZWaveWidgetService", "updateSwitch ("+name+"): level=" + Integer.toString(level));
+            Log.i(TAG, "updateSwitch ("+name+"): level=" + Integer.toString(level));
 
         } catch(JSONException e){
-            Log.e("ZWaveWidgetService", "forceRefreshDevice: Error parsing data "+e.toString());
+            Log.e(TAG, "forceRefreshDevice: Error parsing data "+e.toString());
         }
 
         updateImageView(imgViewId, icontype_base, level);
@@ -314,7 +316,7 @@ public class ZWaveWidgetService extends IntentService {
             JSONObject jdata = new JSONObject(result);
             updateTime = jdata.getString("updateTime");
         } catch(JSONException e){
-            Log.e("ZWaveWidgetService", "getServerTime: Error parsing data "+e.toString());
+            Log.e(TAG, "getServerTime: Error parsing data "+e.toString());
         }
 
         // Notify provider of this timestamp
@@ -327,14 +329,14 @@ public class ZWaveWidgetService extends IntentService {
             donePendingIntent.send();
         }
         catch (PendingIntent.CanceledException ce) {
-            Log.i("ZWaveWidgetService", "getServerTime: Exception: " + ce.toString());
+            Log.i(TAG, "getServerTime: Exception: " + ce.toString());
         }
     }
 
     private String httpRequest(String url) {
         String result = "";
 
-      Log.i("ZWaveWidgetService", "Performing HTTP request " + url);
+      Log.i(TAG, "Performing HTTP request " + url);
 
         try {
 
@@ -347,7 +349,7 @@ public class ZWaveWidgetService extends IntentService {
                 urlConnection.disconnect();
             }
         } catch (Exception e) {
-            Log.e("ZWaveWidgetService", "httpRequest: Error in http connection " + e.toString());
+            Log.e(TAG, "httpRequest: Error in http connection " + e.toString());
         }
 
         String data;
@@ -356,7 +358,7 @@ public class ZWaveWidgetService extends IntentService {
         else
             data = "[long data....]";
 
-        //Log.i("ZWaveWidgetService", "httpRequest completed, received " + result.length() + " bytes: " + result.replaceAll(" ", "").replaceAll("\r", "").replaceAll("\n", ""));
+        //Log.i(TAG, "httpRequest completed, received " + result.length() + " bytes: " + result.replaceAll(" ", "").replaceAll("\r", "").replaceAll("\n", ""));
 
         return result;
     }

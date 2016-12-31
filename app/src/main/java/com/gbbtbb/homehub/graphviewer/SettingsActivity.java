@@ -50,7 +50,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         //GraphViewerWidgetMain.notifySettingsChanged(this);
-        Log.i("SettingsActivity", "notifySettingsChanged called");
+        Log.i(TAG, "notifySettingsChanged called");
         Intent refreshIntent = new Intent();
         refreshIntent.setAction(GraphViewerWidgetMain.SETTINGSCHANGED_ACTION);
         sendBroadcast(refreshIntent);

@@ -23,6 +23,8 @@ import java.util.ArrayList;
 
 public class ShoppingListWidgetService extends IntentService {
 
+    public static final String TAG = "ShoppingListWidgetSvc";
+
     public ShoppingListWidgetService() {
         super(ShoppingListWidgetService.class.getName());
     }
@@ -31,7 +33,7 @@ public class ShoppingListWidgetService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         final String action = intent.getAction();
 
-        Log.i("ShoppingListWidgetSvc", "onHandleIntent action= " + action);
+        Log.i(TAG, "onHandleIntent action= " + action);
 
         if (action.equals(ShoppingListWidgetMain.RELOAD_ACTION)) {
 
@@ -101,14 +103,7 @@ public class ShoppingListWidgetService extends IntentService {
         for(int i=0;i<ShoppingListWidgetMain.NB_DUMMY_ITEMS;i++){
             list.add("");
         }
-/*
-        try {
-            Thread.sleep(4000);
-        }
-        catch (InterruptedException e) {
 
-        }
-*/
         return list;
     }
 
@@ -122,16 +117,16 @@ public class ShoppingListWidgetService extends IntentService {
                     URLEncoder.encode(newItemName, charset));
         }
         catch (UnsupportedEncodingException e) {
-            Log.e("PhotoFrameWidgetService", "getImage: Error encoding URL params: " + e.toString());
+            Log.e(TAG, "getImage: Error encoding URL params: " + e.toString());
         }
         
         httpRequest(query);
 
-        Log.i(ShoppingListWidgetMain.TAG, "ShoppingListDataProvider: requested to add new item: " + newItemName);
+        Log.i(TAG, "ShoppingListDataProvider: requested to add new item: " + newItemName);
     }
 
     public void deleteItem(String selection) {
-        Log.i(ShoppingListWidgetMain.TAG, "ShoppingListDataProvider: request for deleting " + selection);
+        Log.i(TAG, "ShoppingListDataProvider: request for deleting " + selection);
 
         String query = "";
         String charset = "UTF-8";
@@ -141,7 +136,7 @@ public class ShoppingListWidgetService extends IntentService {
                     URLEncoder.encode(selection, charset));
         }
         catch (UnsupportedEncodingException e) {
-            Log.e("PhotoFrameWidgetService", "getImage: Error encoding URL params: " + e.toString());
+            Log.e(TAG, "getImage: Error encoding URL params: " + e.toString());
         }
 
         httpRequest(query);
@@ -150,7 +145,7 @@ public class ShoppingListWidgetService extends IntentService {
     private String httpRequest(String url) {
         String result = "";
 
-        Log.i("ShoppingListWidgetSvc", "Performing HTTP request " + url);
+        Log.i(TAG, "Performing HTTP request " + url);
 
         try {
 
@@ -164,7 +159,7 @@ public class ShoppingListWidgetService extends IntentService {
                 urlConnection.disconnect();
             }
         } catch(Exception e) {
-            Log.e("ShoppingListWidgetSvc", "httpRequest: Error in http connection "+e.toString());
+            Log.e(TAG, "httpRequest: Error in http connection "+e.toString());
         }
 
         String data ;
@@ -173,7 +168,7 @@ public class ShoppingListWidgetService extends IntentService {
         else
             data = "[long data....]";
 
-        Log.i("ShoppingListWidgetSvc", "httpRequest completed, received "+ result.length() + " bytes: " + data);
+        Log.i(TAG, "httpRequest completed, received "+ result.length() + " bytes: " + data);
 
         return result;
     }

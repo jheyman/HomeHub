@@ -93,10 +93,7 @@ public class AddItemMenuActivity extends Activity {
                 ll.getLocalVisibleRect(r);
                 //Log.i(TodoListWidgetMain.TAG, "AddItemMenuActivity LinearLayout bounds= " + r);
 
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN)
-                    ll.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                else
-                    ll.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                ll.getViewTreeObserver().removeGlobalOnLayoutListener(this);
 
                 Display display = getWindowManager().getDefaultDisplay();
                 Point size = new Point();

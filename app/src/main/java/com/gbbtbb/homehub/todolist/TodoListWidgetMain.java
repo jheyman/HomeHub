@@ -162,7 +162,7 @@ public class TodoListWidgetMain extends Fragment implements AdapterView.OnItemCl
                 String creation_date = intent.getStringExtra(EXTRA_ITEM_CREATIONDATE);
 
                 adapter.insert(new TodoListRowItem(new_item, priority, creation_date), adapter.getCount() - NB_DUMMY_ITEMS);
-                Log.i(com.gbbtbb.homehub.todolist.TodoListWidgetMain.TAG, "TodoListBroadcastReceiver added item { " + new_item +
+                Log.i(TAG, "TodoListBroadcastReceiver added item { " + new_item +
                         "} with priority " + Integer.toString(priority) +
                         " and creation date " + creation_date);
             }
@@ -181,7 +181,7 @@ public class TodoListWidgetMain extends Fragment implements AdapterView.OnItemCl
             }
             else if (action.equals(RELOADDONE_ACTION)) {
 
-                Log.i(com.gbbtbb.homehub.todolist.TodoListWidgetMain.TAG, "processing RELOAD_ACTION_DONE...");
+                Log.i(TAG, "processing RELOAD_ACTION_DONE...");
                 setLoadingInProgress(false);
 
                 adapter.clear();
@@ -189,7 +189,7 @@ public class TodoListWidgetMain extends Fragment implements AdapterView.OnItemCl
 
                     adapter.add(e);
                     if (! "".equals(e.getItemName())) {
-                        Log.i(com.gbbtbb.homehub.todolist.TodoListWidgetMain.TAG, "Adding todo item " + e);
+                        Log.i(TAG, "Adding todo item " + e);
                     }
                 }
             }

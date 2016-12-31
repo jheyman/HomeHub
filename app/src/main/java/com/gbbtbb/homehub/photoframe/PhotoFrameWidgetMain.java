@@ -24,6 +24,7 @@ import java.io.File;
 
 public class PhotoFrameWidgetMain extends Fragment {
 
+    public static final String TAG = "PhotoFrameWidgetMain";
     public static String GETLOWRESIMAGE_ACTION = "com.gbbtbb.PhotoFrameWidgetProvider.GETLOWRESIMAGE_ACTION";
     public static String LOWRESLOADINGDONE_ACTION = "com.gbbtbb.PhotoFrameWidgetProvider.LOWRESLOADINGDONE_ACTION";
     public static String FULLRESSAVE_ACTION = "com.gbbtbb.PhotoFrameWidgetProvider.FULLRESSAVE_ACTION";
@@ -82,7 +83,7 @@ public class PhotoFrameWidgetMain extends Fragment {
     @Override
     public void onDestroyView()
     {
-        Log.i("PhotoFrameWidgetMain", "onDestroyView" );
+        Log.i(TAG, "onDestroyView" );
         handler.removeCallbacksAndMessages(null);
         getActivity().unregisterReceiver(photoFrameViewBroadcastReceiver);
         super.onDestroyView();
@@ -139,7 +140,7 @@ public class PhotoFrameWidgetMain extends Fragment {
             final String action = intent.getAction();
             ProgressBar pb = (ProgressBar)getView().findViewById(R.id.photoframe_loadingProgress);
 
-            //Log.i("PhotoFrameWidgetMain", "onReceive " + action);
+            //Log.i(TAG, "onReceive " + action);
             if (action.equals(FULLRESSAVINGDONE_ACTION)) {
 
                 // Hide progress bar now
@@ -156,7 +157,6 @@ public class PhotoFrameWidgetMain extends Fragment {
                 File f = new File(imageDumpPath, "temp.png");
 
                 emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(f));
-
                 ctx.startActivity(emailIntent);
             } else if (action.equals(LOWRESLOADINGDONE_ACTION)) {
 
@@ -165,10 +165,10 @@ public class PhotoFrameWidgetMain extends Fragment {
                 imageHeight = intent.getIntExtra("heigth", 0);
                 imageOrientation = intent.getIntExtra("orientation", 0);
 
-                Log.i("PhotoFrameWidgetProvidr", "imagePath is " + imageName);
-                Log.i("PhotoFrameWidgetProvidr", "imageHeight is " + Integer.toString(imageHeight));
-                Log.i("PhotoFrameWidgetProvidr", "imageWidth is " + Integer.toString(imageWidth));
-                Log.i("PhotoFrameWidgetProvidr", "imageOrientation is " + Integer.toString(imageOrientation));
+                Log.i(TAG, "imagePath is " + imageName);
+                Log.i(TAG, "imageHeight is " + Integer.toString(imageHeight));
+                Log.i(TAG, "imageWidth is " + Integer.toString(imageWidth));
+                Log.i(TAG, "imageOrientation is " + Integer.toString(imageOrientation));
                 // image is about to be displayed: hide progress bar now.
                 pb.setVisibility(View.GONE);
 

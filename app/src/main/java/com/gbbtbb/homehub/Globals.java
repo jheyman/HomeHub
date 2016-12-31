@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 
 import com.gbbtbb.homehub.agendaviewer.AgendaItem;
 import com.gbbtbb.homehub.agendaviewer.WeatherItem;
+import com.gbbtbb.homehub.musicplayer.AlbumItem;
 import com.gbbtbb.homehub.todolist.TodoListRowItem;
 
 import java.util.ArrayList;
@@ -15,6 +16,8 @@ public class Globals {
         public static ArrayList<String> shoppingListItems;
 
         public static ArrayList<TodoListRowItem> todoListItems;
+
+        public static ArrayList<AlbumItem> musicAlbumItems;
 
         public static ArrayList<WeatherItem> weatherItems;
 

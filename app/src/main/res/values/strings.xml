@@ -3,7 +3,7 @@
     <!--
         <string name="app_fontPath">"fonts/Quicksand-Regular.otf"</string>
     -->
-    <string name="app_fontPath">"fonts/OpenSans-Light.ttf"</string>
+    <string name="app_fontPath">"fonts/OpenSans-Regular.ttf"</string>
     <string name="quitAppQuestion">"Quitter l'application ?"</string>
     <string name="quitAppQuestionYes">"Oui"</string>
     <string name="quitAppQuestionNo">"Non"</string>

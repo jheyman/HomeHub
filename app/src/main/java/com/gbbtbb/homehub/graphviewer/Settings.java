@@ -37,6 +37,7 @@ public class Settings {
     public static class GraphSettings {
         private String mPrefix;
         private int mNumHours;
+        public static final String TAG = "GraphSettings";
 
         public int getHistoryLength() { return mNumHours; }
 
@@ -44,7 +45,7 @@ public class Settings {
             GraphSettings gs = new GraphSettings();
             gs.mPrefix = prefix;
             gs.mNumHours = Integer.parseInt(pref.getString(prefix + "NumHours", Integer.toString(24)));
-            Log.i("PREFERENCE", "NumHours CHANGED TO" + Integer.toString(gs.mNumHours));
+            Log.i(TAG, "NumHours CHANGED TO" + Integer.toString(gs.mNumHours));
             return gs;
         }
 

@@ -31,7 +31,6 @@ public class NetworkWidgetService extends IntentService {
                 for (String d : deviceList) {
 
                     Float val = Globals.graphLatestValues.get(d);
-                    //Log.i(TAG, "Getting latest values in Globals = " + Float.toString(val) + " for key " + d);
 
                     if (val != null) {
                         int arrayId = this.getResources().getIdentifier(d, "array", this.getPackageName());

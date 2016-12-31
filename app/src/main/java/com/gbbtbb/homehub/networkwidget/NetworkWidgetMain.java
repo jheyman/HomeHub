@@ -18,13 +18,12 @@ import com.gbbtbb.homehub.R;
 
 public class NetworkWidgetMain extends Fragment {
 
+    public static final String TAG = "NetworkWidgetMain";
     public static final String REFRESH_ACTION ="com.gbbtbb.networkwidget.REFRESH_ACTION";
 
     public static final String UPDATE_IMAGEVIEW_ACTION ="com.gbbtbb.networkwidget.UPDATE_IMAGEVIEW_ACTION";
     public static final String UPDATE_IMAGEVIEW_EXTRA_VIEWID ="com.gbbtbb.networkwidget.UPDATE_IMAGEVIEW_EXTRA_VIEWID";
     public static final String UPDATE_IMAGEVIEW_EXTRA_IMGID ="com.gbbtbb.networkwidget.UPDATE_IMAGEVIEW_EXTRA_LEVEL";
-
-    static long latestRefreshUnixTime = 0;
 
     public Handler handler = new Handler();
     private Context ctx;
@@ -54,7 +53,7 @@ public class NetworkWidgetMain extends Fragment {
     @Override
     public void onDestroyView()
     {
-        Log.i("NetworkWidgetMain", "onDestroyView" );
+        Log.i(TAG, "onDestroyView" );
         handler.removeCallbacksAndMessages(null);
         getActivity().unregisterReceiver(NetworkViewBroadcastReceiver);
         super.onDestroyView();
@@ -86,24 +85,7 @@ public class NetworkWidgetMain extends Fragment {
             // Get resource identifier of ImageView for this device
             int imageViewId = getResources().getIdentifier(temp[0], "id", ctx.getPackageName());
             ImageView iv = (ImageView)getView().findViewById(imageViewId);
-
-            // Register a click callback
-
-            // Store deviceName in private tags of associated ImageView, for later use in click callback
-            //iv.setTag(d);
-
-            /*
-            iv.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    Intent i = new Intent(ctx.getApplicationContext(), NetworkWidgetService.class);
-                    i.putExtra(DEVICE_NAME_EXTRA, (String)v.getTag());
-                    i.setAction(TOGGLE_ACTION);
-                    ctx.startService(i);
-                }
-            });
-            */
         }
-
 
         // Initial call to the service to get the first batch of data to refresh the UI
         Intent intent = new Intent(ctx.getApplicationContext(), NetworkWidgetService.class);
@@ -121,7 +103,7 @@ public class NetworkWidgetMain extends Fragment {
         {
             final String action = intent.getAction();
 
-            //Log.i("NetworkWidgetMain", "onReceive " + action);
+            //Log.i(TAG, "onReceive " + action);
              if (UPDATE_IMAGEVIEW_ACTION.equals(action)) {
                 int imageViewId = intent.getIntExtra(UPDATE_IMAGEVIEW_EXTRA_VIEWID, 0);
                 int imgId = intent.getIntExtra(UPDATE_IMAGEVIEW_EXTRA_IMGID, 0);

@@ -42,7 +42,6 @@ public class ShoppingListWidgetMain extends Fragment implements AdapterView.OnIt
 
     public static String ACTION_CANCELLED = "com.gbbtbb.shoppinglistwidget.ACTION_CANCELLED";
 
-
     List<ShoppingListRowItem> rowItems;
     ShoppingListViewAdapter adapter;
     public static final int NB_DUMMY_ITEMS = 25;
@@ -117,10 +116,6 @@ public class ShoppingListWidgetMain extends Fragment implements AdapterView.OnIt
         adapter = new ShoppingListViewAdapter(ctx, R.layout.shoppinglist_item, rowItems);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
-
-        // Draw title
-        //ImageView titleView = (ImageView) getView().findViewById(R.id.shoppingwidget_textShoppingTitle);
-       // titleView.setImageBitmap(adapter.drawTextOnList(ctx, "Courses", 30, R.drawable.paperpad_top));
 
         // Initialize list
         reloadList();
