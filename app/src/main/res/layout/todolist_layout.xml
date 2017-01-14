@@ -13,109 +13,45 @@
 
     <FrameLayout
         android:id="@+id/todowidget_FrameLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_gravity="right"
         android:orientation="horizontal"
-        android:background="@drawable/todolist_border_fullslot">
-
-        <ImageView
-            android:id="@+id/todowidget_textTodoTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            />
+        android:background="#00000000">
 
         <LinearLayout
-            android:id="@+id/todowidget_LinearLayoutButtons"
-            android:layout_width="wrap_content"
-            android:layout_height="40px"
-            android:padding="0dp"
-            android:orientation="horizontal"
-            android:layout_gravity="right"
-            android:paddingTop="0dp"
-            android:paddingRight="0dp"
-            android:paddingLeft="0dp">
+            android:id="@+id/todowidget_LinearLayoutListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
 
-            <FrameLayout
-                android:id="@+id/todowidget_reloadFrameLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:paddingLeft="0dp"
-                android:paddingTop="8px"
-                android:paddingBottom="8px">
-                <ImageButton
-                    android:id="@+id/todowidget_reloadList"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:scaleType="fitCenter"
-                    android:paddingTop="0dp"
-                    android:paddingBottom="0dp"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
-                    android:background="#00000000"
-                    android:src="@drawable/todolist_reload_button"/>
-                <ProgressBar
-                    android:id="@+id/todowidget_loadingProgress"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:background="#00000000"
-                    android:visibility="gone"/>
-            </FrameLayout>
+            <ListView
+                android:id="@+id/todowidget_todo_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="@null"
+                android:dividerHeight="0dp"
+                android:layout_gravity="center"/>
 
-            <ImageButton
-                android:id="@+id/todowidget_cleanList"
-                android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/todowidget_empty_view"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="fitCenter"
-                android:background="#00000000"
-                android:src="@drawable/todolist_trash_button"
-                android:paddingTop="8px"
-                android:paddingBottom="8px"/>
-            <ImageButton
-                android:id="@+id/todowidget_addItem"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="right"
-                android:scaleType="fitCenter"
-                android:paddingTop="8px"
-                android:paddingBottom="8px"
-                android:paddingLeft="0dp"
-                android:paddingRight="0dp"
-                android:background="#00000000"
-                android:src="@drawable/todo_add_button" />
+                android:gravity="center_vertical"
+                android:text="EMPTY"
+                android:background="#40FF00"
+                android:paddingLeft="50dp"
+                android:paddingTop="1dp"
+                android:textSize="16sp"
+                android:visibility="gone"/>
         </LinearLayout>
 
+        <ProgressBar
+            android:id="@+id/todowidget_loadingProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="#00000000"
+            android:visibility="visible"/>
     </FrameLayout>
-
-    <LinearLayout
-        android:id="@+id/todowidget_LinearLayoutListView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="100"
-        android:orientation="vertical" >
-
-        <ListView
-            android:id="@+id/todowidget_todo_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@null"
-            android:dividerHeight="0dp"
-            android:layout_gravity="center"/>
-
-        <TextView
-            android:id="@+id/todowidget_empty_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:text="EMPTY"
-            android:background="#40FF00"
-            android:paddingLeft="50dp"
-            android:paddingTop="1dp"
-            android:textSize="16sp"
-            android:visibility="gone"/>
-    </LinearLayout>
-
 </LinearLayout>

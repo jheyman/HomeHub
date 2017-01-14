@@ -6,12 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
@@ -48,8 +48,24 @@ public class TodoListWidgetMain extends Fragment implements AdapterView.OnItemCl
     List<TodoListRowItem> rowItems;
     TodoListViewAdapter adapter;
     public static final int NB_DUMMY_ITEMS = 25;
+    public static String EMPTY_SLOT_TEXT = "<Ajouter>";
 
     private Context ctx;
+
+    public Handler handler = new Handler();
+    private static int REFRESH_DELAY = 3600000;
+
+    Runnable refreshView = new Runnable()
+    {
+        @Override
+        public void run() {
+
+            Log.i(TAG, "refreshView CALLED, ctx=" + ctx.toString());
+            reloadList();
+
+            handler.postDelayed(this, REFRESH_DELAY);
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -81,37 +97,6 @@ public class TodoListWidgetMain extends Fragment implements AdapterView.OnItemCl
         getActivity().registerReceiver(TodoListBroadcastReceiver, filter);
         ctx = getActivity();
 
-        ImageView addItemIcon = (ImageView)getView().findViewById(R.id.todowidget_addItem);
-
-        //  register a click event on the add item button
-        addItemIcon.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                setLoadingInProgress(true);
-                Intent intent = new Intent(ctx.getApplicationContext(), com.gbbtbb.homehub.todolist.AddItemMenuActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        ImageView cleanIcon = (ImageView)getView().findViewById(R.id.todowidget_cleanList);
-
-        //  register a click event on the clean list button
-        cleanIcon.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                setLoadingInProgress(true);
-                Intent intent = new Intent(ctx.getApplicationContext(), CleanListMenuActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        ImageView reloadIcon = (ImageView)getView().findViewById(R.id.todowidget_reloadList);
-
-        //  register a click event on the reload button
-        reloadIcon.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                reloadList();
-            }
-        });
-
         // Initialize list
         rowItems = new ArrayList<>();
 
@@ -121,7 +106,8 @@ public class TodoListWidgetMain extends Fragment implements AdapterView.OnItemCl
         listView.setOnItemClickListener(this);
 
         // Initialize list
-        reloadList();
+        Log.i(TAG, "initial RELOAD triggered");
+        handler.post(refreshView);
     }
 
     private void reloadList() {
@@ -135,14 +121,22 @@ public class TodoListWidgetMain extends Fragment implements AdapterView.OnItemCl
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
         setLoadingInProgress(true);
+
         final String item = rowItems.get(position).getItemName();
-        Intent intent = new Intent(ctx.getApplicationContext(), DeleteItemMenuActivity.class);
-        Bundle b = new Bundle();
-        b.putString(EXTRA_ITEM_ID, item);
-        b.putInt(EXTRA_DELETEDITEM_POSITION, position);
-        intent.putExtras(b);
-        intent.setClass(ctx, DeleteItemMenuActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Intent intent;
+
+        if (EMPTY_SLOT_TEXT.equals(item)) {
+            intent = new Intent(ctx.getApplicationContext(), com.gbbtbb.homehub.todolist.AddItemMenuActivity.class);
+        }
+        else {
+            intent = new Intent(ctx.getApplicationContext(), DeleteItemMenuActivity.class);
+            Bundle b = new Bundle();
+            b.putString(EXTRA_ITEM_ID, item);
+            b.putInt(EXTRA_DELETEDITEM_POSITION, position);
+            intent.putExtras(b);
+            intent.setClass(ctx, DeleteItemMenuActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
 
         ctx.startActivity(intent);
     }
@@ -206,8 +200,5 @@ public class TodoListWidgetMain extends Fragment implements AdapterView.OnItemCl
 
         ProgressBar pb = (ProgressBar)getView().findViewById(R.id.todowidget_loadingProgress);
         pb.setVisibility(state ? View.VISIBLE: View.GONE);
-
-        ImageView iv = (ImageView)getView().findViewById(R.id.todowidget_reloadList);
-        iv.setVisibility(state ? View.GONE: View.VISIBLE);
     }
 }

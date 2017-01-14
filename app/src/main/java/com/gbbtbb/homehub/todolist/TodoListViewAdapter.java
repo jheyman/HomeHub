@@ -28,6 +28,7 @@ public class TodoListViewAdapter extends ArrayAdapter<com.gbbtbb.homehub.todolis
         TextView item;
         TextView creationDate;
         ImageView priorityIcon;
+        ImageView postitIcon;
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -43,6 +44,7 @@ public class TodoListViewAdapter extends ArrayAdapter<com.gbbtbb.homehub.todolis
             holder.creationDate = (TextView) convertView.findViewById(R.id.todoitem_creationdate);
             holder.item = (TextView) convertView.findViewById(R.id.todo_item);
             holder.priorityIcon = (ImageView) convertView.findViewById(R.id.todoitem_priorityicon);
+            holder.postitIcon = (ImageView) convertView.findViewById(R.id.todoitem_postiticon);
             convertView.setTag(holder);
         } else
             holder = (ViewHolder) convertView.getTag();
@@ -70,13 +72,14 @@ public class TodoListViewAdapter extends ArrayAdapter<com.gbbtbb.homehub.todolis
 
         LinearLayout l = (LinearLayout) convertView.findViewById(R.id.todo_item_backgroundlayout);
 
-        if ("".equals(rowItem.getItemName())) {
-
+        if (TodoListWidgetMain.EMPTY_SLOT_TEXT.equals(rowItem.getItemName())) {
             l.setBackgroundResource(R.drawable.todolist_border_emptyslot);
             holder.priorityIcon.setVisibility(View.INVISIBLE);
+            holder.postitIcon.setVisibility(View.INVISIBLE);
         } else {
             l.setBackgroundResource(R.drawable.todolist_border_fullslot);
             holder.priorityIcon.setVisibility(View.VISIBLE);
+            holder.postitIcon.setVisibility(View.VISIBLE);
         }
 
         return convertView;

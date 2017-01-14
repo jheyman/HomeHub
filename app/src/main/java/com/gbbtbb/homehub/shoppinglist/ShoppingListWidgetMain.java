@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,6 +48,21 @@ public class ShoppingListWidgetMain extends Fragment implements AdapterView.OnIt
     public static final int NB_DUMMY_ITEMS = 25;
 
     private Context ctx;
+
+    public Handler handler = new Handler();
+    private static int REFRESH_DELAY = 600000;
+
+    Runnable refreshView = new Runnable()
+    {
+        @Override
+        public void run() {
+
+            Log.i(TAG, "refreshView CALLED, ctx=" + ctx.toString());
+            reloadList();
+
+            handler.postDelayed(this, REFRESH_DELAY);
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -118,7 +134,8 @@ public class ShoppingListWidgetMain extends Fragment implements AdapterView.OnIt
         listView.setOnItemClickListener(this);
 
         // Initialize list
-        reloadList();
+        Log.i(TAG, "initial RELOAD triggered");
+        handler.post(refreshView);
     }
 
     private void reloadList() {

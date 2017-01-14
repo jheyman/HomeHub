@@ -31,7 +31,7 @@ public class AddItemMenuActivity extends Activity {
 
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-		//Log.i(ShoppingListWidgetMain.TAG, "AddItemMenuActivity creation, source bounds= "+getIntent().getSourceBounds());
+		//Log.i(ShoppingListWidgetMain.TAG, "SelectAlbumActivity creation, source bounds= "+getIntent().getSourceBounds());
 
 		setContentView(R.layout.additem_popup_menu);
 
@@ -42,7 +42,7 @@ public class AddItemMenuActivity extends Activity {
 		buttonConfirm.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				Editable value = input.getText();
-				Log.i(ShoppingListWidgetMain.TAG, "AddItemMenuActivity: new item to add is " + value.toString());
+				Log.i(ShoppingListWidgetMain.TAG, "SelectAlbumActivity: new item to add is " + value.toString());
 
 				final Bundle extras = new Bundle();
 				Intent intent = new Intent(AddItemMenuActivity.this, ShoppingListWidgetService.class);
@@ -59,7 +59,7 @@ public class AddItemMenuActivity extends Activity {
 
 		buttonCancel.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				Log.i(ShoppingListWidgetMain.TAG, "Canceled delete item");
+				Log.i(ShoppingListWidgetMain.TAG, "Canceled add item");
 
 				Intent doneIntent = new Intent();
 				doneIntent.setAction(ShoppingListWidgetMain.ACTION_CANCELLED);
@@ -83,7 +83,7 @@ public class AddItemMenuActivity extends Activity {
 
 				Rect r = new Rect();
 				ll.getLocalVisibleRect(r);
-				Log.i(TodoListWidgetMain.TAG, "DeleteItemMenuActivity LinearLayout bounds= " + r);
+				Log.i(TodoListWidgetMain.TAG, "SelectAlbumActivity LinearLayout bounds= " + r);
 
 				ll.getViewTreeObserver().removeGlobalOnLayoutListener(this);
 
@@ -93,8 +93,12 @@ public class AddItemMenuActivity extends Activity {
 				int screen_width = size.x;
 				int screen_height = size.y;
 
+				// center pop-up horizontally
 				wmlp.x = screen_width / 2 - r.width() / 2;
-				wmlp.y = screen_height / 2 - r.height() / 2;
+
+				// center pop-up vertically on the top 1/4 line, so that the virtual keyboard that will show up from the
+				// bottom of the screen does not overlap us.
+				wmlp.y = screen_height / 4 - r.height() / 2;
 
 				wmlp.gravity = Gravity.TOP | Gravity.LEFT;
 				window.setAttributes(wmlp);

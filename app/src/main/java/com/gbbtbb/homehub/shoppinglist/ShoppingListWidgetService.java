@@ -82,7 +82,7 @@ public class ShoppingListWidgetService extends IntentService {
 
         ArrayList<String> list = new ArrayList<String>();
 
-        String result = httpRequest("http://88.181.199.137:8081/shoppinglist.php");
+        String result = httpRequest("http://192.168.0.13:8081/shoppinglist.php");
 
         // Parse the received JSON data
         try {
@@ -113,7 +113,7 @@ public class ShoppingListWidgetService extends IntentService {
         String charset = "UTF-8";
 
         try {
-            query = String.format("http://88.181.199.137:8081/shoppinglist_insert.php?newitem=%s",
+            query = String.format("http://192.168.0.13:8081/shoppinglist_insert.php?newitem=%s",
                     URLEncoder.encode(newItemName, charset));
         }
         catch (UnsupportedEncodingException e) {
@@ -132,7 +132,7 @@ public class ShoppingListWidgetService extends IntentService {
         String charset = "UTF-8";
 
         try {
-            query = String.format("http://88.181.199.137:8081/shoppinglist_delete.php?whereClause=%s",
+            query = String.format("http://192.168.0.13:8081/shoppinglist_delete.php?whereClause=%s",
                     URLEncoder.encode(selection, charset));
         }
         catch (UnsupportedEncodingException e) {

@@ -78,12 +78,16 @@ public class ZWaveWidgetService extends IntentService {
             JSONObject jdata = getIncrementalUpdate(lastRefreshTime);
 
             // Parse the list of all declared devices, and figure out if a UI update is required
-            String[] deviceList = getResources().getStringArray(R.array.ZWaveDeviceList);
-            for (String d : deviceList) {
-                int arrayId = this.getResources().getIdentifier(d, "array", this.getPackageName());
-                String[] temp = getResources().getStringArray(arrayId);
-                refreshDevice(jdata, temp[0], temp[1], temp[2],temp[3], temp[4], temp[5], temp[6], temp[7], temp[8], d);
+            if (jdata != null) {
+                String[] deviceList = getResources().getStringArray(R.array.ZWaveDeviceList);
+                for (String d : deviceList) {
+                    int arrayId = this.getResources().getIdentifier(d, "array", this.getPackageName());
+                    String[] temp = getResources().getStringArray(arrayId);
+                    refreshDevice(jdata, temp[0], temp[1], temp[2], temp[3], temp[4], temp[5], temp[6], temp[7], temp[8], d);
+                }
             }
+            else
+                Log.e(TAG, "NULL jdata after getIncrementalUpdate");
 
         }  else if (ZWaveWidgetMain.TOGGLE_ACTION.equals(action)) {
 
@@ -309,27 +313,30 @@ public class ZWaveWidgetService extends IntentService {
         httpRequest(query_Get);
         String result = httpRequest(query_Data);
 
-        String updateTime ="";
+        String updateTime ="0";
 
         // Parse the received JSON data
         try {
             JSONObject jdata = new JSONObject(result);
-            updateTime = jdata.getString("updateTime");
+            if (jdata != null) {
+                updateTime = jdata.getString("updateTime");
+            }
+
+            // Notify provider of this timestamp
+            final Intent storeTimeIntent = new Intent(this, ZWaveWidgetMain.class);
+            storeTimeIntent.setAction(ZWaveWidgetMain.STORE_REFRESH_TIME_ACTION);
+            storeTimeIntent.putExtra(ZWaveWidgetMain.STORE_REFRESH_TIME_EXTRA, Long.valueOf(updateTime));
+            final PendingIntent donePendingIntent = PendingIntent.getBroadcast(this, 0, storeTimeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            try {
+                donePendingIntent.send();
+            }
+            catch (PendingIntent.CanceledException ce) {
+                Log.i(TAG, "getServerTime: Exception: " + ce.toString());
+            }
+
         } catch(JSONException e){
             Log.e(TAG, "getServerTime: Error parsing data "+e.toString());
-        }
-
-        // Notify provider of this timestamp
-        final Intent storeTimeIntent = new Intent(this, ZWaveWidgetMain.class);
-        storeTimeIntent.setAction(ZWaveWidgetMain.STORE_REFRESH_TIME_ACTION);
-        storeTimeIntent.putExtra(ZWaveWidgetMain.STORE_REFRESH_TIME_EXTRA, Long.valueOf(updateTime));
-        final PendingIntent donePendingIntent = PendingIntent.getBroadcast(this, 0, storeTimeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        try {
-            donePendingIntent.send();
-        }
-        catch (PendingIntent.CanceledException ce) {
-            Log.i(TAG, "getServerTime: Exception: " + ce.toString());
         }
     }
 

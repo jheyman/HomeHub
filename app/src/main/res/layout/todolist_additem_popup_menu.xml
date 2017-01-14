@@ -42,7 +42,8 @@
         android:padding="20dp" >
         <RadioGroup
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
             <RadioButton
                 android:id="@+id/button_priority1"
                 android:layout_width="100dp"

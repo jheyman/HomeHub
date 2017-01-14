@@ -4,6 +4,8 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
+    <color name="musicplayer_progressbars_color">#FF0000</color>
+
     <color name="graphviewer_background_color">#FFFFFF</color>
     <color name="graphviewer_text_color">#000000</color>
     <color name="graphviewer_lineplot_color">#0099FF</color>

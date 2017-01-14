@@ -21,14 +21,15 @@
     <string name="graphviewer_special_time_start">07:00</string>
     <string name="graphviewer_special_time_stop">9:30</string>
 
-    <string name="agendaviewer_noevent_text">pas de rdv</string>
+    <string name="musicplayer_title_activity_selectalbum_menu">SelectAlbumActivity</string>
+
+    <string name="agendaviewer_noevent_text">R.A.S.</string>
     <string name="open_weather_maps_app_id">2dee82fd5d7326c51ceb0d4b8a42e2b5</string>
 
     <string name="weather_sunny_day">&#xf00d;</string>
     <string name="weather_clear_night">&#xf02e;</string>
 
     <string name="weather_cloudy_night">&#xf086;</string>
-
 
     <string name="weather_fewclouds_day">&#xf00c;</string>
     <string name="weather_fewclouds_night">&#xf081;</string>

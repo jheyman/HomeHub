@@ -22,7 +22,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-
 public class TodoListWidgetService extends IntentService {
 
     public static final String TAG = "TodoListWidgetSvc";
@@ -92,7 +91,7 @@ public class TodoListWidgetService extends IntentService {
 
         ArrayList<TodoListRowItem> list = new ArrayList<TodoListRowItem>();
 
-        String result = httpRequest("http://88.181.199.137:8081/todolist.php");
+        String result = httpRequest("http://192.168.0.13:8081/todolist.php");
 
         // Parse the received JSON data
         try {
@@ -114,7 +113,7 @@ public class TodoListWidgetService extends IntentService {
 
         // Add a few empty items so that the list looks good even with no item present
         for(int i=0;i< com.gbbtbb.homehub.todolist.TodoListWidgetMain.NB_DUMMY_ITEMS;i++){
-            list.add(new TodoListRowItem("", 0, ""));
+            list.add(new TodoListRowItem(TodoListWidgetMain.EMPTY_SLOT_TEXT, 0, ""));
         }
 
         return list;
@@ -126,7 +125,7 @@ public class TodoListWidgetService extends IntentService {
         String charset = "UTF-8";
 
         try {
-            query = String.format("http://88.181.199.137:8081/todolist_insert.php?newitem=%s&priority=%d&creationdate=%s",
+            query = String.format("http://192.168.0.13:8081/todolist_insert.php?newitem=%s&priority=%d&creationdate=%s",
                     URLEncoder.encode(newItemName, charset), priority, URLEncoder.encode(creationDate, charset));
         }
         catch (UnsupportedEncodingException e) {
@@ -145,7 +144,7 @@ public class TodoListWidgetService extends IntentService {
         String charset = "UTF-8";
 
         try {
-            query = String.format("http://88.181.199.137:8081/todolist_delete.php?whereClause=%s",
+            query = String.format("http://192.168.0.13:8081/todolist_delete.php?whereClause=%s",
                     URLEncoder.encode(selection, charset));
         }
         catch (UnsupportedEncodingException e) {

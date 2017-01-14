@@ -6,6 +6,15 @@
     android:background="@drawable/todolist_border_fullslot"
     android:orientation="horizontal">
 
+    <ImageView
+        android:id="@+id/todoitem_postiticon"
+        android:layout_width="48px"
+        android:layout_height="48px"
+        android:src="@drawable/todo"
+        android:padding="10dp"
+        android:visibility="gone"
+        android:background="#00000000"/>
+
     <com.gbbtbb.homehub.CustomTextView
         android:id="@+id/todo_item"
         android:layout_width="0dp"
@@ -14,8 +23,8 @@
         android:text="-----ITEM TEXT-------"
         android:textColor="#000000"
         android:textSize="@dimen/todolist_text_size"
-        android:paddingLeft="50dp"
-        android:gravity="center_vertical"
+        android:paddingLeft="15dp"
+        android:gravity="center_vertical|left"
         android:background="#00000000"/>
 
     <com.gbbtbb.homehub.CustomTextView
@@ -31,11 +40,12 @@
 
     <ImageView
         android:id="@+id/todoitem_priorityicon"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="50px"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
         android:src="@drawable/priority2"
         android:padding="10dp"
-        android:visibility="gone"
+        android:visibility="visible"
         android:background="#00000000"/>
 
 </LinearLayout>

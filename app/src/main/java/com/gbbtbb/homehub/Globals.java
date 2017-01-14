@@ -19,6 +19,8 @@ public class Globals {
 
         public static ArrayList<AlbumItem> musicAlbumItems;
 
+        public static AlbumItem selectedAlbum;
+
         public static ArrayList<WeatherItem> weatherItems;
 
         public static ArrayList<AgendaItem> agendaItems;

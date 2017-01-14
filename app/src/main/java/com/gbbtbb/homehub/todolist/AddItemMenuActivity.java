@@ -35,6 +35,7 @@ public class AddItemMenuActivity extends Activity {
 
 		final EditText input =  (EditText)findViewById(R.id.textViewItemName);
 		final RadioButton rb_prio1 = (RadioButton)findViewById(R.id.button_priority1);
+		rb_prio1.setChecked(true);
 		final RadioButton rb_prio2 = (RadioButton)findViewById(R.id.button_priority2);
 		final RadioButton rb_prio3 = (RadioButton)findViewById(R.id.button_priority3);
 
@@ -43,7 +44,7 @@ public class AddItemMenuActivity extends Activity {
 		buttonConfirm.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				Editable value = input.getText();
-				Log.i(TodoListWidgetMain.TAG, "AddItemMenuActivity: new item to add is " + value.toString());
+				Log.i(TodoListWidgetMain.TAG, "SelectAlbumActivity: new item to add is " + value.toString());
 
                 boolean prio1=rb_prio1.isChecked();
                 boolean prio2=rb_prio2.isChecked();
@@ -91,7 +92,7 @@ public class AddItemMenuActivity extends Activity {
 
                 Rect r = new Rect();
                 ll.getLocalVisibleRect(r);
-                //Log.i(TodoListWidgetMain.TAG, "AddItemMenuActivity LinearLayout bounds= " + r);
+                //Log.i(TodoListWidgetMain.TAG, "SelectAlbumActivity LinearLayout bounds= " + r);
 
                 ll.getViewTreeObserver().removeGlobalOnLayoutListener(this);
 
@@ -101,8 +102,12 @@ public class AddItemMenuActivity extends Activity {
                 int screen_width = size.x;
                 int screen_height = size.y;
 
-                wmlp.x = screen_width/2 - r.width()/2;
-                wmlp.y = screen_height/2 - r.height()/2;
+				// center pop-up horizontally
+				wmlp.x = screen_width / 2 - r.width() / 2;
+
+				// center pop-up vertically on the top 1/4 line, so that the virtual keyboard that will show up from the
+				// bottom of the screen does not overlap us.
+				wmlp.y = screen_height / 4 - r.height() / 2;
 
                 wmlp.gravity = Gravity.TOP | Gravity.LEFT;
                 window.setAttributes(wmlp);

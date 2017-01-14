@@ -6,17 +6,18 @@
     android:background="#000000"
     android:orientation="vertical">
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="90"
+        android:background="#00000000"
         android:orientation="horizontal" >
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
+            android:background="#00000000"
             android:orientation="vertical" >
 
             <fragment android:name="com.gbbtbb.homehub.graphviewer.GraphViewerWidgetMain"
@@ -39,6 +40,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3"
+            android:background="#00000000"
             android:orientation="vertical" >
 
             <fragment android:name="com.gbbtbb.homehub.agendaviewer.AgendaWidgetMain"
@@ -51,13 +53,13 @@
                 android:id="@+id/musicplayerfragment"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.30"
+                android:layout_weight="0.3"
                 tools:layout="@layout/musicplayerwidget_layout"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.70"
+                android:layout_weight="0.7"
                 android:orientation="horizontal" >
 
                 <fragment android:name="com.gbbtbb.homehub.shoppinglist.ShoppingListWidgetMain"
@@ -84,6 +86,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="10"
+        android:background="#00000000"
         android:orientation="horizontal" >
 
         <fragment android:name="com.gbbtbb.homehub.zwavewidget.ZWaveWidgetMain"

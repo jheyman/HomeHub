@@ -124,6 +124,8 @@ public class PhotoFrameWidgetMain extends Fragment {
         });
 
         // Initial call to the service
+        ProgressBar pb = (ProgressBar)getView().findViewById(R.id.photoframe_loadingProgress);
+        pb.setVisibility(View.VISIBLE);
         Intent intent = new Intent(ctx.getApplicationContext(), PhotoFrameWidgetService.class);
         intent.setAction(GETLOWRESIMAGE_ACTION);
         ctx.startService(intent);

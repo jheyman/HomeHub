@@ -77,8 +77,12 @@ public class CleanListMenuActivity extends Activity {
 				int screen_width = size.x;
 				int screen_height = size.y;
 
+				// center pop-up horizontally
 				wmlp.x = screen_width / 2 - r.width() / 2;
-				wmlp.y = screen_height / 2 - r.height() / 2;
+
+				// center pop-up vertically on the top 1/4 line, so that the virtual keyboard that will show up from the
+				// bottom of the screen does not overlap us.
+				wmlp.y = screen_height / 4 - r.height() / 2;
 
 				wmlp.gravity = Gravity.TOP | Gravity.LEFT;
 				window.setAttributes(wmlp);

@@ -8,7 +8,7 @@
     <application
         android:name=".HomeHubApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/homehub"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -55,6 +55,11 @@
             android:label="@string/shoppinglist_title_activity_cleanlist_menu"
             android:theme="@android:style/Theme.Holo.Light.Dialog">
         </activity>
+        <activity  android:name=".musicplayer.SelectAlbumActivity"
+            android:label="@string/musicplayer_title_activity_selectalbum_menu"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen">
+        </activity>
+
         <service
             android:name=".zwavewidget.ZWaveWidgetService"
             android:exported="false"/>

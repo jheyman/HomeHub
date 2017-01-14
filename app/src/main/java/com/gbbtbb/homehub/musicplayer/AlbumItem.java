@@ -1,19 +1,25 @@
 package com.gbbtbb.homehub.musicplayer;
 
+import android.graphics.Bitmap;
+
 public class AlbumItem {
 
-        private String folder_name;
+        private String album_title;
+        private String album_artist;
+        private Bitmap album_cover;
 
-        public AlbumItem(String name) {
-            this.folder_name = name;
+        public AlbumItem(String name, String artist, Bitmap cover) {
+            this.album_title = name;
+            this.album_artist = artist;
+            this.album_cover = cover;
         }
 
-        public String getItemName() { return folder_name; }
-        public void setItemName(String folder_name) { this.folder_name = folder_name; }
+        public String getAlbumTitle() { return album_title; }
+        public String getAlbumArtist() { return album_artist; }
+        public Bitmap getAlbumCover() { return album_cover; }
 
         @Override
         public String toString() {
-            return folder_name + "\n";
+            return album_title + "\n";
         }
-
 }

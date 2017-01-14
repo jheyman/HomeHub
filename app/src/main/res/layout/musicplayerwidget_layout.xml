@@ -2,163 +2,385 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="150dp"
     android:paddingTop="@dimen/general_widgets_padding"
     android:paddingLeft="0px"
     android:paddingRight="@dimen/general_widgets_padding"
     android:paddingBottom="0dp">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/musicplayer_background">
 
-        <LinearLayout
-            android:id="@+id/musicplayer_LinearLayoutListView"
-            android:layout_width="0dp"
-            android:layout_weight="2"
+        <FrameLayout
+            android:layout_width="@dimen/musicplayer_albumthumbnail_size"
             android:layout_height="match_parent"
-            android:orientation="vertical" >
-
-            <ListView
-                android:id="@+id/musicplayer_folder_list"
+            android:padding="10dp">
+            <ImageView
+                android:id="@+id/musicplayer_albumcover"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_gravity="center"
+                android:padding="0dp"
+                android:src="@drawable/albumcover_unavailable"/>
+            <ProgressBar
+                android:id="@+id/musicplayer_albumloadingProgress"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:divider="@null"
-                android:dividerHeight="0dp"
-                android:visibility="gone"
-                android:padding="5dp"
-                android:layout_gravity="center"/>
-
-            <TextView
-                android:id="@+id/musicplayer_empty_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="EMPTY"
-                android:paddingLeft="50dp"
-                android:paddingTop="1dp"
-                android:textSize="16sp"
-                android:visibility="visible"/>
-        </LinearLayout>
-
-        <ImageView
-            android:id="@+id/musicplayer_albumcover"
-            android:layout_height="match_parent"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:padding="15dp"
-            android:src="@drawable/albumcover_unavailable"/>
+                android:layout_gravity="center"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:padding="40dp"
+                android:visibility="gone">
+            </ProgressBar>
+        </FrameLayout>
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/musicplayer_controls"
+            android:id="@+id/musicplayer_controls_songinfo"
             android:orientation="vertical"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:padding="5dp">
+            android:layout_height="match_parent">
 
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/musicplayer_controls_buttons"
+            <com.gbbtbb.homehub.CustomTextView
+                android:id="@+id/musicplayer_albumartist"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="[pas d'artiste selectionne]"
+                android:textColor="#000000"
+                />
+            <com.gbbtbb.homehub.CustomTextView
+                android:id="@+id/musicplayer_albumtitle"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="[pas d'album selectionne]"
+                android:textColor="#000000"
+                />
+            <com.gbbtbb.homehub.CustomTextView
+                android:id="@+id/musicplayer_songtitle"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="[pas de chanson chargee]"
+                android:textColor="#000000"
+                />
+        </LinearLayout>
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent">
+            <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:padding="5dp"
-                >
+                android:layout_height="0dp"
+                android:paddingTop="10dp"
+                android:paddingRight="10dp"
+                android:background="#00000000">
 
-                <ImageView
-                    android:id="@+id/musicplayer_previous"
+                <LinearLayout
+                    android:orientation="horizontal"
                     android:layout_height="match_parent"
-                    android:layout_width="match_parent"
                     android:layout_weight="1"
-                    android:padding="10dp"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
-                    android:paddingTop="0dp"
-                    android:paddingBottom="0dp"
-                    android:src="@drawable/music_previous"/>
-                <ImageView
-                    android:id="@+id/musicplayer_stop"
+                    android:layout_width="0dp"
+                    android:background="#00000000">
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
                     android:layout_height="match_parent"
-                    android:layout_width="match_parent"
                     android:layout_weight="1"
-                    android:padding="10dp"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
-                    android:paddingTop="0dp"
-                    android:paddingBottom="0dp"
-                    android:src="@drawable/music_stop"/>
-                <ImageView
-                    android:id="@+id/musicplayer_play"
+                    android:layout_width="0dp"
+                    android:background="#00000000">
+                </LinearLayout>
+                <LinearLayout
+                    android:orientation="horizontal"
                     android:layout_height="match_parent"
-                    android:layout_width="match_parent"
                     android:layout_weight="1"
-                    android:padding="10dp"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
-                    android:paddingTop="0dp"
-                    android:paddingBottom="0dp"
-                    android:src="@drawable/music_play"/>
-                <ImageView
-                    android:id="@+id/musicplayer_pause"
+                    android:layout_width="0dp"
+                    android:background="#00000000">
+                </LinearLayout>
+                <LinearLayout
+                    android:orientation="horizontal"
                     android:layout_height="match_parent"
-                    android:layout_width="match_parent"
                     android:layout_weight="1"
-                    android:padding="10dp"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
-                    android:paddingTop="0dp"
-                    android:paddingBottom="0dp"
-                    android:visibility="gone"
-                    android:src="@drawable/music_pause"/>
-                <ImageView
-                    android:id="@+id/musicplayer_next"
+                    android:layout_width="0dp"
+                    android:background="#00000000">
+                </LinearLayout>
+                <LinearLayout
+                    android:orientation="horizontal"
                     android:layout_height="match_parent"
-                    android:layout_width="match_parent"
-                    android:padding="10dp"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
-                    android:paddingTop="0dp"
-                    android:paddingBottom="0dp"
                     android:layout_weight="1"
-                    android:src="@drawable/music_next"/>
+                    android:layout_width="0dp"
+                    android:background="#00000000">
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <ProgressBar
+                            android:id="@+id/musicplayer_volUpInProgress"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:progressTint="@color/musicplayer_progressbars_color"
+                            android:padding="0dp"
+                            android:visibility="gone" >
+                        </ProgressBar>
+
+                        <ImageView
+                            android:id="@+id/musicplayer_volumeup"
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:padding="0dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/music_volup_disabled"/>
+                    </FrameLayout>
+                </LinearLayout>
 
             </LinearLayout>
 
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/musicplayer_controls_songtitle"
+            <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_weight="1"
-                android:layout_height="match_parent"
-                >
+                android:layout_height="0dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:paddingRight="10dp"
+                android:background="#00000000">
 
-                <com.gbbtbb.homehub.CustomTextView
-                    android:id="@+id/musicplayer_songtitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:text="Titre de la chanson en cours"
-                    android:textColor="#000000"
-                    />
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:background="#00000000">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <ImageView
+                            android:id="@+id/musicplayer_poweron"
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:padding="@dimen/musicplayer_controlbuttons_padding"
+                            android:src="@drawable/music_poweron"/>
+                        <ProgressBar
+                            android:id="@+id/musicplayer_powerOnInProgress"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:padding="0dp"
+                            android:visibility="gone" >
+                        </ProgressBar>
+                        <ImageView
+                            android:id="@+id/musicplayer_poweroff"
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:padding="@dimen/musicplayer_controlbuttons_padding"
+                            android:visibility="gone"
+                            android:src="@drawable/music_poweroff"/>
+                        <ProgressBar
+                            android:id="@+id/musicplayer_powerOffInProgress"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:progressTint="@color/musicplayer_progressbars_color"
+                            android:padding="0dp"
+                            android:visibility="gone" >
+                        </ProgressBar>
+                    </FrameLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:background="#00000000">
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <ImageView
+                            android:id="@+id/musicplayer_play"
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:padding="@dimen/musicplayer_controlbuttons_padding"
+                            android:src="@drawable/music_play_disabled"/>
+                        <ProgressBar
+                            android:id="@+id/musicplayer_playInProgress"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:progressTint="@color/musicplayer_progressbars_color"
+                            android:padding="0dp"
+                            android:visibility="gone" >
+                        </ProgressBar>
+                        <ImageView
+                            android:id="@+id/musicplayer_pause"
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:padding="@dimen/musicplayer_controlbuttons_padding"
+                            android:visibility="gone"
+                            android:src="@drawable/music_pause"/>
+                        <ProgressBar
+                            android:id="@+id/musicplayer_pauseInProgress"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:progressTint="@color/musicplayer_progressbars_color"
+                            android:padding="0dp"
+                            android:visibility="gone" >
+                        </ProgressBar>
+                    </FrameLayout>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:background="#00000000">
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <ImageView
+                            android:id="@+id/musicplayer_previous"
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:padding="@dimen/musicplayer_controlbuttons_padding"
+                            android:src="@drawable/music_previous_disabled"/>
+                        <ProgressBar
+                            android:id="@+id/musicplayer_previousInProgress"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:progressTint="@color/musicplayer_progressbars_color"
+                            android:padding="0dp"
+                            android:visibility="gone" >
+                        </ProgressBar>
+                    </FrameLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:background="#00000000">
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <ImageView
+                            android:id="@+id/musicplayer_next"
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:padding="@dimen/musicplayer_controlbuttons_padding"
+                            android:src="@drawable/music_next_disabled"/>
+                        <ProgressBar
+                            android:id="@+id/musicplayer_nextInProgress"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:progressTint="@color/musicplayer_progressbars_color"
+                            android:padding="0dp"
+                            android:visibility="gone" >
+                        </ProgressBar>
+                    </FrameLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:background="#00000000">
+                    <com.gbbtbb.homehub.CustomTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/musicplayer_controls_volumefeedback"
+                        android:text="XX%"
+                        android:textColor="#000000"
+                        android:padding="0dp"
+                        android:layout_gravity="center"
+                        android:gravity="center|center_vertical"
+                        />
+                </LinearLayout>
+
             </LinearLayout>
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/musicplayer_controls_volume"
+
+            <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_weight="1"
-                android:layout_height="match_parent"
-                >
+                android:layout_height="0dp"
+                android:paddingBottom="10dp"
+                android:paddingRight="10dp"
+                android:background="#00000000">
 
-                <SeekBar
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:id="@+id/seekBar"
-                    />
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:background="#00000000">
+                </LinearLayout>
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:background="#00000000">
+                </LinearLayout>
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:background="#00000000">
+                </LinearLayout>
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:background="#00000000">
+                </LinearLayout>
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:background="#00000000">
+                    <FrameLayout
+                        android:layout_height="match_parent"
+                        android:layout_width="match_parent">
+
+                        <ProgressBar
+                            android:id="@+id/musicplayer_volDownInProgress"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:padding="0dp"
+                            android:visibility="gone" >
+                        </ProgressBar>
+
+                        <ImageView
+                            android:id="@+id/musicplayer_volumedown"
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:padding="0dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/music_voldown_disabled"/>
+                    </FrameLayout>
+                </LinearLayout>
+
             </LinearLayout>
 
         </LinearLayout>

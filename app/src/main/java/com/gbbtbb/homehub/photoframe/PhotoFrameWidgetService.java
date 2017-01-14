@@ -5,10 +5,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.os.Debug;
 import android.text.TextPaint;
 import android.util.Log;
 
@@ -131,7 +129,13 @@ public class PhotoFrameWidgetService extends IntentService {
         doneIntent.addCategory(Intent.CATEGORY_DEFAULT);
         //doneIntent.putExtra("BitmapImage", bret);
         Globals.photoFrameBitmap = bret;
-        doneIntent.putExtra("Text", inf.path.substring(BASE_DIR.length()));
+
+        if (inf.path.length() > BASE_DIR.length()) {
+            doneIntent.putExtra("Text", inf.path.substring(BASE_DIR.length()));
+        }
+        else {
+            doneIntent.putExtra("Text", "<Error loading image path>");
+        }
 
         doneIntent.putExtra("imagepath", inf.path);
         doneIntent.putExtra("width", inf.width);
@@ -190,6 +194,10 @@ public class PhotoFrameWidgetService extends IntentService {
         String charset = "UTF-8";
         String query = "";
         ImageInfo inf = new ImageInfo();
+        //default values
+        inf.width = 512;
+        inf.heigth = 512;
+        inf.orientation = 1;
 
         try {
             query = String.format("http://192.168.0.13:8081/getRandomImagePath.php?basepath=%s",
@@ -205,26 +213,24 @@ public class PhotoFrameWidgetService extends IntentService {
 
         inf.path = parts[0];
 
-        try{
-            inf.width = Integer.parseInt(parts[1]);
-            inf.heigth = Integer.parseInt(parts[2]);
-        } catch (NumberFormatException n) {
-            Log.e(TAG, "getRandomImageInfo: error parsing image width or height: " + n.toString());
-            inf.width = 512;
-            inf.heigth = 512;
-        }
-
-        if (parts.length > 3) {
-            try{
-                inf.orientation = Integer.parseInt(parts[3]);
+        if (parts.length > 2) {
+            try {
+                inf.width = Integer.parseInt(parts[1]);
+                inf.heigth = Integer.parseInt(parts[2]);
             } catch (NumberFormatException n) {
-                Log.e(TAG, "getRandomImageInfo: error parsing image orientation: " + n.toString());
-                inf.orientation = 1;
+                Log.e(TAG, "getRandomImageInfo: error parsing image width or height: " + n.toString());
             }
-        } else {
-            // EXIF orientation data is not available: set default value
-            inf.orientation = 1;
+
+            if (parts.length > 3) {
+                try{
+                    inf.orientation = Integer.parseInt(parts[3]);
+                } catch (NumberFormatException n) {
+                    Log.e(TAG, "getRandomImageInfo: error parsing image orientation: " + n.toString());
+                }
+            }
         }
+        else
+            Log.e(TAG, "getRandomImageInfo: cannot process format response: " + result);
 
         return inf;
     }
