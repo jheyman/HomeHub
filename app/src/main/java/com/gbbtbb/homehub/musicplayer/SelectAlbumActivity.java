@@ -47,11 +47,10 @@ public class SelectAlbumActivity extends Activity {
 
                 Globals.selectedAlbum = ai;
 
-                // Trig service to load album
-				Intent intent = new Intent(getApplicationContext(), MusicPlayerService.class);
-				intent.setAction(MusicPlayerMain.LOADALBUM_ACTION);
-                intent.putExtra(MusicPlayerMain.EXTRA_LOADALBUM_NAME, ai.getAlbumTitle());
-				startService(intent);
+				Intent intent = new Intent();
+				intent.putExtra(MusicPlayerMain.EXTRA_LOADALBUM_NAME, ai.getAlbumTitle());
+				intent.addCategory(Intent.CATEGORY_DEFAULT);
+				setResult(Activity.RESULT_OK,intent);
 
                 SelectAlbumActivity.this.finish();
 			}

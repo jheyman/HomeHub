@@ -15,7 +15,7 @@
         <item>Fibaro1</item>
         <item>Fibaro2</item>
         <item>Fibaro3</item>
-        <item>PoppPlug</item>
+        <item>RadioSdB</item>
         <item>Cuisine</item>
     </string-array>
 
@@ -187,7 +187,7 @@
         <item name="icontype">plug</item>
     </string-array>
 
-    <string-array name="PoppPlug">
+    <string-array name="RadioSdB">
         <item name="devId_setget">9</item>
         <item name="instanceId_setget">0</item>
         <item name="commandclass_setget">37</item>

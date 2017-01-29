@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import static com.gbbtbb.homehub.musicplayer.MusicPlayerMain.EXTRA_ALBUMLOAD_PROGRESS;
 import static com.gbbtbb.homehub.musicplayer.MusicPlayerMain.EXTRA_LOADALBUM_NAME;
 import static com.gbbtbb.homehub.musicplayer.MusicPlayerMain.EXTRA_SONGPLAYING_NAME;
+import static com.gbbtbb.homehub.musicplayer.MusicPlayerMain.EXTRA_SONG_INDEX;
 import static com.gbbtbb.homehub.musicplayer.MusicPlayerMain.EXTRA_VOLUME_FEEDBACK;
 
 
@@ -53,7 +54,7 @@ public class MusicPlayerService extends IntentService{
 
             // get full list of albums from server
             // the "tags:jla" option specifies to return artwork_track_id (j) and album_name (l) and artist name (a)
-            String command = "albums 0 999 tags:jla";
+            String command = "albums 0 999 tags:jla sort:artflow";
             String list = sendMusicServerCommand(command,"");
 
             if (list != "") {
@@ -77,7 +78,8 @@ public class MusicPlayerService extends IntentService{
                 String tmp[] = list.split(";");
 
                 // the resulting string list has album ID values and Album names (and potentially artwork_track_id) in sequence
-                for (int i = 0; i < tmp.length; i += 3) {
+                // SKIP first element, which is "" due to the split on the first ";"
+                for (int i = 1; i < tmp.length; i += 3) {
 
                     String albumID = tmp[i];
                     Log.i(TAG, "AlbumID:" + albumID);
@@ -131,7 +133,7 @@ public class MusicPlayerService extends IntentService{
                         Log.i(TAG, "MusicPlayerService: exception reading image over network");
                     }
 
-                    AlbumItem album = new AlbumItem(albumName, albumArtist, b);
+                    AlbumItem album = new AlbumItem(albumID, albumName, albumArtist, b);
                     Globals.musicAlbumItems.add(album);
 
                     Intent progressIntent = new Intent();
@@ -161,15 +163,94 @@ public class MusicPlayerService extends IntentService{
             doneIntent.addCategory(Intent.CATEGORY_DEFAULT);
             sendBroadcast(doneIntent);
         }
+        else if (action.equals(MusicPlayerMain.PLAY_SONG_INDEX)) {
+
+            int index = intent.getIntExtra(EXTRA_SONG_INDEX, 0);
+            String cmd = LMS_PLAYER_MACADDRESS + " playlist index " + index;
+            sendMusicServerCommand(cmd, "");
+
+            Intent doneIntent = new Intent();
+            doneIntent.setAction(MusicPlayerMain.PLAY_SONG_INDEX_ACTION_DONE);
+            doneIntent.addCategory(Intent.CATEGORY_DEFAULT);
+            sendBroadcast(doneIntent);
+
+            String command = LMS_PLAYER_MACADDRESS + " title ?";
+            String ret = sendMusicServerCommand(command, "");
+
+            Log.i(TAG, "Active song after play song ingex cmd: " + ret);
+
+            Intent songPlayingIntent = new Intent();
+            songPlayingIntent.setAction(MusicPlayerMain.SONGPLAYING_EVENT);
+            songPlayingIntent.putExtra(EXTRA_SONGPLAYING_NAME, ret);
+            songPlayingIntent.addCategory(Intent.CATEGORY_DEFAULT);
+            sendBroadcast(songPlayingIntent);
+        }
         else if (action.equals(MusicPlayerMain.LOADALBUM_ACTION)) {
 
             String albumName = intent.getStringExtra(EXTRA_LOADALBUM_NAME);
+            String albumID = Globals.selectedAlbum.getAlbumId();
+
+            Log.i(TAG, "Loading album " + albumName + " , id=" + albumID);
 
             String command = LMS_PLAYER_MACADDRESS + " playlist clear";
             sendMusicServerCommand(command, "");
 
-            command = LMS_PLAYER_MACADDRESS + " playlist addalbum * * ";
-            sendMusicServerCommand(command, albumName);
+            command = LMS_PLAYER_MACADDRESS + " playlistcontrol cmd:add album_id:"+albumID;
+            sendMusicServerCommand(command, "");
+
+            // Update list of songs, from this newly selected album
+            command = LMS_PLAYER_MACADDRESS + " titles 0 99 album_id:"+albumID+" tags:id sort:tracknum";
+            String list = sendMusicServerCommand(command, "");
+
+            Globals.musicAlbumSongItems = new ArrayList<>();
+            if (list != "") {
+
+                // The returned string is of the format:
+                // <echoed command> then N x " id:XXXX title:XXXXXXXXXXXXXXXXXXXX duration:XXX.YYY tracknum:XX" then " count:XX"
+                Log.i(TAG, "track list returned: " + list);
+
+                // remove "count:<XXX>" from the end of the string
+                int index = list.indexOf(" count:");
+                list = list.substring(0, index);
+                Log.i(TAG, "albums list returned(1): " + list);
+
+                // replace id: & album: keywords by an arbitrary symbol, and split on this symbol
+                list = list.replace(" id:", ";");
+                list = list.replace(" title:", ";");
+                list = list.replace(" duration:", ";");
+                list = list.replace(" tracknum:", ";");
+                String tmp[] = list.split(";");
+
+                // the resulting string list has track ID , title, and duration in sequence
+                // SKIP first element, which is "" due to the split on the first ";"
+                for (int i = 1; i < tmp.length; i += 4) {
+
+                    String trackID = tmp[i];
+                    String title="";
+                    String duration="";
+                    String trackNum="";
+                    title = tmp[i+1];
+                    duration = tmp[i+2];
+                    trackNum = tmp[i+3];
+
+                    float durationVal = Float.valueOf(duration);
+                    int minutes = ((int)durationVal)/60;
+                    int seconds = ((int)durationVal)%60;
+                    String durationString = Integer.toString(minutes)+":"+Integer.toString(seconds);
+
+                    int trackNumInt = Integer.valueOf(trackNum);
+
+                    Log.i(TAG, "trackID:" + trackID);
+                    Log.i(TAG, "title:" + title);
+                    Log.i(TAG, "duration:" + durationString);
+                    Log.i(TAG, "tracknum:" + Integer.toString(trackNumInt));
+
+                    SongItem song = new SongItem(trackID, trackNum, title, durationString);
+                    Globals.musicAlbumSongItems.add(song);
+                }
+            }
+            else
+                Log.e(TAG, "returned track list is empty");
 
             Intent doneIntent = new Intent();
             doneIntent.setAction(MusicPlayerMain.LOADALBUM_ACTION_DONE);
@@ -190,14 +271,18 @@ public class MusicPlayerService extends IntentService{
         else if (action.equals(MusicPlayerMain.POWERON_ACTION)) {
 
             sendRemoteAudioControlCommand("power_on");
-
+/*
             try{
                 Thread.sleep(5000);
             }
             catch (InterruptedException e) {
             }
+*/
+            String cmd2 = LMS_PLAYER_MACADDRESS + " mixer volume ?";
+            String feedback = sendMusicServerCommand(cmd2, "");
 
             Intent doneIntent = new Intent();
+            doneIntent.putExtra(EXTRA_VOLUME_FEEDBACK, feedback);
             doneIntent.setAction(MusicPlayerMain.POWERON_ACTION_DONE);
             doneIntent.addCategory(Intent.CATEGORY_DEFAULT);
             sendBroadcast(doneIntent);
@@ -351,7 +436,7 @@ public class MusicPlayerService extends IntentService{
         // the actual interesting response data
         // Also, when the command ends with " ?" (some queries do), this " ?" will not be present
         // in the mirrored command in the response, so take it int account.
-        int substringIndex = fullCmd.length() + 1 - (fullCmd.endsWith(" ?") ? 2:0);
+        int substringIndex = fullCmd.length() - (fullCmd.endsWith(" ?") ? 2:0);
         if (afterDecode.length() > substringIndex) {
             ret = afterDecode.substring(substringIndex).replace("\n","");
 

@@ -59,6 +59,10 @@
             android:label="@string/musicplayer_title_activity_selectalbum_menu"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen">
         </activity>
+        <activity  android:name=".musicplayer.SelectSongActivity"
+            android:label="@string/musicplayer_title_activity_selectsong_menu"
+            android:theme="@android:style/Theme.Holo.Light.Dialog">
+        </activity>
 
         <service
             android:name=".zwavewidget.ZWaveWidgetService"

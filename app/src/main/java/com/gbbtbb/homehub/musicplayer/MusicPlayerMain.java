@@ -1,10 +1,12 @@
 package com.gbbtbb.homehub.musicplayer;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -27,14 +29,21 @@ public class MusicPlayerMain extends Fragment {
     public static final String GET_LMS_INFO_ACTION ="com.gbbtbb.musicplayerwidget.GET_LMS_INFO_ACTION";
     public static final String GET_LMS_INFO_ACTION_DONE ="com.gbbtbb.musicplayerwidget.GET_LMS_INFO_ACTION_DONE";
 
+    public static final int PICK_SONG_REQUEST=1;
+    public static final int PICK_ALBUM_REQUEST=2;
+
+    public static final String PLAY_SONG_INDEX ="com.gbbtbb.musicplayerwidget.PLAY_SONG";
+    public static final String PLAY_SONG_INDEX_ACTION_DONE ="com.gbbtbb.musicplayerwidget.PLAY_SONG_INDEX_ACTION_DONE";
+    public static String EXTRA_SONG_INDEX = "com.gbbtbb.musicplayerwidget.songIndex";
+
     public static final String ALBUM_LIST_REFRESH_ACTION ="com.gbbtbb.musicplayerwidget.ALBUM_LIST_REFRESH_ACTION";
     public static final String ALBUMS_LOADING_PROGRESS_EVENT ="com.gbbtbb.musicplayerwidget.ALBUMS_LOADING_PROGRESS_EVENT";
-    public static String EXTRA_ALBUMLOAD_PROGRESS = "com.gbbtbb.shoppinglistwidget.albumLoadProgress";
+    public static String EXTRA_ALBUMLOAD_PROGRESS = "com.gbbtbb.musicplayerwidget.albumLoadProgress";
     public static final String ALBUM_LIST_REFRESH_ACTION_DONE ="com.gbbtbb.musicplayerwidget.ALBUM_LIST_REFRESH_ACTION_DONE";
 
     public static final String LOADALBUM_ACTION ="com.gbbtbb.musicplayerwidget.LOADALBUM_ACTION";
     public static final String LOADALBUM_ACTION_DONE ="com.gbbtbb.musicplayerwidget.LOADALBUM_ACTION_DONE";
-    public static String EXTRA_LOADALBUM_NAME = "com.gbbtbb.shoppinglistwidget.loadAlbumName";
+    public static String EXTRA_LOADALBUM_NAME = "com.gbbtbb.musicplayerwidget.loadAlbumName";
 
     public static final String PLAY_ACTION ="com.gbbtbb.musicplayerwidget.PLAY_ACTION";
     public static final String PLAY_ACTION_DONE ="com.gbbtbb.musicplayerwidget.PLAY_ACTION_DONE";
@@ -54,7 +63,7 @@ public class MusicPlayerMain extends Fragment {
     public static final String PREVIOUSSONG_ACTION ="com.gbbtbb.musicplayerwidget.PREVIOUSSONG_ACTION";
     public static final String PREVIOUSSONG_ACTION_DONE ="com.gbbtbb.musicplayerwidget.PREVIOUSSONG_ACTION_DONE";
 
-    public static String EXTRA_VOLUME_FEEDBACK = "com.gbbtbb.shoppinglistwidget.volumeFeedback";
+    public static String EXTRA_VOLUME_FEEDBACK = "com.gbbtbb.musicplayerwidget.volumeFeedback";
 
     public static final String VOLUMEUP_ACTION ="com.gbbtbb.musicplayerwidget.VOLUMEUP_ACTION";
     public static final String VOLUMEUP_ACTION_DONE ="com.gbbtbb.musicplayerwidget.VOLUMEUP_ACTION_DONE";
@@ -63,11 +72,12 @@ public class MusicPlayerMain extends Fragment {
     public static final String VOLUMEDOWN_ACTION_DONE ="com.gbbtbb.musicplayerwidget.VOLUMEDOWN_ACTION_DONE";
 
     public static final String SONGPLAYING_EVENT ="com.gbbtbb.musicplayerwidget.SONGPLAYING_EVENT";
-    public static String EXTRA_SONGPLAYING_NAME = "com.gbbtbb.shoppinglistwidget.songPlayingName";
+    public static String EXTRA_SONGPLAYING_NAME = "com.gbbtbb.musicplayerwidget.songPlayingName";
 
     private Context ctx;
 
     private boolean isPowerOn;
+    private boolean isPowerOnInProgress;
 
     public Handler handler = new Handler();
     private static int AUTOLOADALBUM_DELAY = 1800000;
@@ -101,12 +111,20 @@ public class MusicPlayerMain extends Fragment {
         super.onDestroyView();
     }
 
-    private void setAlbumLoadingInProgress(boolean state) {
-        //Log.i(TAG, "setAlbumLoadingInProgress " + Boolean.toString(state));
+    private void setAlbumsListRefreshInProgress(boolean state) {
+        //Log.i(TAG, "setAlbumsListRefreshInProgress " + Boolean.toString(state));
 
-        ProgressBar pb = (ProgressBar)getView().findViewById(R.id.musicplayer_albumloadingProgress);
+        ProgressBar pb = (ProgressBar)getView().findViewById(R.id.musicplayer_albumListRefreshProgress);
         pb.setVisibility(state ? View.VISIBLE: View.GONE);
     }
+
+    private void setAlbumLoadInProgress(boolean state) {
+        //Log.i(TAG, "setAlbumLoadInProgress " + Boolean.toString(state));
+
+        ProgressBar pb = (ProgressBar)getView().findViewById(R.id.musicplayer_albumLoadProgress);
+        pb.setVisibility(state ? View.VISIBLE: View.GONE);
+    }
+
     private void setPowerOnInProgress(boolean state) {
         //Log.i(TAG, "setPowerOnInProgress " + Boolean.toString(state));
 
@@ -119,6 +137,14 @@ public class MusicPlayerMain extends Fragment {
         ProgressBar pb = (ProgressBar)getView().findViewById(R.id.musicplayer_powerOffInProgress);
         pb.setVisibility(state ? View.VISIBLE: View.GONE);
     }
+
+    private void setLoadSongProgress(boolean state) {
+        //Log.i(TAG, "setLoadSongProgress " + Boolean.toString(state));
+
+        ProgressBar pb = (ProgressBar)getView().findViewById(R.id.musicplayer_openSongListInProgress);
+        pb.setVisibility(state ? View.VISIBLE: View.GONE);
+    }
+
     private void setPlayInProgress(boolean state) {
         //Log.i(TAG, "setPlayInProgress " + Boolean.toString(state));
 
@@ -173,20 +199,23 @@ public class MusicPlayerMain extends Fragment {
         filter.addAction(SONGPLAYING_EVENT);
         filter.addAction(GET_LMS_INFO_ACTION_DONE);
         filter.addAction(ALBUMS_LOADING_PROGRESS_EVENT);
+        filter.addAction(PLAY_SONG_INDEX_ACTION_DONE);
         filter.addCategory(Intent.CATEGORY_DEFAULT);
 
         getActivity().registerReceiver(NetworkViewBroadcastReceiver, filter);
         ctx = getActivity();
 
         isPowerOn = false;
+        isPowerOnInProgress = false;
 
         ImageView albumView = (ImageView)getView().findViewById(R.id.musicplayer_albumcover);
 
         //  register a click event on the album cover to access album selection activity
         albumView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                setAlbumLoadInProgress(true);
                 Intent intent = new Intent(ctx.getApplicationContext(), SelectAlbumActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent,PICK_ALBUM_REQUEST);
             }
         });
 
@@ -222,7 +251,7 @@ public class MusicPlayerMain extends Fragment {
         ctx.startService(initIntent);
 
         // Initiate loading of info of all albums from LMS server
-        setAlbumLoadingInProgress(true);
+        setAlbumsListRefreshInProgress(true);
         Intent intent = new Intent(ctx.getApplicationContext(), MusicPlayerService.class);
         intent.setAction(ALBUM_LIST_REFRESH_ACTION);
         ctx.startService(intent);
@@ -238,9 +267,67 @@ public class MusicPlayerMain extends Fragment {
         powerOnIcon.setVisibility(show ? View.VISIBLE: View.GONE);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == PICK_SONG_REQUEST) {
+
+            if(resultCode == Activity.RESULT_OK){
+                int index = data.getIntExtra(EXTRA_SONG_INDEX, 999);
+                if (isPowerOn) {
+                    Log.i(TAG, "Request to play song index: " + Integer.toString(index));
+
+                    // Trig service to play this specific song
+                    Intent playSongIntent = new Intent(ctx, MusicPlayerService.class);
+                    playSongIntent.setAction(MusicPlayerMain.PLAY_SONG_INDEX);
+                    playSongIntent.putExtra(MusicPlayerMain.EXTRA_SONG_INDEX, index);
+                    ctx.startService(playSongIntent);
+                }
+                else
+                    Log.i(TAG, "POWER is OFF : ignoring request to play song index: " + Integer.toString(index));
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                Log.i(TAG, "Request to play song index: CANCELLED");
+                setLoadSongProgress(false);
+            }
+        }
+        else if (requestCode == PICK_ALBUM_REQUEST) {
+
+            if(resultCode == Activity.RESULT_OK) {
+                String albumToLoad = data.getStringExtra(EXTRA_LOADALBUM_NAME);
+                Log.i(TAG, "Request to load album: " + albumToLoad);
+
+                Intent intent = new Intent(ctx, MusicPlayerService.class);
+                intent.setAction(MusicPlayerMain.LOADALBUM_ACTION);
+                intent.putExtra(MusicPlayerMain.EXTRA_LOADALBUM_NAME, albumToLoad);
+                ctx.startService(intent);
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                Log.i(TAG, "Request to load album: CANCELLED");
+            }
+        }
+    }
+
     private void enableControls(boolean enable) {
 
         Log.i(TAG, "enableControls:" + Boolean.toString(enable));
+
+        ImageView songListIcon = (ImageView)getView().findViewById(R.id.musicplayer_songlist);
+
+        if (!enable) {
+            songListIcon.setOnClickListener(null);
+            songListIcon.setImageResource(R.drawable.music_songlist_disabled);
+        }
+        else {
+            songListIcon.setImageResource(R.drawable.music_songlist);
+
+            //  register a click event on the songTitle
+            songListIcon.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    setLoadSongProgress(true);
+                    Intent intent = new Intent(ctx.getApplicationContext(), SelectSongActivity.class);
+                    startActivityForResult(intent, PICK_SONG_REQUEST);
+                }
+            });
+        }
 
         ImageView playIcon = (ImageView)getView().findViewById(R.id.musicplayer_play);
 
@@ -357,6 +444,15 @@ public class MusicPlayerMain extends Fragment {
                 }
             });
         }
+
+        TextView volumeText = (TextView)getView().findViewById(R.id.musicplayer_controls_volumefeedback);
+
+        if (!enable) {
+            volumeText.setTextColor(Color.parseColor("#808080"));
+        }
+        else {
+            volumeText.setTextColor(Color.parseColor("#000000"));
+        }
     }
 
     private void showPowerOffIcon(boolean show) {
@@ -413,6 +509,8 @@ public class MusicPlayerMain extends Fragment {
         Globals.selectedAlbum = ai;
         Log.i(TAG, "Loading album randomly: " + ai.getAlbumTitle());
 
+        setAlbumLoadInProgress(true);
+
         // Trig service to load album
         Intent loadAlbumIntent = new Intent(ctx, MusicPlayerService.class);
         loadAlbumIntent.setAction(MusicPlayerMain.LOADALBUM_ACTION);
@@ -434,8 +532,18 @@ public class MusicPlayerMain extends Fragment {
                 showVolume(volFeedback);
                 Log.i(TAG, "processed GET_LMS_INFO_ACTION_DONE, vol=["+volFeedback+"]");
             }
+            else if (action.equals(PLAY_SONG_INDEX_ACTION_DONE)) {
+
+                setLoadSongProgress(false);
+                // hide play icon now that playing is in progress
+                showPlayIcon(false);
+                showPauseIcon(true);
+
+                Log.i(TAG, "processed PLAY_SONG_INDEX_ACTION_DONE");
+            }
             else if (action.equals(ALBUM_LIST_REFRESH_ACTION_DONE)) {
                 Log.i(TAG, "processing ALBUM_LIST_REFRESH_ACTION_DONE.");
+                setAlbumsListRefreshInProgress(false);
 
                 // All available albums were loaded, now pick one randomly
                 loadRandomAlbum();
@@ -443,14 +551,14 @@ public class MusicPlayerMain extends Fragment {
             else if (action.equals(ALBUMS_LOADING_PROGRESS_EVENT)) {
                 int progress = intent.getIntExtra(EXTRA_ALBUMLOAD_PROGRESS, 0);
 
-                ProgressBar pb = (ProgressBar)getView().findViewById(R.id.musicplayer_albumloadingProgress);
+                ProgressBar pb = (ProgressBar)getView().findViewById(R.id.musicplayer_albumListRefreshProgress);
                 pb.setMax(100);
                 pb.setProgress(progress);
                 Log.i(TAG, "processed ALBUMS_LOADING_PROGRESS_EVENT: "+ Integer.toString(progress));
             }
             else if (action.equals(LOADALBUM_ACTION_DONE)) {
 
-                setAlbumLoadingInProgress(false);
+                setAlbumLoadInProgress(false);
 
                 ImageView albumCover = (ImageView)getView().findViewById(R.id.musicplayer_albumcover);
                 albumCover.setImageBitmap(Globals.selectedAlbum.getAlbumCover());
@@ -461,13 +569,22 @@ public class MusicPlayerMain extends Fragment {
                 TextView albumArtist = (TextView)getView().findViewById(R.id.musicplayer_albumartist);
                 albumArtist.setText(Globals.selectedAlbum.getAlbumArtist());
 
+                if (isPowerOnInProgress) {
+                    enableControls(true);
+                    showPowerOffIcon(true);
+                    showPowerOnIcon(false);
+                    setPowerOnInProgress(false);
+                    isPowerOnInProgress = false;
+                }
+
                 Log.i(TAG, "processed LOADALBUM_ACTION_DONE");
             }
             else if (action.equals(POWERON_ACTION_DONE)) {
 
+                String volFeedback = intent.getStringExtra(EXTRA_VOLUME_FEEDBACK);
+                showVolume(volFeedback);
                 // Sending poweron on the remote raspberry pi trigs loading of the confirmation song "audio_on.wav" in the playlist,
                 // so reload the selected album
-                setPowerOnInProgress(false);
                 Log.i(TAG, "Reloading album at poweron: " + Globals.selectedAlbum.getAlbumTitle());
 
                 // Trig service to load album
@@ -476,9 +593,9 @@ public class MusicPlayerMain extends Fragment {
                 loadAlbumIntent.putExtra(MusicPlayerMain.EXTRA_LOADALBUM_NAME, Globals.selectedAlbum.getAlbumTitle());
                 ctx.startService(loadAlbumIntent);
 
-                enableControls(true);
-                showPowerOffIcon(true);
-                showPowerOnIcon(false);
+                // enableControls & toggle poweron/poweroff button moved in LOAD_ALBUM_ACTION_DONE to
+                // be sure to not complete power on before "play" button can actually be used successfully
+                isPowerOnInProgress = true;
             }
             else if (action.equals(POWEROFF_ACTION_DONE)) {
                 setPowerOffInProgress(false);

@@ -6,8 +6,9 @@
 
     <dimen name="general_widgets_padding">25px</dimen>
 
-    <dimen name="musicplayer_albumlist_text_size">15dp</dimen>
-    <dimen name="musicplayer_textinfo_text_size">15dp</dimen>
+    <dimen name="musicplayer_albumlist_text_size">16dp</dimen>
+    <dimen name="musicplayer_textinfo_text_size">16dp</dimen>
+    <dimen name="musicplayer_songlist_text_size">20dp</dimen>
 
     <dimen name="musicplayer_albumthumbnail_size">256px</dimen>
     <dimen name="musicplayer_controlbuttons_padding">0dp</dimen>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="75dp"
+    android:background="#FFFFFF"
+    android:orientation="horizontal"
+    android:gravity="center">
+
+    <com.gbbtbb.homehub.CustomTextView
+        android:id="@+id/song_number"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:text="xx"
+        android:textColor="#000000"
+        android:textSize="@dimen/musicplayer_songlist_text_size"
+        android:paddingLeft="20dp"
+        android:background="#00000000"/>
+
+    <com.gbbtbb.homehub.CustomTextView
+        android:id="@+id/song_title"
+        android:layout_width="0dp"
+        android:layout_weight="6"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:text="-----SONG TITLE -------"
+        android:textColor="#000000"
+        android:textSize="@dimen/musicplayer_songlist_text_size"
+        android:paddingLeft="20dp"
+        android:background="#00000000"/>
+
+    <com.gbbtbb.homehub.CustomTextView
+        android:id="@+id/song_duration"
+        android:layout_width="0dp"
+        android:layout_weight="1.2"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:text="xx:xx"
+        android:textColor="#000000"
+        android:textSize="@dimen/musicplayer_songlist_text_size"
+        android:paddingLeft="20dp"
+        android:background="#00000000"/>
+</LinearLayout>
