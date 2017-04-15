@@ -231,7 +231,13 @@ public class MusicPlayerService extends IntentService{
                     String trackNum="";
                     title = tmp[i+1];
                     duration = tmp[i+2];
-                    trackNum = tmp[i+3];
+
+                    // Handle the corner case where the album contains a single song:
+                    // in this case LMS does not include a "tracknum" field in the response
+                    if (i+3 < tmp.length)
+                        trackNum = tmp[i+3];
+                    else
+                        trackNum = "1";
 
                     float durationVal = Float.valueOf(duration);
                     int minutes = ((int)durationVal)/60;
